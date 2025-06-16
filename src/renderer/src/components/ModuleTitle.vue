@@ -1,11 +1,16 @@
 <script setup>
-const props = defineProps({
-    title: String,
+import EditIcon from '../assets/edit.svg'
+
+defineProps({
+  title: String,
+  isEditing: Boolean,
 })
+
+const emit = defineEmits(['update:isEditing'])
 </script>
 
 <template>
-    <div class="moduleTitle">
-        <h1>{{ title }}</h1>
-    </div>
+  <div class="module-title">
+    <h1 class="module-title__text">{{ title }}</h1>
+  </div>
 </template>

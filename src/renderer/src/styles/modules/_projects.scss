@@ -1,313 +1,308 @@
 .projectTitleWrapper {
-    display: flex;
-    background-color: $ui-color-medium;
-    border-radius: 5px;
-    margin-top: 10px;
+  display: flex;
+  background-color: $ui-color-medium;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 940px;
+
+  .projectCardContent {
     width: 940px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0px 5px 5px 65px;
 
-    .projectCardContent {
-        width: 940px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 0px 5px 5px 65px;
-
-        .projectTitle {
-            @include base-font($weight: 200, $size: 32px);
-            color: $main-txt-color;
-            width: 500px;
-        }
-
-        .projectDescription {
-            @include inter-font($weight: 300, $size: 14px);
-            color: $main-txt-color;
-            opacity: .5;
-            width: 500px;
-        }
+    .projectTitle {
+      @include base-font($weight: 200, $size: 32px);
+      color: $main-txt-color;
+      width: 500px;
     }
+
+    .projectDescription {
+      @include inter-font($weight: 300, $size: 14px);
+      color: $main-txt-color;
+      opacity: 0.5;
+      width: 500px;
+    }
+  }
 }
 
 #todoCard {
-    height: fit-content;
+  height: fit-content;
 
-    .todoCardContent {
-        padding-left: 10px;
-        height: 30px;
-        transition: opacity 0.2s ease-in-out;
+  .todoCardContent {
+    padding-left: 10px;
+    height: 30px;
+    transition: opacity 0.2s ease-in-out;
 
-        .todoTitle {
-            position: absolute;
-            bottom: 3px;
-            left: 30px;
-        }
+    .todoTitle {
+      position: absolute;
+      bottom: 3px;
+      left: 30px;
     }
-
+  }
 }
 
 .addTodoItemWrapper {
-    @include add-wrapper(30px);
+  @include add-wrapper(30px);
 }
 
-
 .todoListCardContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 5px;
+  background-color: $ui-color-dark;
+
+  .habitStackTitle {
+    @include base-font($weight: 200, $size: 24px);
+    color: $main-txt-color;
+    margin: auto 0;
+    height: fit-content;
     background-color: $ui-color-dark;
+    padding-left: 2px;
+  }
 
-    .habitStackTitle {
-        @include base-font($weight: 200, $size: 24px);
-        color: $main-txt-color;
-        margin: auto 0;
-        height: fit-content;
-        background-color: $ui-color-dark;
-        padding-left: 2px;
-    }
+  .todoListTag {
+    @include inter-font($weight: 200, $size: 12px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: $ui-color-medium;
+    border-radius: 20px;
 
-    .todoListTag {
-        @include base-font($weight: 200, $size: 14px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: fit-content;
-        padding-left: 10px;
-        padding-right: 10px;
-        background-color: $ui-color-medium;
-        border-radius: 20px;
-
-        width: fit-content;
-    }
+    width: fit-content;
+  }
 }
 
 .listTitleWrapper {
-    display: flex;
-    justify-content: space-between;
-    height: 50px;
-    background-color: $ui-color-medium;
-    border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+  background-color: $ui-color-medium;
+  border-radius: 5px;
 }
 
 .todoCardContent {
-    width: 100%;
+  width: 100%;
 
-    .todoCompletionWrapper {
-        input[type="checkbox"] {
-            position: absolute;
-            left: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .todoTitle {
-            @include inter-font($weight: 200, $size: 16px);
-            color: $main-txt-color;
-
-            padding-bottom: 2px;
-        }
+  .todoCompletionWrapper {
+    input[type='checkbox'] {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
     }
+
+    .todoTitle {
+      @include inter-font($weight: 200, $size: 16px);
+      color: $main-txt-color;
+
+      padding-bottom: 2px;
+    }
+  }
 }
 
-
 .projectRankGems {
-    width: 100px;
-    height: 60px;
-    overflow: visible;
-    z-index: 100;
+  width: 100px;
+  height: 60px;
+  overflow: visible;
+  z-index: 100;
 
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .projectRankMark {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    top: -65px;
-    left: -70px;
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: -65px;
+  left: -70px;
 
-    transition: all .15s ease-in-out;
+  transition: all 0.15s ease-in-out;
 
-    &.legendary-glow {
-        filter: drop-shadow(0px 0px 2px rgba($legendary-color, 0.15));
-    }
+  &.legendary-glow {
+    filter: drop-shadow(0px 0px 2px rgba($legendary-color, 0.15));
+  }
 
-    &.epic-glow {
-        filter: drop-shadow(0px 0px 2px rgba($epic-color, 0.15));
-    }
+  &.epic-glow {
+    filter: drop-shadow(0px 0px 2px rgba($epic-color, 0.15));
+  }
 
-    &.rare-glow {
-        filter: drop-shadow(0px 0px 2px rgba($rare-color, 0.15));
-    }
+  &.rare-glow {
+    filter: drop-shadow(0px 0px 2px rgba($rare-color, 0.15));
+  }
 
-    &.uncommon-glow {
-        filter: drop-shadow(0px 0px 2px rgba($uncommon-color, 0.15));
-    }
+  &.uncommon-glow {
+    filter: drop-shadow(0px 0px 2px rgba($uncommon-color, 0.15));
+  }
 
-    &.common-glow {
-        filter: drop-shadow(0px 0px 2px rgba($common-color, 0.15));
-    }
+  &.common-glow {
+    filter: drop-shadow(0px 0px 2px rgba($common-color, 0.15));
+  }
 }
 
 .todoRewardWrapper {
-    height: 95px;
-    background-color: $ui-color-medium;
-    border-radius: 5px;
-    padding: 3px;
+  height: 95px;
+  background-color: $ui-color-medium;
+  border-radius: 5px;
+  padding: 3px;
 
-    filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
 
-    h4 {
-        @include base-font($weight: 200, $size: 17px);
-        color: $main-txt-color;
-        margin: auto 0;
-        height: fit-content;
-        padding-left: 4px;
-    }
+  h4 {
+    @include base-font($weight: 200, $size: 17px);
+    color: $main-txt-color;
+    margin: auto 0;
+    height: fit-content;
+    padding-left: 4px;
+  }
 
-    p {
-        @include base-font($weight: 200, $size: 13px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: fit-content;
-        padding-top: 4px;
-        padding-left: 4px;
-    }
+  p {
+    @include base-font($weight: 200, $size: 13px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: fit-content;
+    padding-top: 4px;
+    padding-left: 4px;
+  }
 
-    button {
-        @include base-font($weight: 500, $size: 14px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: 100%;
-        background-color: #61372F;
-        border-radius: 0 5px 5px 0;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
-
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        transition: all .15s ease-in-out;
-
-        &:hover {
-            background-color: $main-txt-color;
-            color: $ui-color-dark;
-            opacity: 1;
-        }
-    }
-
-    #claimButtonActive {
-        @include base-font($weight: 500, $size: 14px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: 100%;
-        background-color: #4A612F;
-        border-radius: 0 5px 5px 0;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
-
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        transition: all .15s ease-in-out;
-
-        &:hover {
-            background-color: $main-txt-color;
-            color: $ui-color-dark;
-            opacity: 1;
-        }
-    }
-}
-
-.projectRewardWrapper {
-    height: 95px;
-
-    border-radius: 5px;
-    padding: 3px;
-    width: 100px;
+  button {
+    @include base-font($weight: 500, $size: 14px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: 100%;
+    background-color: #61372f;
+    border-radius: 0 5px 5px 0;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
 
     position: absolute;
     bottom: 0;
-    right: 80px;
+    right: 0;
+    transition: all 0.15s ease-in-out;
 
-    filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
-
-    .projectRewardText{
-        position: absolute;
-        bottom: 0;
-        right: 50px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+    &:hover {
+      background-color: $main-txt-color;
+      color: $ui-color-dark;
+      opacity: 1;
     }
+  }
 
-    p {
-        @include base-font($weight: 200, $size: 13px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: fit-content;
-        padding-top: 4px;
-        padding-left: 4px;
-        width: 125px;
+  #claimButtonActive {
+    @include base-font($weight: 500, $size: 14px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: 100%;
+    background-color: #4a612f;
+    border-radius: 0 5px 5px 0;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
 
-        padding-bottom: 20px;
-        
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: all 0.15s ease-in-out;
 
+    &:hover {
+      background-color: $main-txt-color;
+      color: $ui-color-dark;
+      opacity: 1;
     }
+  }
+}
 
-    button {
-        @include base-font($weight: 500, $size: 14px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: 40px;
-        background-color: #61372F;
-        border-radius: 5px;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
+.projectRewardWrapper {
+  height: 95px;
 
-        position: absolute;
-        bottom: 13px;
-        right: 0;
-        transition: all .15s ease-in-out;
+  border-radius: 5px;
+  padding: 3px;
+  width: 100px;
 
-        &:hover {
-            background-color: $main-txt-color;
-            color: $ui-color-dark;
-            opacity: 1;
-        }
+  position: absolute;
+  bottom: 0;
+  right: 80px;
+
+  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
+
+  .projectRewardText {
+    position: absolute;
+    bottom: 0;
+    right: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  p {
+    @include base-font($weight: 200, $size: 13px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: fit-content;
+    padding-top: 4px;
+    padding-left: 4px;
+    width: 125px;
+
+    padding-bottom: 20px;
+  }
+
+  button {
+    @include base-font($weight: 500, $size: 14px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: 40px;
+    background-color: #61372f;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+
+    position: absolute;
+    bottom: 13px;
+    right: 0;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      background-color: $main-txt-color;
+      color: $ui-color-dark;
+      opacity: 1;
     }
+  }
 
-    #claimButtonActive {
-        @include base-font($weight: 500, $size: 14px);
-        color: $main-txt-color;
-        opacity: .6;
-        height: 40px;
-        background-color: #4A612F;
-        border-radius: 5px;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
+  #claimButtonActive {
+    @include base-font($weight: 500, $size: 14px);
+    color: $main-txt-color;
+    opacity: 0.6;
+    height: 40px;
+    background-color: #4a612f;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
 
-        position: absolute;
-        bottom: 13px;
-        right: 0;
-        transition: all .15s ease-in-out;
+    position: absolute;
+    bottom: 13px;
+    right: 0;
+    transition: all 0.15s ease-in-out;
 
-        &:hover {
-            background-color: $main-txt-color;
-            color: $ui-color-dark;
-            opacity: 1;
-        }
+    &:hover {
+      background-color: $main-txt-color;
+      color: $ui-color-dark;
+      opacity: 1;
     }
+  }
 }
 
 .addTodoListWrapper {
-    @include add-wrapper(30px);
+  @include add-wrapper(30px);
 
-    p{
-        @include base-font($weight: 600, $size: 16px);
-        color: $main-txt-color;
-        padding-top: 2px;
-    }
+  p {
+    @include base-font($weight: 600, $size: 16px);
+    color: $main-txt-color;
+    padding-top: 2px;
+  }
 }

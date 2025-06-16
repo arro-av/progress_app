@@ -1,7 +1,9 @@
 /**
- * DATES HELPER
- * --------------------------------------------------------------------------------------------------------------
- * @function getToday {function} - Gets today's date and returns it as a string in the format YYYY-MM-DD
+ * @function getToday {function} - Gets today's date
+ * @returns {string} - Today's date in the format YYYY-MM-DD
+ * ---
+ * @function getYesterday {function} - Gets yesterday's date
+ * @returns {string} - Yesterday's date in the format YYYY-MM-DD
  */
 export function useDates() {
   const getToday = (): string => {
@@ -19,10 +21,10 @@ export function useDates() {
     const month = String(yesterday.getMonth() + 1).padStart(2, '0')
     const day = String(yesterday.getDate()).padStart(2, '0')
     return `${year}-${month}-${day}`
-  };
+  }
 
   return {
     getToday,
-    getYesterday
+    getYesterday,
   }
 }

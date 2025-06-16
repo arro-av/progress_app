@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { IPC_CHANNELS } from '../shared/ipcChannels'
+import { IPC_CHANNELS } from '../main/services/channels'
 
 // exposes custom API to renderer process
 const api = {
@@ -10,109 +10,133 @@ const api = {
   // Universal Functions
   getItems: (itemType) => ipcRenderer.invoke(IPC_CHANNELS.GET_ITEMS, itemType),
   deleteItem: (id, itemType) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_ITEM, id, itemType),
-  moveItem: (item, itemType, direction) => ipcRenderer.invoke(IPC_CHANNELS.MOVE_ITEM, item, itemType, direction),
+  moveItem: (item, itemType, direction) =>
+    ipcRenderer.invoke(IPC_CHANNELS.MOVE_ITEM, item, itemType, direction),
 
   // User Functions
   getBalance: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_BALANCE),
   onBalanceUpdate: (callback) => {
-    const handler = (event, newBalance) => callback(newBalance);
-    ipcRenderer.on(IPC_CHANNELS.BALANCE_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.BALANCE_UPDATED, handler);
+    const handler = (event, newBalance) => callback(newBalance)
+    ipcRenderer.on(IPC_CHANNELS.BALANCE_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.BALANCE_UPDATED, handler)
   },
   getUserExp: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER_EXP),
   onUserExpUpdate: (callback) => {
-    const handler = (event, newExpCurrent, newExpNeeded) => callback(newExpCurrent, newExpNeeded);
-    ipcRenderer.on(IPC_CHANNELS.USER_EXP_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_EXP_UPDATED, handler);
+    const handler = (event, newExpCurrent, newExpNeeded) => callback(newExpCurrent, newExpNeeded)
+    ipcRenderer.on(IPC_CHANNELS.USER_EXP_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_EXP_UPDATED, handler)
   },
   getUserLevel: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER_LEVEL),
   onUserLevelUpdate: (callback) => {
-    const handler = (event, newLevel) => callback(newLevel);
-    ipcRenderer.on(IPC_CHANNELS.USER_LEVEL_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_LEVEL_UPDATED, handler);
+    const handler = (event, newLevel) => callback(newLevel)
+    ipcRenderer.on(IPC_CHANNELS.USER_LEVEL_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_LEVEL_UPDATED, handler)
   },
-  addTime: async (timeSpent, todoListId) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_TIME, timeSpent, todoListId),
+  addTime: async (timeSpent, todoListId) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.ADD_TIME, timeSpent, todoListId),
 
-  // Project Functions
-  addProject: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_PROJECT, project),
-  editProject: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_PROJECT, project),
-  claimProjectReward: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_PROJECT_REWARD, project),
-  activateProject: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.ACTIVATE_PROJECT, project),
-  onProjectsUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.PROJECTS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.PROJECTS_UPDATED, handler);
-  },
-
-  // Todo List Functions
-  addTodoList: async (todoList) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_TODO_LIST, todoList),
-  editTodoList: async (todoList) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_TODO_LIST, todoList),
-  claimTodoListReward: async (todoList) => await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_TODO_LIST_REWARD, todoList),
-  onTodoListsUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.TODO_LISTS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.TODO_LISTS_UPDATED, handler);
+  // Questline Functions
+  getQuestline: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_QUESTLINE),
+  addQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_QUESTLINE, project),
+  editQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUESTLINE, project),
+  claimQuestlineReward: async (project) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUEST_REWARD, project),
+  activateQuestline: async (project) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.ACTIVATE_QUESTLINE, project),
+  onQuestlinesUpdate: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.QUESTLINES_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.QUESTLINES_UPDATED, handler)
   },
 
-  // Todo Item Functions
-  addTodoItem: async (todoItem) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_TODO_ITEM, todoItem),
-  editTodoItem: async (todoItem) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_TODO_ITEM, todoItem),
-  toggleTodoItemCompletion: async (todoItemId) => await ipcRenderer.invoke(IPC_CHANNELS.TOGGLE_TODO_ITEM_COMPLETION, todoItemId),
-  getNextActiveTodo: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_NEXT_ACTIVE_TODO),
-  onTodoItemsUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.TODO_ITEMS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.TODO_ITEMS_UPDATED, handler);
+  // Quest Functions
+  getQuests: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_QUESTS),
+  addQuest: async (quest) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_QUEST, quest),
+  editQuest: async (quest) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUEST, quest),
+  deleteQuest: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_QUEST, id),
+  claimQuestReward: async (quest) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUEST_REWARD, quest),
+  onQuestsUpdate: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.QUESTS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.QUESTS_UPDATED, handler)
+  },
+
+  // Task Functions
+  getTasks: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_TASKS),
+  addTask: async (task) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_TASK, task),
+  editTask: async (task) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_TASK, task),
+  deleteTask: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_TASK, id),
+  toggleTaskCompletion: async (taskId) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.TOGGLE_TASK_COMPLETION, taskId),
+  getNextActiveTask: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_NEXT_ACTIVE_TASK),
+  onTasksUpdate: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.TASKS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.TASKS_UPDATED, handler)
   },
 
   // Idea Functions
+  getIdeas: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_IDEAS),
   addIdea: async (idea) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_IDEA, idea),
   editIdea: async (idea) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_IDEA, idea),
-  convertIdeaToProject: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.CONVERT_IDEA_TO_PROJECT, id),
+  deleteIdea: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_IDEA, id),
+  convertIdeaToProject: async (id) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.CONVERT_IDEA_TO_PROJECT, id),
   onIdeasUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.IDEAS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.IDEAS_UPDATED, handler);
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.IDEAS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.IDEAS_UPDATED, handler)
   },
-  
+
   // Tag Functions
+  getTags: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_TAGS),
   addTag: async (tag) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_TAG, tag),
   editTag: async (tag) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_TAG, tag),
+  deleteTag: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_TAG, id),
   onTagsUpdate: (callback) => {
-    const handler = (event, newTags) => callback(newTags);
-    ipcRenderer.on(IPC_CHANNELS.TAGS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.TAGS_UPDATED, handler);
+    const handler = (event, newTags) => callback(newTags)
+    ipcRenderer.on(IPC_CHANNELS.TAGS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.TAGS_UPDATED, handler)
   },
 
   // Reward Functions
+  getRewards: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_REWARDS),
   addReward: async (reward) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_REWARD, reward),
   editReward: async (reward) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_REWARD, reward),
+  deleteReward: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_REWARD, id),
   unlockReward: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.UNLOCK_REWARD, id),
   onRewardsUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.REWARDS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.REWARDS_UPDATED, handler);
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.REWARDS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.REWARDS_UPDATED, handler)
   },
 
   // HabitStack Functions
-  addHabitStack: async (habitStack) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_HABIT_STACK, habitStack),
-  editHabitStack: async (habitStack) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_HABIT_STACK, habitStack),
+  getHabitStacks: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_HABIT_STACKS),
+  addHabitStack: async (habitStack) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.ADD_HABIT_STACK, habitStack),
+  editHabitStack: async (habitStack) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.EDIT_HABIT_STACK, habitStack),
+  deleteHabitStack: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_HABIT_STACK, id),
   onHabitStacksUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.HABIT_STACKS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.HABIT_STACKS_UPDATED, handler);
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.HABIT_STACKS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.HABIT_STACKS_UPDATED, handler)
   },
 
   // Habit Functions
+  getHabits: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_HABITS),
   addHabit: async (habit) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_HABIT, habit),
   editHabit: async (habit) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_HABIT, habit),
-  moveNestedHabit: async (habit, direction) => await ipcRenderer.invoke(IPC_CHANNELS.MOVE_NESTED_HABIT, habit, direction),
-  toggleHabitCompletion: async (habitId) => await ipcRenderer.invoke(IPC_CHANNELS.TOGGLE_HABIT_COMPLETION, habitId),
+  deleteHabit: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_HABIT, id),
+  toggleHabitCompletion: async (habitId) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.TOGGLE_HABIT_COMPLETION, habitId),
   updateAllStreaks: async () => await ipcRenderer.invoke(IPC_CHANNELS.UPDATE_ALL_STREAKS),
   onHabitsUpdate: (callback) => {
-    const handler = () => callback();
-    ipcRenderer.on(IPC_CHANNELS.HABITS_UPDATED, handler);
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.HABITS_UPDATED, handler);
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.HABITS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.HABITS_UPDATED, handler)
   },
 }
 

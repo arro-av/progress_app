@@ -1,6 +1,9 @@
 import { ref, toRaw } from 'vue'
+
+import { constructPayload } from '../constructPayload'
+
 import { useToasts } from './useToasts'
-const { addToast } = useToasts()
+
 /**
  * GENERIC ADD-ITEM COMPOSABLE
  * --------------------------------------------------------------------------------------------------------------
@@ -14,13 +17,12 @@ const { addToast } = useToasts()
  * @param {function} config.addFn - Async function to add an item (e.g., (itemData) => addItem(itemData)).
  * @param {string} config.itemType - The type of item being added (e.g., 'reward', 'tag').
  */
-export function useAdd({
-  addFn,
-  itemType,
-}) { 
+export function useAdd({ addFn, itemType }) {
   const isAdding = ref(false)
   const addedItemData = ref({})
   const activeListId = ref(null)
+
+  const { addToast } = useToasts()
 
   const startAdding = (listId = null) => {
     addedItemData.value = { ...constructPayload(itemType) }
@@ -59,58 +61,4 @@ export function useAdd({
     cancelAdding,
     saveAdding,
   }
-}
-
-/**
- * HELPER FUNCTION
- * Constructs a payload based on the item type.
- * @param {string} itemType - The type of item (e.g., 'reward', 'tag').
- * @returns {object} - The constructed payload.
- */
-const constructPayload = (itemType) => {
-    switch (itemType) {
-      case 'rewards':
-        return {
-          title: '',
-          cost: 0,
-          repeatable: false,
-        }
-      case 'tags':
-        return {
-          title: ''
-        }
-      case 'habit_stacks':
-        return {
-          title: ''
-        }
-      case 'ideas':
-        return {
-          title: '',
-          description: ''
-        }
-      case 'habits':
-        return {
-          title: '',
-          tag_name: null,
-          stack_id: null
-        }
-      case 'todo_lists':
-        return {
-          title: '',
-          project_id: null,
-          time_spent: 0,
-          tag_name: null,
-          position: 0
-        }
-      case 'todo_items':
-        return {
-          title: '',
-          todo_list_id: null,
-          completed: false,
-          position: 0
-        }
-      default:
-        console.warn(`Unknown itemType: ${itemType}.`)
-        return null
-    }
 }

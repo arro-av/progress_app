@@ -6,7 +6,7 @@ export interface User {
   exp_needed: number
   focused_time: number
   pomodoros: number
-  projects_done: number
+  questlines_done: number
   todos_done: number
   ideas_total: number
   habits_implemented: number
@@ -16,8 +16,8 @@ export interface User {
   created_at: string
 }
 
-// ========== PROJECTS ==========
-export interface Project {
+// ========== QUESTLINES ==========
+export interface Questline {
   id: number
   title: string
   description: string
@@ -28,26 +28,26 @@ export interface Project {
   position: number
 }
 
-// ========== TODO LISTS ==========
-export interface TodoList {
+// ========== QUESTS ==========
+export interface Quest {
   id: number
   title: string
   time_spent: number
-  project_id: number
+  questline_id: number
   tag_name: string
   position: number
 }
 
-// ========== TODO ITEMS ==========
-export interface TodoItem {
+// ========== TASKS ==========
+export interface Task {
   id: number
   title: string
-  todo_list_id: number
+  quest_id: number
   completed: boolean
   position: number
 }
 
-// ========== PROJECTS DONE ========== 
+// ========== PROJECTS DONE ==========
 export interface ProjectsDone {
   id: number
   name: string
@@ -114,10 +114,10 @@ export interface Achievement {
 // ========== FULL DB SCHEMA ==========
 export interface DbSchema {
   user: User
-  projects: Project[]
-  projects_done: ProjectsDone[]
-  todo_lists: TodoList[]
-  todo_items: TodoItem[]
+  questlines: Questline[]
+  questlines_done: ProjectsDone[]
+  quests: Quest[]
+  tasks: Task[]
   tags: Tag[]
   ideas: Idea[]
   habit_stacks: HabitStack[]

@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import { useToasts } from '../ui/useToasts'
+import { useToasts } from '../composables/useToasts'
 const { addToast } = useToasts()
 
 /**
@@ -23,16 +23,16 @@ export function useUniversals() {
       const result = await window.api.moveItem(toRaw(item), itemType, direction)
       if (!result.success) {
         addToast({ message: result.message, type: 'error' })
-      } 
+      }
     } catch (error) {
       console.error('Error moving item:', error)
       addToast({ message: 'An error occured...', type: 'error' })
     }
   }
-  
+
   return {
     getItems,
     deleteItem,
-    moveItem
+    moveItem,
   }
 }

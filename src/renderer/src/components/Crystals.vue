@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useUser } from '../composables/db_functions/useUser'
+import { useUser } from '../helpers/db_functions/useUser'
 
 const { balance, getBalance, onBalanceUpdate } = useUser()
 
@@ -11,12 +11,14 @@ onMounted(async () => {
     getBalance()
   })
 })
-
 </script>
 
 <template>
   <div class="balanceWrapper">
-    <img src="../assets/crystal.png" alt="Crystal Symbol">
+    <img
+      src="../assets/crystal.png"
+      alt="Crystal Symbol"
+    />
     <p class="balance">
       {{ balance }}
     </p>

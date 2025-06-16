@@ -7,6 +7,8 @@ const { EXP_MULTIPLIER_USER, EXP_MULTIPLIER_TAGS } = useConstants()
  * PROGRESSIONS HELPER
  * --------------------------------------------------------------------------------------------------------------
  * @function getHabitProgressionReward {function} - Gets habit progression reward based on habit rank
+ * @function getQuestProgressionReward {function} - Gets quest progression reward based on quest rank
+ * @function getProjectProgressionReward {function} - Gets project progression reward based on project rank
  */
 export const useProgressions = () => {
   const getHabitProgressionReward = (habit) => {
@@ -41,11 +43,11 @@ export const useProgressions = () => {
     }
   }
 
-  const getTodoListProgressionReward = (todoList, todoItemsInList) => {
+  const getQuestProgressionReward = (questline, questsInList) => {
     return {
-      crystals: Math.round(todoItemsInList.length + todoList.time_spent / 10),
-      tagExp: Math.round(todoItemsInList.length * 10 + todoList.time_spent / 2),
-      userExp: Math.round(todoItemsInList.length * 15 + todoList.time_spent / 1.35),
+      crystals: Math.round(questsInList.length + questline.time_spent / 10),
+      tagExp: Math.round(questsInList.length * 10 + questline.time_spent / 2),
+      userExp: Math.round(questsInList.length * 15 + questline.time_spent / 1.35),
     }
   }
 
@@ -81,7 +83,7 @@ export const useProgressions = () => {
 
   return {
     getHabitProgressionReward,
-    getTodoListProgressionReward,
+    getQuestProgressionReward,
     getProjectProgressionReward,
     updateLevel,
   }

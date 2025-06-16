@@ -2,11 +2,11 @@ import { LowSync } from 'lowdb'
 import { JSONFileSync } from 'lowdb/node'
 import { join } from 'path'
 import { app } from 'electron'
-import defaultData from './defaultData'
-import type { DbSchema } from '../../shared/dbTypes'
+import defaultData from './default'
+import type { DbSchema } from './types'
 
 // save path of db.json
-const file = join(app.getPath('userData'), 'db.json')
+const file = join(app.getPath('userData'), 'dev-db.json') // change to 'db.json' in production
 
 // creates the adapter
 const adapter = new JSONFileSync<DbSchema>(file)

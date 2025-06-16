@@ -1,52 +1,52 @@
 @mixin titles-font {
-  font-family: "Anek Devanagari", sans-serif;
+  font-family: 'Anek Devanagari', sans-serif;
   font-weight: 600;
   font-size: 28px;
 }
 
 @mixin ui-titles-font {
-  font-family: "Anek Devanagari", sans-serif;
+  font-family: 'Anek Devanagari', sans-serif;
   font-weight: 600;
   font-size: 18px;
 }
 
 @mixin ui-lvl-font {
-  font-family: "Anek Devanagari", sans-serif;
+  font-family: 'Anek Devanagari', sans-serif;
   font-weight: 300;
   font-size: 14px;
   opacity: 35%;
 }
 
 :root {
-  --bg-color: #1B1B1F;
+  --bg-color: #1b1b1f;
   --ui-bg-color: #222227;
   --ui-txt-color: #313137;
   --txt-color: white;
 
-  --common-color: #FFFFFF;
-  --uncommon-color: #1EFF00;
-  --rare-color: #0070DD;
-  --epic-color: #A335EE;
-  --legendary-color: #FF8000;
+  --common-color: #ffffff;
+  --uncommon-color: #1eff00;
+  --rare-color: #0070dd;
+  --epic-color: #a335ee;
+  --legendary-color: #ff8000;
 }
 
-@import "utils/variables";
-@import "utils/mixins";
-@import "utils/global";
+@import 'utils/variables';
+@import 'utils/mixins';
+@import 'utils/global';
 
-@import "components/dragbar";
-@import "components/nav";
-@import "components/edit+add";
-@import "components/card";
-@import "components/toasts";
+@import 'components/dragbar';
+@import 'components/nav';
+@import 'components/edit+add';
+@import 'components/card';
+@import 'components/toasts';
+@import 'components/moduleTitle';
 
-@import "components/user";
+@import 'components/user';
 
-@import "modules/ideas";
-@import "modules/tags";
-@import "modules/habits";
-@import "modules/rewards";
-@import "modules/projects";
-@import "modules/stats";
-@import "modules/timer";
-
+@import 'modules/ideas';
+@import 'modules/tags';
+@import 'modules/habits';
+@import 'modules/rewards';
+@import 'modules/projects';
+@import 'modules/stats';
+@import 'modules/timer';

@@ -2,60 +2,44 @@
 // ========== IMPORTS ==========
 // Icons
 import PlusIcon from '../assets/plus.svg'
-
 // Components
 import ModuleTitle from '../components/ModuleTitle.vue'
 import Card from '../components/Card.vue'
 import EditItem from '../components/EditItem.vue'
 import AddItem from '../components/AddItem.vue'
-
 // Composables
-import { useUniversals } from '../composables/db_functions/useUniversals'
-import { useHabits } from '../composables/db_functions/useHabits'
-import { useHabitStacks } from '../composables/db_functions/useHabitStacks'
-import { useEdit } from '../composables/ui/useEdit'
-import { useAdd } from '../composables/ui/useAdd'
-import { useSort } from '../composables/ui/useSort'
-
+import { useEdit } from '../helpers/composables/useEdit'
+import { useAdd } from '../helpers/composables/useAdd'
+import { useKeydowns } from '../helpers/composables/useKeydowns'
+import { useEditEnable } from '../helpers/composables/useEditEnable'
+// Stores
+import { useTagsStore } from '../stores/tags'
+import { useHabitsStore } from '../stores/habits'
+import { storeToRefs } from 'pinia'
 // Vue
-import { onMounted, onUnmounted, ref } from 'vue'
-// ========= DATA =========
-const { addHabit, editHabit, onHabitsUpdate, toggleHabitCompletion, updateAllStreaks } = useHabits()
-const { addHabitStack, editHabitStack, onHabitStacksUpdate } = useHabitStacks()
-const { getItems, deleteItem, moveItem } = useUniversals()
-const { sortByPosition } = useSort()
+import { onMounted, onUnmounted, toRaw } from 'vue'
+// Helpers
+import { moveItem } from '../helpers/moveItem'
 
-let cleanupHabitUpdate = null
-let cleanupHabitStackUpdate = null
+// ========== DATA ==========
+const habitsStore = useHabitsStore()
+const { habits } = storeToRefs(habitsStore)
+const { habitStacks } = storeToRefs(habitsStore)
 
-const habits = ref([])
-const tags = ref([])
-const habit_stacks = ref([])
+const tagsStore = useTagsStore()
+const { tags } = storeToRefs(tagsStore)
+
+const { editEnabled, toggleEditEnabled } = useEditEnable()
+
 // ========= LIFECYCLE =========
 onMounted(async () => {
-  habits.value = sortByPosition(await getItems('habits'))
-  tags.value = sortByPosition(await getItems('tags'))
-  habit_stacks.value = sortByPosition(await getItems('habit_stacks'))
-
-  await updateAllStreaks()
-
-  cleanupHabitUpdate = onHabitsUpdate(async () => {
-    habits.value = sortByPosition(await getItems('habits'))
-  })
-
-  cleanupHabitStackUpdate = onHabitStacksUpdate(async () => {
-    habit_stacks.value = sortByPosition(await getItems('habit_stacks'))
-  })
+  habitsStore.init()
+  tagsStore.init()
 })
 
 onUnmounted(async () => {
-  if (cleanupHabitUpdate) {
-    await cleanupHabitUpdate()
-  }
-
-  if (cleanupHabitStackUpdate) {
-    await cleanupHabitStackUpdate()
-  }
+  habitsStore.cleanupListeners()
+  tagsStore.cleanupListeners()
 })
 
 // ========== EDITOR CONFIGS ==========
@@ -68,8 +52,8 @@ const {
   saveEditing: habitSaveEditing,
   deleteEditing: habitDeleteEditing,
 } = useEdit({
-  editFn: editHabit,
-  deleteFn: deleteItem,
+  editFn: habitsStore.editHabit,
+  deleteFn: habitsStore.deleteHabit,
 })
 
 // Habit Stack Editor
@@ -81,8 +65,8 @@ const {
   saveEditing: stackSaveEditing,
   deleteEditing: stackDeleteEditing,
 } = useEdit({
-  editFn: editHabitStack,
-  deleteFn: deleteItem,
+  editFn: habitsStore.editHabitStack,
+  deleteFn: habitsStore.deleteHabitStack,
 })
 
 // ========= ADDER CONFIGS ==========
@@ -95,7 +79,7 @@ const {
   cancelAdding: habitCancelAdding,
   saveAdding: habitSaveAdding,
 } = useAdd({
-  addFn: addHabit,
+  addFn: habitsStore.addHabit,
   itemType: 'habits',
 })
 
@@ -106,8 +90,22 @@ const {
   cancelAdding: habitStackCancelAdding,
   saveAdding: habitStackSaveAdding,
 } = useAdd({
-  addFn: addHabitStack,
+  addFn: habitsStore.addHabitStack,
   itemType: 'habit_stacks',
+})
+
+// ========== KEYDOWNS ==========
+useKeydowns({
+  onEdit: () => {
+    if (
+      !habitEditingId.value &&
+      !stackEditingId.value &&
+      !habitIsAdding.value &&
+      !habitStackIsAdding.value
+    ) {
+      toggleEditEnabled()
+    }
+  },
 })
 </script>
 
@@ -119,17 +117,17 @@ const {
     class="moduleWrapper"
   >
     <div
-      v-for="habit_stack in habit_stacks"
-      :key="habit_stack.id"
+      v-for="habitStack in habitStacks"
+      :key="habitStack.id"
       class="habitStackCard"
     >
       <div class="stackTitleWrapper">
-        <template v-if="stackEditingId !== habit_stack.id">
+        <template v-if="stackEditingId !== habitStack.id">
           <Card
-            :itemData="habit_stack"
+            :itemData="habitStack"
             :itemType="'habit_stacks'"
-            @start-edit="stackStartEditing(habit_stack, 'habit_stacks')"
-            @move-item="moveItem(habit_stack, 'habit_stacks', $event)"
+            @click="editEnabled ? stackStartEditing(habitStack, 'habit_stacks') : null"
+            @move-item="moveItem(toRaw(habitStack), 'habit_stacks', $event)"
           />
         </template>
 
@@ -145,7 +143,7 @@ const {
       </div>
 
       <div
-        v-for="habit in habits.filter((habit) => habit.stack_id === habit_stack.id)"
+        v-for="habit in habits.filter((habit) => habit.stack_id === habitStack.id)"
         :key="habit.id"
         id="habitCard"
       >
@@ -153,7 +151,7 @@ const {
           <Card
             :itemData="habit"
             :itemType="'habits'"
-            @start-edit="habitStartEditing(habit, 'habits')"
+            @click="editEnabled ? habitStartEditing(habit, 'habits') : null"
             @toggle-completion="toggleHabitCompletion(habit)"
             @move-item="moveItem(habit, 'habits', $event)"
           />
@@ -162,7 +160,7 @@ const {
           <EditItem
             :itemType="'habits'"
             :allTags="tags"
-            :allHabitStacks="habit_stacks"
+            :allHabitStacks="habitStacks"
             v-model="habitEditedItemData"
             @save-edit="habitSaveEditing"
             @cancel-edit="habitCancelEditing"
@@ -174,33 +172,43 @@ const {
       <!--Show AddIcon -->
       <template v-if="!habitIsAdding">
         <div
+          v-if="editEnabled"
           class="addHabitWrapper"
-          @click="habitStartAdding(habit_stack.id)"
+          @click="habitStartAdding(habitStack.id)"
         >
           <PlusIcon class="addIcon" />
         </div>
       </template>
       <!--Show AddItem if adding button is clicked-->
-      <template v-else-if="habitIsAdding && habit_stack.id == habitActiveListId">
+      <template v-else-if="habitIsAdding && habitStack.id == habitActiveListId">
         <AddItem
-          :stackId="habit_stack.id"
+          :stackId="habitStack.id"
           :itemType="'habits'"
           :allTags="tags"
-          :allHabitStacks="habit_stacks"
+          :allHabitStacks="habitStacks"
           v-model="habitAddedItemData"
           @save-add="habitSaveAdding()"
           @cancel-add="habitCancelAdding()"
         />
       </template>
     </div>
-    <!-- TODO: Add Habit Stack | For now diabled | Add manually in DB-->
-    <!-- <template v-if="!habitStackIsAdding">
-      <div class="addHabitStackWrapper" @click="habitStackStartAdding()">
+
+    <template v-if="!habitStackIsAdding">
+      <div
+        v-if="editEnabled"
+        class="addHabitStackWrapper"
+        @click="habitStackStartAdding()"
+      >
         <PlusIcon class="addIcon" />
       </div>
-    </template> 
+    </template>
     <template v-else-if="habitStackIsAdding">
-      <AddItem :itemType="'stacks'" v-model="habitStackAddedItemData" @save-add="habitStackSaveAdding()" @cancel-add="habitStackCancelAdding()" />
-    </template>-->
+      <AddItem
+        :itemType="'stacks'"
+        v-model="habitStackAddedItemData"
+        @save-add="habitStackSaveAdding()"
+        @cancel-add="habitStackCancelAdding()"
+      />
+    </template>
   </div>
 </template>

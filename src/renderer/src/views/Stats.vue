@@ -1,6 +1,6 @@
 <script setup>
 import ModuleTitle from '../components/ModuleTitle.vue'
-import { useUniversals } from '../composables/db_functions/useUniversals'
+import { useUniversals } from '../helpers/db_functions/useUniversals'
 import { onMounted, ref } from 'vue'
 
 const { getItems } = useUniversals()
@@ -19,7 +19,7 @@ const user = ref({
   rewards_unlocked: 0,
   exp_gained: 0,
   crystals_gained: 0,
-  created_at: ''
+  created_at: '',
 })
 
 const formatTime = (seconds) => {
@@ -39,18 +39,15 @@ onMounted(async () => {
     <div class="stats-grid">
       <!-- Level & Progress -->
       <div class="stat-card">
-        <div class="stat-value">
-          Level {{ user.level }}
-        </div>
-        <div class="stat-value">
-          {{ user.exp_current }} / {{ user.exp_needed }} XP
-        </div>
+        <div class="stat-value">Level {{ user.level }}</div>
+        <div class="stat-value">{{ user.exp_current }} / {{ user.exp_needed }} XP</div>
       </div>
 
       <!-- Balance -->
       <div class="stat-card">
         <div class="stat-value">
-          {{ user.crystals_gained }} <span class="unit">Crystals</span>
+          {{ user.crystals_gained }}
+          <span class="unit">Crystals</span>
         </div>
         <div class="stat-subtext">Total crystals earned</div>
       </div>
@@ -58,14 +55,14 @@ onMounted(async () => {
       <!-- Focus Time -->
       <div class="stat-card">
         <div class="stat-value">
-          {{ user.focused_time }} <span class="unit">Minutes</span>
+          {{ user.focused_time }}
+          <span class="unit">Minutes</span>
         </div>
         <div class="stat-subtext">Focused time in {{ user.pomodoros }} sessions</div>
       </div>
 
       <!-- Projects & Todos -->
       <div class="stat-card">
-
         <div class="stat-row">
           <div>
             <div class="stat-value">{{ user.projects_done }}</div>
@@ -111,6 +108,4 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

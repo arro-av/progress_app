@@ -1,287 +1,282 @@
 .cardWrapper {
-    position: relative;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  width: fit-content;
+
+  cursor: pointer;
+
+  background-color: $ui-color-medium;
+  border-radius: 5px 5px 5px 5px;
+
+  transition: all 0.15s ease-in-out;
+
+  width: 227px;
+
+  .cardContent {
+    padding-left: 5px;
+    padding-right: 13px;
+    width: 180px;
+    height: 60px;
+    overflow: hidden;
     display: flex;
-    justify-content: space-around;
-    width: fit-content;
+    flex-direction: column;
 
-    cursor: pointer;
-
-    background-color: $ui-color-medium;
-    border-radius: 5px 5px 5px 5px;
-
-    transition: all .15s ease-in-out;
-
-    width: 227px;
-
-    .cardContent {
-        padding-left: 5px;
-        padding-right: 13px;
-        width: 180px;
-        height: 60px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-
-
-        h4 {
-            @include base-font($weight: 600, $size: 16px);
-            color: $main-txt-color;
-            margin: auto 0;
-            height: fit-content
-        }
-
-        .tagLvl {
-            @include base-font($weight: 600, $size: 12px);
-            color: $main-txt-color;
-            opacity: .5;
-            height: fit-content;
-
-            position: absolute;
-            bottom: 2px;
-            right: 5px;
-        }
+    h4 {
+      @include base-font($weight: 600, $size: 16px);
+      color: $main-txt-color;
+      margin: auto 0;
+      height: fit-content;
     }
 
-    .editIconContainer {
-        position: absolute;
-        top: 3px;
-        right: 5px;
-        opacity: 0;
-        transition: opacity 0.2s ease-in-out;
-        cursor: pointer;
-    
-        .editIcon {
-          width: 18px;
-          height: 18px;
-          fill: $main-txt-color;
-          opacity: 0.3;
-          transition: opacity .15s ease-in-out;
+    .tagLvl {
+      @include base-font($weight: 600, $size: 12px);
+      color: $main-txt-color;
+      opacity: 0.5;
+      height: fit-content;
 
-          &:hover {
-            opacity: 1;
-            filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
-          }
-        }
+      position: absolute;
+      bottom: 2px;
+      right: 5px;
+    }
+  }
+
+  .editIconContainer {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    cursor: pointer;
+
+    .editIcon {
+      width: 18px;
+      height: 18px;
+      fill: $main-txt-color;
+      opacity: 0.3;
+      transition: opacity 0.15s ease-in-out;
+
+      &:hover {
+        opacity: 1;
+        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
       }
-    
-      &:hover .editIconContainer {
-        opacity: 0.75; 
-        cursor: pointer;
+    }
+  }
+
+  &:hover .editIconContainer {
+    opacity: 0.75;
+    cursor: pointer;
+  }
+
+  .moveIconContainer {
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    cursor: pointer;
+
+    .moveUpIcon {
+      rotate: 180deg;
+    }
+
+    .nestedMoveUpIcon {
+      rotate: 270deg;
+    }
+
+    .nestedMoveDownIcon {
+      rotate: 90deg;
+    }
+
+    .moveIcon {
+      scale: 0.5;
+      fill: $main-txt-color;
+      opacity: 0.3;
+      transition: opacity 0.15s ease-in-out;
+
+      &:hover {
+        opacity: 1;
+        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
       }
+    }
+  }
 
-      .moveIconContainer {
-        position: absolute;
-        top: 0px;
-        right: 25px;
-        opacity: 0;
-        transition: opacity 0.2s ease-in-out;
-        cursor: pointer;
-    
-        .moveUpIcon {
-          rotate: 180deg;
-        }
-
-        .nestedMoveUpIcon {
-          rotate: 270deg;
-        }
-
-        .nestedMoveDownIcon {
-          rotate: 90deg;
-        }
-
-        .moveIcon {
-          scale: .5;
-          fill: $main-txt-color;
-          opacity: 0.3;
-          transition: opacity .15s ease-in-out;
-
-          &:hover {
-            opacity: 1;
-            filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
-          }
-        }
-      }
-
-      &:hover .moveIconContainer {
-        opacity: 0.75; 
-        cursor: pointer;
-      }
+  &:hover .moveIconContainer {
+    opacity: 0.75;
+    cursor: pointer;
+  }
 }
 
 //=== HABIT SPECIFIC STYLES ===
 
 .habitStackTitle {
-    @include base-font($weight: 600, $size: 16px);
-    color: $main-txt-color;
-    width: 227px;
-    height: fit-content;
-    background-color: $ui-color-dark;
-    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.0));
+  @include base-font($weight: 600, $size: 16px);
+  color: $main-txt-color;
+  width: 227px;
+  height: fit-content;
+  background-color: $ui-color-dark;
+  filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 0));
 }
 
 .habitStreak {
-    @include base-font($weight: 300, $size: 10px);
-    color: $main-txt-color;
+  @include base-font($weight: 300, $size: 10px);
+  color: $main-txt-color;
 
-    width: fit-content;
+  width: fit-content;
 
-    position: absolute;
-    bottom: 2px;
-    right: 5px;
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
 }
 
 .habitCardContent {
-    width: 300px;
-    height: 60px;
-    padding-top: 10px;
+  width: 300px;
+  height: 60px;
+  padding-top: 10px;
 
-
-    h4 {
-        @include base-font($weight: 600, $size: 16px);
-        color: $main-txt-color;
-        height: fit-content;
-    }
-
+  h4 {
+    @include base-font($weight: 600, $size: 16px);
+    color: $main-txt-color;
+    height: fit-content;
+  }
 }
 
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    margin: auto 0;
-    width: 14px;
-    height: 14px;
-    border: 1px solid $main-txt-color;
-    border-radius: 2px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: auto 0;
+  width: 14px;
+  height: 14px;
+  border: 1px solid $main-txt-color;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-    &:checked {
-        background-color: $main-txt-color;
+  &:checked {
+    background-color: $main-txt-color;
 
-        &::after {
-            content: '✓';
-            position: absolute;
-            color: $ui-color-dark;
-            font-size: 10px;
-            font-weight: bold;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    &::after {
+      content: '✓';
+      position: absolute;
+      color: $ui-color-dark;
+      font-size: 10px;
+      font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
+  }
 
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px rgba($main-txt-color, 0.2);
-    }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($main-txt-color, 0.2);
+  }
 }
-
 
 .habitTag {
-    @include inter-font($weight: 300, $size: 12px);
-    color: $main-txt-color;
-    border-radius: 20px;
-    padding: 2px 5px;
-    background-color: $ui-color-dark;
-    opacity: .5;
+  @include inter-font($weight: 300, $size: 12px);
+  color: $main-txt-color;
+  border-radius: 20px;
+  padding: 2px 5px;
+  background-color: $ui-color-dark;
+  opacity: 0.5;
 
-    width: fit-content;
-    
+  width: fit-content;
 }
 
 .habitCompletionWrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    h4 {
-        padding-left: 4px;
-    }
+  h4 {
+    padding-left: 4px;
+  }
 }
 //=== REWARD SPECIFIC STYLES ===
 .costWrapper {
-    width: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-    transition: transform .15s ease-in-out;
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.15s ease-in-out;
 
-    &:hover {
-        transform: scale(1.04);
-        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
-    }
+  &:hover {
+    transform: scale(1.04);
+    filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
+  }
 
-    img {
-        width: 23px;
-        opacity: 100%;
-        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
-    }
+  img {
+    width: 23px;
+    opacity: 100%;
+    filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
+  }
 
-    p {
-        @include base-font($weight: 600, $size: 14px);
-        color: $secondary-txt-color;
-    }
+  p {
+    @include base-font($weight: 600, $size: 14px);
+    color: $secondary-txt-color;
+  }
 }
 
 //=== TAG SPECIFIC STYLES ===
 .expBar {
-    width: 227px;
-    border-radius: 5px;
-    height: 3px;
+  width: 227px;
+  border-radius: 5px;
+  height: 3px;
 
-    position: absolute;
-    bottom: 0px;
-    left:0px;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 
-    z-index: 20;
+  z-index: 20;
 
-    opacity: 50%;
+  opacity: 50%;
 }
 
 progress::-webkit-progress-bar {
-    background-color: #414141;
+  background-color: #414141;
 
-    border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 progress::-webkit-progress-value {
-    background-color: #A335EE;
+  background-color: #a335ee;
 }
 
 .rankGems {
-    position: relative;
-    width: 100px;
-    height: 60px;
-    overflow: visible;
-    z-index: 100;
+  position: relative;
+  width: 100px;
+  height: 60px;
+  overflow: visible;
+  z-index: 100;
 
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .rankMark {
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    top: -35px;
-    left: -40px;
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  top: -35px;
+  left: -40px;
 
-    transition: all .15s ease-in-out;
+  transition: all 0.15s ease-in-out;
 
-    &.legendary-glow{
-        filter: drop-shadow(0px 0px 2px rgba($legendary-color, 0.15));
-    }
-    &.epic-glow{
-        filter: drop-shadow(0px 0px 2px rgba($epic-color, 0.15));
-    }
-    &.rare-glow{
-        filter: drop-shadow(0px 0px 2px rgba($rare-color, 0.15));
-    }
-    &.uncommon-glow{
-        filter: drop-shadow(0px 0px 2px rgba($uncommon-color, 0.15));
-    }
-    &.common-glow{
-        filter: drop-shadow(0px 0px 2px rgba($common-color, 0.15));
-    }            
+  &.legendary-glow {
+    filter: drop-shadow(0px 0px 2px rgba($legendary-color, 0.15));
+  }
+  &.epic-glow {
+    filter: drop-shadow(0px 0px 2px rgba($epic-color, 0.15));
+  }
+  &.rare-glow {
+    filter: drop-shadow(0px 0px 2px rgba($rare-color, 0.15));
+  }
+  &.uncommon-glow {
+    filter: drop-shadow(0px 0px 2px rgba($uncommon-color, 0.15));
+  }
+  &.common-glow {
+    filter: drop-shadow(0px 0px 2px rgba($common-color, 0.15));
+  }
 }

@@ -65,6 +65,6 @@ export function useUser() {
     onUserExpUpdate,
     getUserLevel,
     onUserLevelUpdate,
-    addTime
+    addTime,
   }
 }

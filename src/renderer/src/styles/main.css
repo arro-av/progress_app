@@ -1,14 +1,14 @@
 @charset "UTF-8";
 :root {
-  --bg-color: #1B1B1F;
+  --bg-color: #1b1b1f;
   --ui-bg-color: #222227;
   --ui-txt-color: #313137;
   --txt-color: white;
-  --common-color: #FFFFFF;
-  --uncommon-color: #1EFF00;
-  --rare-color: #0070DD;
-  --epic-color: #A335EE;
-  --legendary-color: #FF8000;
+  --common-color: #ffffff;
+  --uncommon-color: #1eff00;
+  --rare-color: #0070dd;
+  --epic-color: #a335ee;
+  --legendary-color: #ff8000;
 }
 
 * {
@@ -32,22 +32,6 @@ body main {
   position: absolute;
   left: 50px;
 }
-body main .moduleTitle {
-  border-radius: 5px;
-  margin-top: 30px;
-  width: 1000px;
-  height: 40px;
-  padding-top: 2px;
-  background: linear-gradient(to right, rgba(219, 185, 151, 0.35), #181818);
-  z-index: 0;
-}
-body main .moduleTitle h1 {
-  font-family: "Cinzel", sans-serif;
-  font-weight: 600;
-  font-size: 28px;
-  padding-left: 10px;
-  color: #181818;
-}
 body main .moduleWrapper {
   position: absolute;
   margin-top: 10px;
@@ -55,7 +39,7 @@ body main .moduleWrapper {
 
 #constructionIcon {
   scale: 8;
-  fill: #DBB997;
+  fill: #dbb997;
   position: absolute;
   top: 300px;
   left: 450px;
@@ -83,7 +67,7 @@ body main .moduleWrapper {
 .windowControls button {
   background: transparent;
   border: none;
-  color: #DBB997;
+  color: #dbb997;
   padding: 0 10px;
   cursor: pointer;
   opacity: 25%;
@@ -126,17 +110,17 @@ body main .moduleWrapper {
   height: 25px;
   transform: scale(0.85);
   margin: auto 0;
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 20%;
   transition: all 0.1s ease-in-out;
 }
 .navLink .nav-icon:hover {
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 100%;
   filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
 }
 .navLink .nav-icon.active {
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 100%;
   filter: drop-shadow(0px 0px 5px rgba(219, 185, 151, 0.5));
 }
@@ -149,9 +133,9 @@ body main .moduleWrapper {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid #DBB997;
+  border: 1px solid #dbb997;
   border-radius: 4px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   position: relative;
   z-index: 200;
   margin-bottom: 20px;
@@ -163,7 +147,7 @@ body main .moduleWrapper {
   font-weight: 600;
   font-size: 16px;
   color: #181818;
-  background-color: #DBB997;
+  background-color: #dbb997;
   padding: 5px;
 }
 .editWrapper .inputWrapper, .addWrapper .inputWrapper {
@@ -173,18 +157,18 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
 }
 .editWrapper .inputWrapper input, .addWrapper .inputWrapper input {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 16px;
-  color: #DBB997;
-  background-color: #211E1D;
+  color: #dbb997;
+  background-color: #211e1d;
   width: 95%;
   border: none;
   outline: none;
-  border-bottom: 2px solid #DBB997;
+  border-bottom: 2px solid #dbb997;
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
@@ -195,12 +179,12 @@ body main .moduleWrapper {
   font-family: "Inter", sans-serif;
   font-weight: 200;
   font-size: 14px;
-  color: #DBB997;
-  background-color: #211E1D;
+  color: #dbb997;
+  background-color: #211e1d;
   width: 95%;
   border: none;
   outline: none;
-  border-bottom: 2px solid #DBB997;
+  border-bottom: 2px solid #dbb997;
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
@@ -212,13 +196,13 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #DBB997;
-  background-color: #211E1D;
+  color: #dbb997;
+  background-color: #211e1d;
   margin: auto 0;
   height: 26px;
   border: none;
   outline: none;
-  border-bottom: 2px solid #DBB997;
+  border-bottom: 2px solid #dbb997;
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
@@ -232,8 +216,8 @@ body main .moduleWrapper {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 10px;
-  color: #211E1D;
-  background-color: #DBB997;
+  color: #211e1d;
+  background-color: #dbb997;
   border: none;
   outline: none;
   border-radius: 4px;
@@ -253,8 +237,8 @@ body main .moduleWrapper {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 11px;
-  background-color: #DBB997;
-  border: 2px solid #211E1D;
+  background-color: #dbb997;
+  border: 2px solid #211e1d;
   outline: none;
   border-radius: 4px;
   cursor: pointer;
@@ -263,14 +247,14 @@ body main .moduleWrapper {
   margin: 0 auto;
 }
 .editWrapper .saveButton:hover, .addWrapper .saveButton:hover {
-  background-color: #211E1D;
-  color: #DBB997;
+  background-color: #211e1d;
+  color: #dbb997;
 }
 .editWrapper .deleteButton, .addWrapper .deleteButton {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 11px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   color: #61372F;
   border: none;
   outline: none;
@@ -295,12 +279,12 @@ body main .moduleWrapper {
 }
 .editWrapper #repeatIcon.repeatEnabled, .addWrapper #repeatIcon.repeatEnabled {
   opacity: 1;
-  fill: #DBB997;
+  fill: #dbb997;
   filter: drop-shadow(0px 0px 5px rgba(219, 185, 151, 0.2));
 }
 .editWrapper #repeatIcon.repeatDisabled, .addWrapper #repeatIcon.repeatDisabled {
   opacity: 0.35;
-  fill: #DBB997;
+  fill: #dbb997;
 }
 .editWrapper .repeatIconContainer, .addWrapper .repeatIconContainer {
   display: flex;
@@ -324,7 +308,7 @@ body main .moduleWrapper {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #DBB997;
+  color: #dbb997;
   text-align: center;
 }
 .confirmationWrapper .confirmationButtons {
@@ -337,7 +321,7 @@ body main .moduleWrapper {
   font-size: 12px;
   border: none;
   outline: none;
-  color: #DBB997;
+  color: #dbb997;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   margin: 0 auto;
@@ -365,7 +349,7 @@ body main .moduleWrapper {
   width: -moz-fit-content;
   width: fit-content;
   cursor: pointer;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 5px 5px 5px 5px;
   transition: all 0.15s ease-in-out;
   width: 227px;
@@ -383,7 +367,7 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   margin: auto 0;
   height: -moz-fit-content;
   height: fit-content;
@@ -392,7 +376,7 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 12px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.5;
   height: -moz-fit-content;
   height: fit-content;
@@ -411,7 +395,7 @@ body main .moduleWrapper {
 .cardWrapper .editIconContainer .editIcon {
   width: 18px;
   height: 18px;
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 0.3;
   transition: opacity 0.15s ease-in-out;
 }
@@ -426,7 +410,7 @@ body main .moduleWrapper {
 .cardWrapper .moveIconContainer {
   position: absolute;
   top: 0px;
-  right: 25px;
+  right: 2px;
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
   cursor: pointer;
@@ -442,7 +426,7 @@ body main .moduleWrapper {
 }
 .cardWrapper .moveIconContainer .moveIcon {
   scale: 0.5;
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 0.3;
   transition: opacity 0.15s ease-in-out;
 }
@@ -459,7 +443,7 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   width: 227px;
   height: -moz-fit-content;
   height: fit-content;
@@ -471,7 +455,7 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 300;
   font-size: 10px;
-  color: #DBB997;
+  color: #dbb997;
   width: -moz-fit-content;
   width: fit-content;
   position: absolute;
@@ -488,7 +472,7 @@ body main .moduleWrapper {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   height: -moz-fit-content;
   height: fit-content;
 }
@@ -500,14 +484,14 @@ input[type=checkbox] {
   margin: auto 0;
   width: 14px;
   height: 14px;
-  border: 1px solid #DBB997;
+  border: 1px solid #dbb997;
   border-radius: 2px;
   position: relative;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 input[type=checkbox]:checked {
-  background-color: #DBB997;
+  background-color: #dbb997;
 }
 input[type=checkbox]:checked::after {
   content: "✓";
@@ -528,7 +512,7 @@ input[type=checkbox]:focus {
   font-family: "Inter", sans-serif;
   font-weight: 300;
   font-size: 12px;
-  color: #DBB997;
+  color: #dbb997;
   border-radius: 20px;
   padding: 2px 5px;
   background-color: #181818;
@@ -567,7 +551,7 @@ input[type=checkbox]:focus {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #FAF9C4;
+  color: #faf9c4;
 }
 
 .expBar {
@@ -587,7 +571,7 @@ progress::-webkit-progress-bar {
 }
 
 progress::-webkit-progress-value {
-  background-color: #A335EE;
+  background-color: #a335ee;
 }
 
 .rankGems {
@@ -662,7 +646,7 @@ progress::-webkit-progress-value {
 }
 
 .toast-info {
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 
 .toast-success, .toast-plusCrystals {
@@ -674,15 +658,34 @@ progress::-webkit-progress-value {
 }
 
 .toast-plusExp {
-  background-color: #A335EE;
+  background-color: #a335ee;
 }
 
 .toast-lvlup {
-  background-color: #FF8000;
+  background-color: #ff8000;
 }
 
 .toast-error {
   background-color: #61372F;
+}
+
+.module-title {
+  border-radius: 5px;
+  margin-top: 30px;
+  width: 1000px;
+  height: 40px;
+  padding-top: 2px;
+  display: flex;
+  justify-content: flex-start;
+  background: linear-gradient(to right, rgba(219, 185, 151, 0.5), transparent 90%);
+  z-index: 0;
+}
+.module-title .module-title__text {
+  font-family: "Cinzel", sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  padding-left: 10px;
+  color: #181818;
 }
 
 .balanceWrapper {
@@ -709,7 +712,7 @@ progress::-webkit-progress-value {
   border-radius: 0px 10px 10px 0px;
   height: 20px;
   padding: 0px 8px 0px 12px;
-  color: #DBB997;
+  color: #dbb997;
 }
 
 .expBarWrapper {
@@ -723,7 +726,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 12px;
-  color: #DBB997;
+  color: #dbb997;
   text-align: right;
   width: 100%;
   padding-right: 8px;
@@ -759,7 +762,7 @@ progress::-webkit-progress-value {
   align-items: center;
 }
 #ideasWrapper #ideaCard .bulbWrapper .bulb {
-  fill: #DBB997;
+  fill: #dbb997;
   transform: scale(0.9);
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
@@ -782,7 +785,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 18px;
-  color: #DBB997;
+  color: #dbb997;
   padding-top: 0px;
   height: 26px;
 }
@@ -790,7 +793,7 @@ progress::-webkit-progress-value {
   font-family: "Inter", sans-serif;
   font-weight: 300;
   font-size: 12px;
-  color: #DBB997;
+  color: #dbb997;
   padding-top: 0px;
   padding-right: 3px;
   line-height: 15px;
@@ -800,7 +803,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 100px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -809,7 +812,7 @@ progress::-webkit-progress-value {
 .addIdeaWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addIdeaWrapper .addIcon {
   align-self: center;
@@ -828,7 +831,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 60px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -837,7 +840,7 @@ progress::-webkit-progress-value {
 .addTagWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addTagWrapper .addIcon {
   align-self: center;
@@ -868,7 +871,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 24px;
-  color: #DBB997;
+  color: #dbb997;
   margin: auto 0;
   height: -moz-fit-content;
   height: fit-content;
@@ -878,7 +881,7 @@ progress::-webkit-progress-value {
 #habitsWrapper .habitStackCard .editStackIcon {
   width: 20px;
   height: 20px;
-  fill: #DBB997;
+  fill: #dbb997;
   opacity: 0.3;
   transition: opacity 0.15s ease-in-out;
   cursor: pointer;
@@ -891,7 +894,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 60px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -900,7 +903,7 @@ progress::-webkit-progress-value {
 #habitsWrapper .addHabitWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 #habitsWrapper .addHabitWrapper .addIcon {
   align-self: center;
@@ -945,7 +948,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 60px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -954,7 +957,7 @@ progress::-webkit-progress-value {
 .addHabitWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addHabitWrapper .addIcon {
   align-self: center;
@@ -966,7 +969,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 30px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -975,7 +978,7 @@ progress::-webkit-progress-value {
 .addHabitStackWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addHabitStackWrapper .addIcon {
   align-self: center;
@@ -986,7 +989,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   padding-top: 2px;
 }
 
@@ -995,13 +998,13 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #DBB997;
-  background-color: #211E1D;
+  color: #dbb997;
+  background-color: #211e1d;
   margin: auto 0;
   height: 26px;
   border: none;
   outline: none;
-  border-bottom: 2px solid #DBB997;
+  border-bottom: 2px solid #dbb997;
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
@@ -1020,7 +1023,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 60px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -1029,7 +1032,7 @@ progress::-webkit-progress-value {
 .addRewardWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addRewardWrapper .addIcon {
   align-self: center;
@@ -1039,7 +1042,7 @@ progress::-webkit-progress-value {
 
 .projectTitleWrapper {
   display: flex;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 5px;
   margin-top: 10px;
   width: 940px;
@@ -1055,14 +1058,14 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 32px;
-  color: #DBB997;
+  color: #dbb997;
   width: 500px;
 }
 .projectTitleWrapper .projectCardContent .projectDescription {
   font-family: "Inter", sans-serif;
   font-weight: 300;
   font-size: 14px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.5;
   width: 500px;
 }
@@ -1086,7 +1089,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 30px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -1095,7 +1098,7 @@ progress::-webkit-progress-value {
 .addTodoItemWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addTodoItemWrapper .addIcon {
   align-self: center;
@@ -1114,7 +1117,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 24px;
-  color: #DBB997;
+  color: #dbb997;
   margin: auto 0;
   height: -moz-fit-content;
   height: fit-content;
@@ -1122,16 +1125,16 @@ progress::-webkit-progress-value {
   padding-left: 2px;
 }
 .todoListCardContent .todoListTag {
-  font-family: "Cinzel", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 200;
-  font-size: 14px;
-  color: #DBB997;
+  font-size: 12px;
+  color: #dbb997;
   opacity: 0.6;
   height: -moz-fit-content;
   height: fit-content;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 20px;
   width: -moz-fit-content;
   width: fit-content;
@@ -1141,7 +1144,7 @@ progress::-webkit-progress-value {
   display: flex;
   justify-content: space-between;
   height: 50px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 5px;
 }
 
@@ -1158,7 +1161,7 @@ progress::-webkit-progress-value {
   font-family: "Inter", sans-serif;
   font-weight: 200;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   padding-bottom: 2px;
 }
 
@@ -1196,7 +1199,7 @@ progress::-webkit-progress-value {
 
 .todoRewardWrapper {
   height: 95px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 5px;
   padding: 3px;
   filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
@@ -1205,7 +1208,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 17px;
-  color: #DBB997;
+  color: #dbb997;
   margin: auto 0;
   height: -moz-fit-content;
   height: fit-content;
@@ -1215,7 +1218,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 13px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: -moz-fit-content;
   height: fit-content;
@@ -1226,10 +1229,10 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: 100%;
-  background-color: #61372F;
+  background-color: #61372f;
   border-radius: 0 5px 5px 0;
   border: none;
   padding: 5px;
@@ -1240,7 +1243,7 @@ progress::-webkit-progress-value {
   transition: all 0.15s ease-in-out;
 }
 .todoRewardWrapper button:hover {
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
   opacity: 1;
 }
@@ -1248,10 +1251,10 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: 100%;
-  background-color: #4A612F;
+  background-color: #4a612f;
   border-radius: 0 5px 5px 0;
   border: none;
   padding: 5px;
@@ -1262,7 +1265,7 @@ progress::-webkit-progress-value {
   transition: all 0.15s ease-in-out;
 }
 .todoRewardWrapper #claimButtonActive:hover {
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
   opacity: 1;
 }
@@ -1289,7 +1292,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 13px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: -moz-fit-content;
   height: fit-content;
@@ -1302,10 +1305,10 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: 40px;
-  background-color: #61372F;
+  background-color: #61372f;
   border-radius: 5px;
   border: none;
   padding: 5px;
@@ -1316,7 +1319,7 @@ progress::-webkit-progress-value {
   transition: all 0.15s ease-in-out;
 }
 .projectRewardWrapper button:hover {
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
   opacity: 1;
 }
@@ -1324,10 +1327,10 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.6;
   height: 40px;
-  background-color: #4A612F;
+  background-color: #4a612f;
   border-radius: 5px;
   border: none;
   padding: 5px;
@@ -1338,7 +1341,7 @@ progress::-webkit-progress-value {
   transition: all 0.15s ease-in-out;
 }
 .projectRewardWrapper #claimButtonActive:hover {
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
   opacity: 1;
 }
@@ -1347,7 +1350,7 @@ progress::-webkit-progress-value {
   width: 227px;
   height: 30px;
   border-radius: 5px;
-  border: 3px dashed #211E1D;
+  border: 3px dashed #211e1d;
   display: flex;
   justify-content: center;
   opacity: 60%;
@@ -1356,7 +1359,7 @@ progress::-webkit-progress-value {
 .addTodoListWrapper:hover {
   opacity: 100%;
   border: none;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 .addTodoListWrapper .addIcon {
   align-self: center;
@@ -1367,7 +1370,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
   padding-top: 2px;
 }
 
@@ -1378,7 +1381,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 28px;
-  color: #DBB997;
+  color: #dbb997;
 }
 
 .stats-grid {
@@ -1393,7 +1396,7 @@ progress::-webkit-progress-value {
   border-radius: 12px;
   padding: 1.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
-  background-color: #211E1D;
+  background-color: #211e1d;
 }
 
 .stat-card:hover {
@@ -1493,7 +1496,7 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 100px;
-  color: #DBB997;
+  color: #dbb997;
   opacity: 0.75;
   margin-bottom: 1rem;
 }
@@ -1501,7 +1504,7 @@ progress::-webkit-progress-value {
 .progress-bar {
   width: 100%;
   height: 8px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   opacity: 1;
   border-radius: 4px;
   overflow: hidden;
@@ -1511,7 +1514,7 @@ progress::-webkit-progress-value {
 
 .progress {
   height: 100%;
-  background-color: #A335EE;
+  background-color: #a335ee;
   opacity: 0.3;
   transition: width 0.5s linear;
 }
@@ -1532,7 +1535,7 @@ progress::-webkit-progress-value {
   -webkit-appearance: none;
   -moz-appearance: none;
        appearance: none;
-  background: #211E1D;
+  background: #211e1d;
   outline: none;
   border-radius: 4px;
   margin: 1rem 0;
@@ -1544,7 +1547,7 @@ progress::-webkit-progress-value {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #DBB997;
+  background: #dbb997;
   cursor: pointer;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
@@ -1561,7 +1564,7 @@ progress::-webkit-progress-value {
   display: block;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
-  color: #DBB997;
+  color: #dbb997;
 }
 
 .buttons {
@@ -1587,7 +1590,7 @@ progress::-webkit-progress-value {
 }
 
 .pause-btn {
-  background-color: #211E1D;
+  background-color: #211e1d;
   color: white;
 }
 
@@ -1615,7 +1618,7 @@ progress::-webkit-progress-value {
   display: flex;
   justify-content: space-between;
   width: 23%;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 4px;
   padding: 10px;
   cursor: pointer;
@@ -1636,7 +1639,7 @@ progress::-webkit-progress-value {
   font-weight: 200;
   font-size: 20px;
   display: block;
-  color: #DBB997;
+  color: #dbb997;
 }
 
 .todo-item-timer {
@@ -1650,7 +1653,7 @@ progress::-webkit-progress-value {
   width: 200px;
   height: 40px;
   margin-bottom: 10px;
-  background-color: #211E1D;
+  background-color: #211e1d;
   border-radius: 5px;
   filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2));
   padding: 10px;
@@ -1661,13 +1664,13 @@ progress::-webkit-progress-value {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
 }
 .todo-item-timer .time {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 16px;
-  color: #DBB997;
+  color: #dbb997;
 }
 
 .checkbox {
@@ -1676,21 +1679,21 @@ progress::-webkit-progress-value {
   font-size: 12px;
   display: flex;
   align-items: center;
-  color: #DBB997;
+  color: #dbb997;
   cursor: pointer;
   transition: all 0.2s;
   opacity: 0.5;
   padding: 5px;
   border-radius: 5px;
-  border: 1px solid #DBB997;
+  border: 1px solid #dbb997;
 }
 .checkbox:hover {
   opacity: 1;
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
 }
 
 .activeCheckbox {
-  background-color: #DBB997;
+  background-color: #dbb997;
   color: #181818;
 }/*# sourceMappingURL=main.css.map */

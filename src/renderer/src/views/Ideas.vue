@@ -10,11 +10,11 @@ import EditItem from '../components/EditItem.vue'
 import AddItem from '../components/AddItem.vue'
 
 // Composables
-import { useUniversals } from '../composables/db_functions/useUniversals'
-import { useIdeas } from '../composables/db_functions/useIdeas'
-import { useEdit } from '../composables/ui/useEdit'
-import { useAdd } from '../composables/ui/useAdd'
-import { useSort } from '../composables/ui/useSort'
+import { useUniversals } from '../helpers/db_functions/useUniversals'
+import { useIdeas } from '../helpers/db_functions/useIdeas'
+import { useEdit } from '../helpers/composables/useEdit'
+import { useAdd } from '../helpers/composables/useAdd'
+import { useSort } from '../helpers/composables/useSort'
 
 // Vue
 import { onMounted, onUnmounted, ref } from 'vue'
@@ -28,7 +28,7 @@ let cleanupIdeaUpdate = null
 
 const ideas = ref([])
 
-// ========== LIFECYCLE ========== 
+// ========== LIFECYCLE ==========
 onMounted(async () => {
   ideas.value = sortByPosition(await getItems('ideas'))
 
@@ -43,73 +43,75 @@ onUnmounted(async () => {
   }
 })
 
-// ========== EDITOR CONFIGS ========== 
-const { 
-  editingId, 
-  editedItemData, 
-  startEditing, 
-  cancelEditing, 
-  saveEditing, 
-  deleteEditing 
-} = useEdit({
-  editFn: editIdea,
-  deleteFn: deleteItem,
-})
+// ========== EDITOR CONFIGS ==========
+const { editingId, editedItemData, startEditing, cancelEditing, saveEditing, deleteEditing } =
+  useEdit({
+    editFn: editIdea,
+    deleteFn: deleteItem,
+  })
 
-// ========== ADDER CONFIGS ========== 
-const {
-  isAdding,
-  addedItemData,
-  startAdding,
-  cancelAdding,
-  saveAdding
-} = useAdd({
+// ========== ADDER CONFIGS ==========
+const { isAdding, addedItemData, startAdding, cancelAdding, saveAdding } = useAdd({
   addFn: addIdea,
-  itemType: 'ideas'
+  itemType: 'ideas',
 })
 
-// ========== FUNCTIONS ========== 
+// ========== FUNCTIONS ==========
 </script>
 
 <template>
   <ModuleTitle title="Ideas" />
 
-  <div id="ideasWrapper" class="moduleWrapper">
+  <div
+    id="ideasWrapper"
+    class="moduleWrapper"
+  >
     <!-- Idea Card START -->
-    <div id="ideaCard" v-for="idea in ideas" :key="idea.id">
+    <div
+      id="ideaCard"
+      v-for="idea in ideas"
+      :key="idea.id"
+    >
       <!-- Show Card if not editing a specific idea -->
       <template v-if="editingId !== idea.id">
-         <Card
-          :itemData="idea" 
-          :itemType="'ideas'" 
+        <Card
+          :itemData="idea"
+          :itemType="'ideas'"
           @start-edit="startEditing(idea, 'ideas')"
           @move-item="moveItem(idea, 'ideas', $event)"
           @idea-to-project="convertIdeaToProject(idea.id)"
         />
       </template>
-       
-       <!-- Show EditItem if editing a specific idea -->
+
+      <!-- Show EditItem if editing a specific idea -->
       <template v-else>
-        <EditItem 
-          :itemType="'ideas'" 
-          v-model="editedItemData" 
+        <EditItem
+          :itemType="'ideas'"
+          v-model="editedItemData"
           @save-edit="saveEditing"
           @cancel-edit="cancelEditing"
           @delete-edit="deleteEditing"
         />
       </template>
     </div>
-    
-     <!-- Show AddIcon -->
+
+    <!-- Show AddIcon -->
     <template v-if="!isAdding">
-      <div class="addIdeaWrapper" @click="startAdding()">
+      <div
+        class="addIdeaWrapper"
+        @click="startAdding()"
+      >
         <PlusIcon class="addIcon" />
       </div>
     </template>
     <!-- Show AddItem if adding button is clicked -->
     <template v-else>
-      <AddItem :itemType="'ideas'" v-model="addedItemData" @save-add="saveAdding()" @cancel-add="cancelAdding()" />
+      <AddItem
+        :itemType="'ideas'"
+        v-model="addedItemData"
+        @save-add="saveAdding()"
+        @cancel-add="cancelAdding()"
+      />
     </template>
-
   </div>
 </template>

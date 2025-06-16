@@ -1,0 +1,21 @@
+.module-title {
+  border-radius: 5px;
+  margin-top: 30px;
+  width: 1000px;
+  height: 40px;
+  padding-top: 2px;
+
+  display: flex;
+  justify-content: flex-start;
+
+  background: linear-gradient(to right, rgba(219, 185, 151, 0.5), transparent 90%);
+
+  z-index: 0;
+
+  .module-title__text {
+    @include base-font($weight: 600, $size: 28px);
+    padding-left: 10px;
+
+    color: $ui-color-dark;
+  }
+}

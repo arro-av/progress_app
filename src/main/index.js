@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { registerDBHandlers } from './db/api.js'
+import { registerDBHandlers } from './services/handler'
 
 function createWindow() {
   // Create the browser window.
@@ -19,8 +19,8 @@ function createWindow() {
     icon: icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
+      sandbox: false,
+    },
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -46,7 +46,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.arro.progress')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -55,8 +55,20 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  // Custom Bar Process
+  ipcMain.on('window-control', (event, action) => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (!window) return
+
+    switch (action) {
+      case 'minimize':
+        window.minimize()
+        break
+      case 'close':
+        window.close()
+        break
+    }
+  })
 
   // register db handlers
   registerDBHandlers()
@@ -80,18 +92,3 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-// Custom Bar Process
-ipcMain.on('window-control', (event, action) => {
-  const window = BrowserWindow.getFocusedWindow()
-  if (!window) return
-
-  switch (action) {
-    case 'minimize':
-      window.minimize()
-      break
-    case 'close':
-      window.close()
-      break
-  }
-})

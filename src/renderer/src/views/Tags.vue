@@ -8,99 +8,107 @@ import Card from '../components/Card.vue'
 import EditItem from '../components/EditItem.vue'
 import AddItem from '../components/AddItem.vue'
 // Composables
-import { useUniversals } from '../composables/db_functions/useUniversals'
-import { useTags } from '../composables/db_functions/useTags'
-import { useAdd } from '../composables/ui/useAdd'
-import { useEdit } from '../composables/ui/useEdit'
-import { useSort } from '../composables/ui/useSort'
+import { useEdit } from '../helpers/composables/useEdit'
+import { useAdd } from '../helpers/composables/useAdd'
+import { useKeydowns } from '../helpers/composables/useKeydowns'
+import { useEditEnable } from '../helpers/composables/useEditEnable'
+// Stores
+import { useTagsStore } from '../stores/tags'
+import { storeToRefs } from 'pinia'
 // Vue
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, toRaw } from 'vue'
+// Helpers
+import { moveItem } from '../helpers/moveItem'
 
 // ========== DATA ==========
-const { editTag, addTag, onTagsUpdate } = useTags()
-const { getItems, deleteItem, moveItem } = useUniversals()
-const { sortByPosition } = useSort()
+const tagsStore = useTagsStore()
+const { tags } = storeToRefs(tagsStore)
 
-const tags = ref([])
-
-let cleanupTagsUpdate = null
+const { editEnabled, toggleEditEnabled } = useEditEnable()
 
 // ========== LIFECYCLE ==========
-onMounted(async () => {
-  tags.value = sortByPosition(await getItems('tags'))
+onMounted(() => {
+  tagsStore.init()
+})
 
-  cleanupTagsUpdate = onTagsUpdate(async () => {
-    tags.value = sortByPosition(await getItems('tags'))
+onUnmounted(() => {
+  tagsStore.cleanupListeners()
+})
+
+// ========== EDITOR CONFIGS ==========
+const { editingId, editedItemData, startEditing, cancelEditing, saveEditing, deleteEditing } =
+  useEdit({
+    editFn: tagsStore.editTag,
+    deleteFn: tagsStore.deleteTag,
   })
-})
-
-onUnmounted(async () => {
-  if (cleanupTagsUpdate) {
-    await cleanupTagsUpdate()
-  }
-})
-
-// ========== EDITOR CONFIGS ========== 
-const { 
-  editingId, 
-  editedItemData, 
-  startEditing, 
-  cancelEditing, 
-  saveEditing, 
-  deleteEditing 
-} = useEdit({
-  editFn: editTag,
-  deleteFn: deleteItem,
-});
 
 // ========== ADDER CONFIGS ==========
-const {
-  isAdding,
-  addedItemData,
-  startAdding,
-  cancelAdding,
-  saveAdding
-} = useAdd({
-  addFn: addTag,
-  itemType: 'tags'
+const { isAdding, addedItemData, startAdding, cancelAdding, saveAdding } = useAdd({
+  addFn: tagsStore.addTag,
+  itemType: 'tags',
+})
+
+// ========== KEYDOWNS ==========
+useKeydowns({
+  onEdit: () => {
+    if (editingId.value === null && !isAdding.value) {
+      toggleEditEnabled()
+    }
+  },
 })
 </script>
 
 <template>
   <ModuleTitle title="Tags" />
 
-  <div id="tagsWrapper" class="moduleWrapper">
-    <div v-for="tag in tags" :key="tag.id" id="tagCard">
+  <div
+    id="tagsWrapper"
+    class="moduleWrapper"
+  >
+    <div
+      v-for="tag in tags"
+      :key="tag.id"
+      id="tagCard"
+    >
       <!-- Show Card if not editing this specific tag -->
       <template v-if="editingId !== tag.id">
         <Card
-          :itemData="tag" 
-          :itemType="'tags'" 
-          @start-edit="startEditing(tag, 'tags')"
-          @move-item="moveItem(tag, 'tags', $event)"
+          :itemData="tag"
+          :itemType="'tags'"
+          @click="editEnabled ? startEditing(tag, 'tags') : null"
+          @move-item="moveItem(toRaw(tag), 'tags', $event)"
         />
       </template>
 
       <!-- Show EditItem if editing this specific tag -->
       <template v-else>
-        <EditItem 
-          :itemType="'tags'" 
-          v-model="editedItemData" 
-          @save-edit="saveEditing"
-          @cancel-edit="cancelEditing"
-          @delete-edit="deleteEditing"
+        <EditItem
+          :itemType="'tags'"
+          v-model="editedItemData"
+          @save-edit="saveEditing()"
+          @cancel-edit="cancelEditing()"
+          @delete-edit="deleteEditing()"
         />
       </template>
     </div>
     <!-- Show AddIcon -->
     <template v-if="!isAdding">
-      <div class="addTagWrapper" @click="startAdding()">
+      <div
+        v-if="editEnabled"
+        class="addTagWrapper"
+        @click="startAdding()"
+      >
         <PlusIcon class="addIcon" />
       </div>
     </template>
     <!-- Show AddItem if adding button is clicked -->
     <template v-else>
-      <AddItem :itemType="'tags'" v-model="addedItemData" @save-add="saveAdding()" @cancel-add="cancelAdding()" />
+      <AddItem
+        :itemType="'tags'"
+        v-model="addedItemData"
+        @save-add="saveAdding()"
+        @cancel-add="cancelAdding()"
+      />
     </template>
   </div>
 </template>
