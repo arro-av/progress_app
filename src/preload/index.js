@@ -7,40 +7,44 @@ const api = {
   // Custom window control panel
   windowControl: (action) => ipcRenderer.send('window-control', action),
 
-  // Universal Functions
-  getItems: (itemType) => ipcRenderer.invoke(IPC_CHANNELS.GET_ITEMS, itemType),
-  deleteItem: (id, itemType) => ipcRenderer.invoke(IPC_CHANNELS.DELETE_ITEM, id, itemType),
+  // Universal Function
   moveItem: (item, itemType, direction) =>
     ipcRenderer.invoke(IPC_CHANNELS.MOVE_ITEM, item, itemType, direction),
 
   // User Functions
-  getBalance: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_BALANCE),
-  onBalanceUpdate: (callback) => {
-    const handler = (event, newBalance) => callback(newBalance)
-    ipcRenderer.on(IPC_CHANNELS.BALANCE_UPDATED, handler)
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.BALANCE_UPDATED, handler)
+  getUser: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER),
+  onUserUpdate: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.USER_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_UPDATED, handler)
   },
-  getUserExp: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER_EXP),
-  onUserExpUpdate: (callback) => {
-    const handler = (event, newExpCurrent, newExpNeeded) => callback(newExpCurrent, newExpNeeded)
-    ipcRenderer.on(IPC_CHANNELS.USER_EXP_UPDATED, handler)
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_EXP_UPDATED, handler)
-  },
-  getUserLevel: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER_LEVEL),
-  onUserLevelUpdate: (callback) => {
-    const handler = (event, newLevel) => callback(newLevel)
-    ipcRenderer.on(IPC_CHANNELS.USER_LEVEL_UPDATED, handler)
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_LEVEL_UPDATED, handler)
-  },
+
+  // Timer Functions
   addTime: async (timeSpent, todoListId) =>
     await ipcRenderer.invoke(IPC_CHANNELS.ADD_TIME, timeSpent, todoListId),
+  startTimer: async () => await ipcRenderer.invoke(IPC_CHANNELS.TIMER_START),
+  stopTimer: async () => await ipcRenderer.invoke(IPC_CHANNELS.TIMER_STOP),
+  resetTimer: async () => await ipcRenderer.invoke(IPC_CHANNELS.TIMER_RESET),
+  setTimerDuration: async (minutes) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.TIMER_SET_DURATION, minutes),
+  getTimerState: async () => await ipcRenderer.invoke(IPC_CHANNELS.TIMER_GET_STATE),
+  onTimerUpdate: (callback) => {
+    const handler = (event, data) => callback(data)
+    ipcRenderer.on(IPC_CHANNELS.TIMER_UPDATE, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.TIMER_UPDATE, handler)
+  },
+  onTimerComplete: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.TIMER_COMPLETE, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.TIMER_COMPLETE, handler)
+  },
 
   // Questline Functions
-  getQuestline: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_QUESTLINE),
+  getQuestlines: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_QUESTLINES),
   addQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_QUESTLINE, project),
   editQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUESTLINE, project),
   claimQuestlineReward: async (project) =>
-    await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUEST_REWARD, project),
+    await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUESTLINE_REWARD, project),
   activateQuestline: async (project) =>
     await ipcRenderer.invoke(IPC_CHANNELS.ACTIVATE_QUESTLINE, project),
   onQuestlinesUpdate: (callback) => {

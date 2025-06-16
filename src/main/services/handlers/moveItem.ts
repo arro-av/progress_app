@@ -32,7 +32,7 @@ export function registerMoveItemHandler() {
       if (direction !== 'up' && direction !== 'down')
         return { success: false, message: 'No valid Direction specified' }
 
-      if (type !== 'habits' && type !== 'tasks') {
+      if (type !== 'habits' && type !== 'tasks' && type !== 'quests') {
         const itemToMove = items[itemToMoveIndex]
         const currentPosition = itemToMove.position
 
@@ -115,6 +115,39 @@ export function registerMoveItemHandler() {
 
         taskToSwap.position = currentPosition
         taskToMove.position = newPosition
+      }
+
+      if (type === 'quests') {
+        const quests = db.data.quests
+        const questToMove = quests[itemToMoveIndex]
+        const questToMoveQuestline = questToMove.questline_id
+        const questsInSameQuestline = quests.filter(
+          (quest) => quest.questline_id === questToMoveQuestline,
+        )
+
+        const currentPosition = questToMove.position
+
+        // Already at TOP
+        if (currentPosition === 0 && direction === 'up')
+          return {
+            success: false,
+            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed first.`,
+          }
+        // Already at BOTTOM
+        if (currentPosition === questsInSameQuestline.length - 1 && direction === 'down')
+          return {
+            success: false,
+            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed last.`,
+          }
+
+        const newPosition = direction === 'up' ? currentPosition - 1 : currentPosition + 1
+        const questToSwapIndex = questsInSameQuestline.findIndex(
+          (quest) => quest.position === newPosition,
+        )
+        const questToSwap = questsInSameQuestline[questToSwapIndex]
+
+        questToSwap.position = currentPosition
+        questToMove.position = newPosition
       }
 
       db.write()

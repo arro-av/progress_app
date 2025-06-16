@@ -1,7 +1,6 @@
 <script setup>
 // ========== IMPORTS ==========
 // Icons
-import EditIcon from '../assets/edit.svg'
 import IdeaIcon from '../assets/idea.svg'
 import ArrowIcon from '../assets/arrow.svg'
 // Composables
@@ -31,13 +30,13 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
     class="cardWrapper"
     :style="{
       filter:
-        itemType !== 'projects' && itemType !== 'habit_stacks' && itemType !== 'todo_lists'
+        itemType !== 'questlines' && itemType !== 'habit_stacks' && itemType !== 'quests'
           ? 'drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.2))'
           : '',
     }"
   >
-    <!-- PROJECT -->
-    <template v-if="itemType === 'projects'">
+    <!-- QUESTLINE -->
+    <template v-if="itemType === 'questlines'">
       <div class="projectRankGems">
         <img
           v-if="getProjectRank(itemData) == 'legendary'"
@@ -81,16 +80,16 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
       </div>
     </template>
 
-    <!-- TODO LIST -->
-    <template v-if="itemType === 'todo_lists'">
+    <!-- QUEST -->
+    <template v-if="itemType === 'quests'">
       <div class="todoListCardContent">
         <h2 class="habitStackTitle">{{ itemData.title }}</h2>
         <p class="todoListTag">#{{ itemData.tag_name }}</p>
       </div>
     </template>
 
-    <!-- TODO ITEM -->
-    <template v-if="itemType === 'todo_items'">
+    <!-- TASK -->
+    <template v-if="itemType === 'tasks'">
       <div class="todoCardContent">
         <div class="todoCompletionWrapper">
           <input
@@ -254,17 +253,17 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
     </template>
     <!-- TODO: Kinda weird on Project Conatiner | Will fix with SCSS refactor in future -->
     <div
-      v-if="itemType !== 'projects'"
+      v-if="itemType !== 'questlines'"
       class="moveIconContainer"
     >
       <ArrowIcon
         class="moveIcon moveUpIcon"
-        :class="{ nestedMoveUpIcon: itemType === 'habits' || itemType === 'todo_items' }"
+        :class="{ nestedMoveUpIcon: itemType === 'habits' || itemType === 'tasks' }"
         @click="emit('move-item', 'up')"
       />
       <ArrowIcon
         class="moveIcon moveDownIcon"
-        :class="{ nestedMoveDownIcon: itemType === 'habits' || itemType === 'todo_items' }"
+        :class="{ nestedMoveDownIcon: itemType === 'habits' || itemType === 'tasks' }"
         @click="emit('move-item', 'down')"
       />
     </div>

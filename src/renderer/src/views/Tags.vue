@@ -94,7 +94,7 @@ useKeydowns({
     <!-- Show AddIcon -->
     <template v-if="!isAdding">
       <div
-        v-if="editEnabled"
+        v-if="editEnabled || tags.length === 0"
         class="addTagWrapper"
         @click="startAdding()"
       >

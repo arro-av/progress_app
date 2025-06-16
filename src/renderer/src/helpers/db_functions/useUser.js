@@ -50,10 +50,6 @@ export function useUser() {
     })
   }
 
-  const addTime = async (timeSpent) => {
-    await window.api.addTime(timeSpent)
-  }
-
   return {
     level,
     balance,
@@ -65,6 +61,5 @@ export function useUser() {
     onUserExpUpdate,
     getUserLevel,
     onUserLevelUpdate,
-    addTime,
   }
 }

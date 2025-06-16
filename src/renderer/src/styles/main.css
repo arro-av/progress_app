@@ -129,7 +129,8 @@ body main .moduleWrapper {
   margin-bottom: 10px;
 }
 
-.editWrapper, .addWrapper {
+.editWrapper,
+.addWrapper {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -142,7 +143,10 @@ body main .moduleWrapper {
   height: -moz-fit-content;
   height: fit-content;
 }
-.editWrapper .editTitle, .editWrapper .addTitle, .addWrapper .editTitle, .addWrapper .addTitle {
+.editWrapper .editTitle,
+.editWrapper .addTitle,
+.addWrapper .editTitle,
+.addWrapper .addTitle {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
@@ -150,16 +154,20 @@ body main .moduleWrapper {
   background-color: #dbb997;
   padding: 5px;
 }
-.editWrapper .inputWrapper, .addWrapper .inputWrapper {
+.editWrapper .inputWrapper,
+.addWrapper .inputWrapper {
   padding: 5px;
 }
-.editWrapper .inputWrapper label, .addWrapper .inputWrapper label {
+.editWrapper .inputWrapper label,
+.addWrapper .inputWrapper label {
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: #dbb997;
+  padding-top: 10px;
 }
-.editWrapper .inputWrapper input, .addWrapper .inputWrapper input {
+.editWrapper .inputWrapper input,
+.addWrapper .inputWrapper input {
   font-family: "Cinzel", sans-serif;
   font-weight: 200;
   font-size: 16px;
@@ -172,10 +180,12 @@ body main .moduleWrapper {
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
-.editWrapper .inputWrapper input:focus, .addWrapper .inputWrapper input:focus {
+.editWrapper .inputWrapper input:focus,
+.addWrapper .inputWrapper input:focus {
   opacity: 1;
 }
-.editWrapper .inputWrapper textarea, .addWrapper .inputWrapper textarea {
+.editWrapper .inputWrapper textarea,
+.addWrapper .inputWrapper textarea {
   font-family: "Inter", sans-serif;
   font-weight: 200;
   font-size: 14px;
@@ -188,10 +198,12 @@ body main .moduleWrapper {
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
-.editWrapper .inputWrapper textarea:focus, .addWrapper .inputWrapper textarea:focus {
+.editWrapper .inputWrapper textarea:focus,
+.addWrapper .inputWrapper textarea:focus {
   opacity: 1;
 }
-.editWrapper .inputWrapper select, .addWrapper .inputWrapper select {
+.editWrapper .inputWrapper select,
+.addWrapper .inputWrapper select {
   width: 95%;
   font-family: "Cinzel", sans-serif;
   font-weight: 600;
@@ -206,10 +218,12 @@ body main .moduleWrapper {
   opacity: 0.35;
   transition: opacity 0.2s ease-in-out;
 }
-.editWrapper .inputWrapper select:focus, .addWrapper .inputWrapper select:focus {
+.editWrapper .inputWrapper select:focus,
+.addWrapper .inputWrapper select:focus {
   opacity: 1;
 }
-.editWrapper .cancelButton, .addWrapper .cancelButton {
+.editWrapper .cancelButton,
+.addWrapper .cancelButton {
   position: absolute;
   top: 8.5px;
   right: 51px;
@@ -227,10 +241,12 @@ body main .moduleWrapper {
   transition: all 0.2s ease-in-out;
   margin: 0 auto;
 }
-.editWrapper .cancelButton:hover, .addWrapper .cancelButton:hover {
+.editWrapper .cancelButton:hover,
+.addWrapper .cancelButton:hover {
   text-decoration: underline;
 }
-.editWrapper .saveButton, .addWrapper .saveButton {
+.editWrapper .saveButton,
+.addWrapper .saveButton {
   position: absolute;
   top: 5.5px;
   right: 2px;
@@ -246,16 +262,18 @@ body main .moduleWrapper {
   padding: 2px 10px;
   margin: 0 auto;
 }
-.editWrapper .saveButton:hover, .addWrapper .saveButton:hover {
+.editWrapper .saveButton:hover,
+.addWrapper .saveButton:hover {
   background-color: #211e1d;
   color: #dbb997;
 }
-.editWrapper .deleteButton, .addWrapper .deleteButton {
+.editWrapper .deleteButton,
+.addWrapper .deleteButton {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 11px;
   background-color: #211e1d;
-  color: #61372F;
+  color: #61372f;
   border: none;
   outline: none;
   border-radius: 4px;
@@ -266,10 +284,12 @@ body main .moduleWrapper {
   margin: 0 auto;
   margin-bottom: 5px;
 }
-.editWrapper .deleteButton:hover, .addWrapper .deleteButton:hover {
+.editWrapper .deleteButton:hover,
+.addWrapper .deleteButton:hover {
   text-decoration: underline;
 }
-.editWrapper #repeatIcon, .addWrapper #repeatIcon {
+.editWrapper #repeatIcon,
+.addWrapper #repeatIcon {
   width: 50px;
   height: 50px;
   margin-bottom: 20px;
@@ -277,21 +297,25 @@ body main .moduleWrapper {
   transition: opacity 0.2s ease-in-out;
   cursor: pointer;
 }
-.editWrapper #repeatIcon.repeatEnabled, .addWrapper #repeatIcon.repeatEnabled {
+.editWrapper #repeatIcon.repeatEnabled,
+.addWrapper #repeatIcon.repeatEnabled {
   opacity: 1;
   fill: #dbb997;
   filter: drop-shadow(0px 0px 5px rgba(219, 185, 151, 0.2));
 }
-.editWrapper #repeatIcon.repeatDisabled, .addWrapper #repeatIcon.repeatDisabled {
+.editWrapper #repeatIcon.repeatDisabled,
+.addWrapper #repeatIcon.repeatDisabled {
   opacity: 0.35;
   fill: #dbb997;
 }
-.editWrapper .repeatIconContainer, .addWrapper .repeatIconContainer {
+.editWrapper .repeatIconContainer,
+.addWrapper .repeatIconContainer {
   display: flex;
   justify-content: center;
 }
 .editWrapper input[type=number]::-webkit-outer-spin-button,
-.editWrapper input[type=number]::-webkit-inner-spin-button, .addWrapper input[type=number]::-webkit-outer-spin-button,
+.editWrapper input[type=number]::-webkit-inner-spin-button,
+.addWrapper input[type=number]::-webkit-outer-spin-button,
 .addWrapper input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   /* WebKit/Blink */
@@ -332,12 +356,12 @@ body main .moduleWrapper {
   opacity: 1;
 }
 .confirmationWrapper .confirmationButtons .deleteDeleteButton {
-  background-color: #61372F;
+  background-color: #61372f;
   width: 50%;
   border-radius: 0 0 4px 0;
 }
 .confirmationWrapper .confirmationButtons .deleteCancelButton {
-  background-color: #4A612F;
+  background-color: #4a612f;
   width: 50%;
   border-radius: 0 0 0 4px;
 }
@@ -779,7 +803,7 @@ progress::-webkit-progress-value {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding-top: 5px;
 }
 #ideasWrapper #ideaCard .ideaContent h4 {
   font-family: "Cinzel", sans-serif;
@@ -795,7 +819,7 @@ progress::-webkit-progress-value {
   font-size: 12px;
   color: #dbb997;
   padding-top: 0px;
-  padding-right: 3px;
+  padding-right: 10px;
   line-height: 15px;
 }
 
@@ -1585,7 +1609,12 @@ progress::-webkit-progress-value {
 }
 
 .start-btn {
-  background-color: #4A612F;
+  background-color: #4a612f;
+  color: white;
+}
+
+.add-btn {
+  background-color: #211e1d;
   color: white;
 }
 
@@ -1595,7 +1624,7 @@ progress::-webkit-progress-value {
 }
 
 .reset-btn {
-  background-color: #61372F;
+  background-color: #61372f;
   color: white;
 }
 
@@ -1661,10 +1690,11 @@ progress::-webkit-progress-value {
   transition: all 0.2s;
 }
 .todo-item-timer p {
-  font-family: "Cinzel", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 200;
-  font-size: 16px;
+  font-size: 14px;
   color: #dbb997;
+  margin: auto 0;
 }
 .todo-item-timer .time {
   font-family: "Cinzel", sans-serif;

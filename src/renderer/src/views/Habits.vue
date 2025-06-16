@@ -152,8 +152,8 @@ useKeydowns({
             :itemData="habit"
             :itemType="'habits'"
             @click="editEnabled ? habitStartEditing(habit, 'habits') : null"
-            @toggle-completion="toggleHabitCompletion(habit)"
-            @move-item="moveItem(habit, 'habits', $event)"
+            @toggle-completion="habitsStore.toggleHabitCompletion(habit)"
+            @move-item="moveItem(toRaw(habit), 'habits', $event)"
           />
         </template>
         <template v-else>
@@ -172,7 +172,10 @@ useKeydowns({
       <!--Show AddIcon -->
       <template v-if="!habitIsAdding">
         <div
-          v-if="editEnabled"
+          v-if="
+            editEnabled ||
+            habitsStore.habits.filter((habit) => habit.stack_id === habitStack.id).length === 0
+          "
           class="addHabitWrapper"
           @click="habitStartAdding(habitStack.id)"
         >
@@ -185,7 +188,6 @@ useKeydowns({
           :stackId="habitStack.id"
           :itemType="'habits'"
           :allTags="tags"
-          :allHabitStacks="habitStacks"
           v-model="habitAddedItemData"
           @save-add="habitSaveAdding()"
           @cancel-add="habitCancelAdding()"
@@ -195,7 +197,7 @@ useKeydowns({
 
     <template v-if="!habitStackIsAdding">
       <div
-        v-if="editEnabled"
+        v-if="editEnabled || habitsStore.habitStacks.length === 0"
         class="addHabitStackWrapper"
         @click="habitStackStartAdding()"
       >

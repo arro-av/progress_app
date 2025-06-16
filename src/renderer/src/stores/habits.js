@@ -8,20 +8,22 @@ import { sortByPosition } from '../helpers/sortByPosition'
  * HABITS STORE
  * --------------------------------------------------------------------------------------------------------------
  * @var habits {array} - Array of habits
- * @var habitStacks {array} - Array of habit stacks
  * @function fetchHabits {function} - Fetches habits from the database
- * @function fetchHabitStacks {function} - Fetches habit stacks from the database
- * @function setupListeners {function} - Sets up listeners for habits & habit stacks update events
  * @function addHabit {function} - Adds a new habit to the database | {param} Habit object
  * @function editHabit {function} - Updates an existing habit in the database | {param} Habit object
  * @function deleteHabit {function} - Deletes a habit from the database & normalizes position | {param} Habit ID
  * @function toggleHabitCompletion {function} - Toggles the completion of a habit
  * @function updateAllStreaks {function} - Updates all habit-streaks in the database
+ * --------------------------------------------------------------------------------------------------------------
+ * @var habitStacks {array} - Array of habit stacks
+ * @function fetchHabitStacks {function} - Fetches habit stacks from the database
  * @function addHabitStack {function} - Adds a new habit stack to the database | {param} HabitStack object
  * @function editHabitStack {function} - Updates an existing habit stack in the database | {param} HabitStack object
  * @function deleteHabitStack {function} - Deletes a habit stack from the database & normalizes position | {param} HabitStack ID
- * @function init {function} - Initializes the store by fetching data & setting up listeners
+ * --------------------------------------------------------------------------------------------------------------
+ * @function setupListeners {function} - Sets up listeners for habits update events
  * @function cleanupListeners {function} - Cleans up the listeners when a component unmounts
+ * @function init {function} - Initializes the store by fetching data & setting up listeners
  */
 export const useHabitsStore = defineStore('habits', () => {
   const { addToast } = useToasts()
@@ -84,18 +86,7 @@ export const useHabitsStore = defineStore('habits', () => {
     }
   }
 
-  const addHabit = async (habit) => {
-    return await window.api.addHabit(habit)
-  }
-
-  const editHabit = async (habit) => {
-    return await window.api.editHabit(habit)
-  }
-
-  const deleteHabit = async (id) => {
-    return await window.api.deleteHabit(id)
-  }
-
+  // HABIT STACKS
   const addHabitStack = async (habitStack) => {
     return await window.api.addHabitStack(habitStack)
   }
@@ -106,6 +97,19 @@ export const useHabitsStore = defineStore('habits', () => {
 
   const deleteHabitStack = async (id) => {
     return await window.api.deleteHabitStack(id)
+  }
+
+  // HABITS
+  const addHabit = async (habit) => {
+    return await window.api.addHabit(habit)
+  }
+
+  const editHabit = async (habit) => {
+    return await window.api.editHabit(habit)
+  }
+
+  const deleteHabit = async (id) => {
+    return await window.api.deleteHabit(id)
   }
 
   const toggleHabitCompletion = async (habit) => {

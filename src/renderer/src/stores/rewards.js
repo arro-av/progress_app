@@ -8,13 +8,14 @@ import { sortByPosition } from '../helpers/sortByPosition'
  * --------------------------------------------------------------------------------------------------------------
  * @var rewards {array} - Array of rewards
  * @function fetchRewards {function} - Fetches rewards from the database
- * @function setupListeners {function} - Sets up listeners for rewards update events
  * @function addReward {function} - Adds a new reward to the database | {param} Reward object
  * @function editReward {function} - Updates an existing reward in the database | {param} Reward object
  * @function deleteReward {function} - Deletes a reward from the database & normalizes position | {param} Reward ID
  * @function unlockReward {function} - Unlocks a reward, updates the balance & deletes based on repeatable value | {param} Reward object
- * @function init {function} - Initializes the store by fetching rewards & setting up listeners
+ * --------------------------------------------------------------------------------------------------------------
+ * @function setupListeners {function} - Sets up listeners for rewards update events
  * @function cleanupListeners {function} - Cleans up the listeners when a component unmounts
+ * @function init {function} - Initializes the store by fetching rewards & setting up listeners
  */
 export const useRewardsStore = defineStore('rewards', () => {
   const { addToast } = useToasts()
@@ -33,21 +34,6 @@ export const useRewardsStore = defineStore('rewards', () => {
       console.error('Error fetching rewards:', err)
     } finally {
       loading.value = false
-    }
-  }
-
-  const setupListeners = () => {
-    // if cleanupListener is not null, execute the cleanup function - prevent multiple listeners
-    if (cleanupListener) {
-      cleanupListener()
-    }
-    cleanupListener = window.api.onRewardsUpdate(fetchRewards) // cleanupListener holds the cleanup function
-  }
-
-  const cleanupListeners = () => {
-    if (cleanupListener) {
-      cleanupListener() // execute the cleanup function
-      cleanupListener = null
     }
   }
 
@@ -80,6 +66,21 @@ export const useRewardsStore = defineStore('rewards', () => {
       console.error('Error unlocking reward:', error)
       addToast({ message: 'An error occurred...', type: 'error' })
       throw error
+    }
+  }
+
+  const setupListeners = () => {
+    // if cleanupListener is not null, execute the cleanup function - prevent multiple listeners
+    if (cleanupListener) {
+      cleanupListener()
+    }
+    cleanupListener = window.api.onRewardsUpdate(fetchRewards) // cleanupListener holds the cleanup function
+  }
+
+  const cleanupListeners = () => {
+    if (cleanupListener) {
+      cleanupListener() // execute the cleanup function
+      cleanupListener = null
     }
   }
 

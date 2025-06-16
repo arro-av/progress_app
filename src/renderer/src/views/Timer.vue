@@ -1,36 +1,26 @@
 <script setup>
-import { ref, computed, onUnmounted, onMounted, toRaw } from 'vue'
+// ========== IMPORTS ==========
 import ModuleTitle from '../components/ModuleTitle.vue'
+// Stores
+import { useQuestsStore } from '../stores/quests'
+import { storeToRefs } from 'pinia'
+// Vue
+import { onMounted, onUnmounted, ref, computed, toRaw } from 'vue'
+// Helpers
+import { useToasts } from '../helpers/composables/useToasts'
+const { addToast } = useToasts()
 
-import { useUniversals } from '../helpers/db_functions/useUniversals'
-import { useSort } from '../helpers/composables/useSort'
-import { useProjects } from '../helpers/db_functions/useProjects'
-import { useTodoLists } from '../helpers/db_functions/useTodoLists'
-import { useTodoItems } from '../helpers/db_functions/useTodoItems'
-import { useUser } from '../helpers/db_functions/useUser'
-
-const { getItems } = useUniversals()
-const { sortByPosition } = useSort()
-const { activateProject, onProjectsUpdate } = useProjects()
-const { onTodoListsUpdate } = useTodoLists()
-const { onTodoItemsUpdate, toggleTodoItemCompletion } = useTodoItems()
-const { addTime } = useUser()
-
-let cleanupProjectsUpdate = null
-let cleanupTodoListsUpdate = null
-let cleanupTodoItemsUpdate = null
-
-const projects = ref([])
-const todo_lists = ref([])
-const todo_items = ref([])
-
-const nextTodo = ref(null)
+// ========== DATA ==========
+const questsStore = useQuestsStore()
+const { questlines } = storeToRefs(questsStore)
+const { quests } = storeToRefs(questsStore)
+const { tasks } = storeToRefs(questsStore)
 
 const isRunning = ref(false)
 const timerDuration = ref(25) // in minutes
 const timeLeft = ref(25 * 60) // in seconds
-let timer = null
 
+// ========== COMPUTED ==========
 const formattedTime = computed(() => {
   const minutes = Math.floor(timeLeft.value / 60)
   const seconds = timeLeft.value % 60
@@ -41,70 +31,85 @@ const progress = computed(() => {
   return (timeLeft.value / (timerDuration.value * 60)) * 100
 })
 
-const startTimer = () => {
-  if (timeLeft.value <= 0) {
-    timeLeft.value = timerDuration.value * 60
+// ========== METHODS =========
+const startTimer = async () => {
+  try {
+    await window.api.startTimer()
+    isRunning.value = true
+  } catch (error) {
+    console.error('Failed to start timer:', error)
   }
-  isRunning.value = true
-
-  timer = setInterval(() => {
-    if (timeLeft.value <= 0) {
-      clearInterval(timer)
-      isRunning.value = false
-      new Notification('Timer finished!')
-
-      addTime(toRaw(timerDuration.value))
-      return
-    }
-    timeLeft.value--
-  }, 1000)
 }
 
-const resetTimer = () => {
-  isRunning.value = false
-  clearInterval(timer)
-  timeLeft.value = timerDuration.value * 60
+const resetTimer = async () => {
+  try {
+    await window.api.resetTimer()
+    isRunning.value = false
+    // Update local state to match
+    timeLeft.value = timerDuration.value * 60
+  } catch (error) {
+    console.error('Failed to reset timer:', error)
+  }
 }
 
 const updateTimerDuration = (minutes) => {
-  timerDuration.value = parseInt(minutes)
+  const newDuration = parseInt(minutes)
+  timerDuration.value = newDuration
+  window.api.setTimerDuration(newDuration)
   if (!isRunning.value) {
-    timeLeft.value = timerDuration.value * 60
+    timeLeft.value = newDuration * 60
   }
 }
 
+const manuallyAddTime = async (minutes) => {
+  try {
+    await window.api.addTime(minutes)
+    addToast({ message: `Added ${minutes} minutes focused time.`, type: 'success' })
+  } catch (error) {
+    console.error('Failed to add time:', error)
+    addToast({ message: 'Failed to add time', type: 'error' })
+  }
+}
+
+// ========== LIFECYCLE HOOKS ==========
 onMounted(async () => {
-  projects.value = await getItems('projects')
-  todo_lists.value = sortByPosition(await getItems('todo_lists'))
-  todo_items.value = sortByPosition(await getItems('todo_items'))
+  questsStore.init()
 
-  cleanupProjectsUpdate = onProjectsUpdate(async () => {
-    projects.value = await getItems('projects')
+  // Initialize timer state from main process
+  try {
+    const state = await window.api.getTimerState()
+    if (state) {
+      isRunning.value = state.isRunning
+      timeLeft.value = state.timeLeft || timerDuration.value * 60
+      // Update duration but don't reset the timer if it's running
+      if (!isRunning.value) {
+        timerDuration.value = Math.floor((state.duration || 25 * 60) / 60)
+      }
+    }
+  } catch (error) {
+    console.error('Failed to get timer state:', error)
+  }
+
+  // Set up timer event listeners
+  const cleanupUpdate = window.api.onTimerUpdate((data) => {
+    timeLeft.value = data.timeLeft
   })
 
-  cleanupTodoListsUpdate = onTodoListsUpdate(async () => {
-    todo_lists.value = sortByPosition(await getItems('todo_lists'))
+  const cleanupComplete = window.api.onTimerComplete(() => {
+    isRunning.value = false
+    new Notification('Timer finished!')
+    // The time is automatically added by the main process
   })
 
-  cleanupTodoItemsUpdate = onTodoItemsUpdate(async () => {
-    todo_items.value = sortByPosition(await getItems('todo_items'))
-  })
+  // Cleanup on component unmount
+  return () => {
+    cleanupUpdate()
+    cleanupComplete()
+  }
 })
 
-onUnmounted(async () => {
-  if (cleanupProjectsUpdate) {
-    await cleanupProjectsUpdate()
-  }
-
-  if (cleanupTodoListsUpdate) {
-    await cleanupTodoListsUpdate()
-  }
-
-  if (cleanupTodoItemsUpdate) {
-    await cleanupTodoItemsUpdate()
-  }
-
-  clearInterval(timer)
+onUnmounted(() => {
+  questsStore.cleanupListeners()
 })
 </script>
 
@@ -114,25 +119,25 @@ onUnmounted(async () => {
   <div class="projects-container">
     <div
       v-if="!isRunning"
-      v-for="project in projects"
-      :key="project.id"
+      v-for="questline in questlines"
+      :key="questline.id"
       class="single-project"
     >
-      <h4>{{ project.title }}</h4>
+      <h4>{{ questline.title }}</h4>
       <div
-        :class="project.active ? 'checkbox activeCheckbox' : 'checkbox'"
-        @click="activateProject(toRaw(project))"
+        :class="questline.active ? 'checkbox activeCheckbox' : 'checkbox'"
+        @click="questsStore.activateQuestline(toRaw(questline))"
       >
         ACTIVE
       </div>
     </div>
     <div
       v-else
-      v-for="filteredProject in projects.filter((project) => project.active)"
-      :key="filteredProject.id"
+      v-for="filteredQuestline in questlines.filter((questline) => questline.active)"
+      :key="filteredQuestline.id"
       class="single-project"
     >
-      <h4>{{ filteredProject.title }}</h4>
+      <h4>{{ filteredQuestline.title }}</h4>
     </div>
   </div>
 
@@ -172,6 +177,13 @@ onUnmounted(async () => {
           Start
         </button>
         <button
+          v-if="!isRunning"
+          @click="manuallyAddTime(toRaw(timerDuration))"
+          class="btn add-btn"
+        >
+          +{{ timerDuration }} min
+        </button>
+        <button
           v-else
           @click="resetTimer"
           class="btn reset-btn"
@@ -179,26 +191,23 @@ onUnmounted(async () => {
           Cancel
         </button>
       </div>
-      <div v-for="project in projects.filter((project) => project.active)">
+      <div v-for="questline in questlines.filter((questline) => questline.active)">
         <div
-          v-for="todo_list in todo_lists.filter(
-            (todo_list) => todo_list.project_id === project.id && todo_list.position === 0,
+          v-for="quest in quests.filter(
+            (quest) => quest.questline_id === questline.id && quest.position === 0,
           )"
         >
           <div
-            v-for="todo_item in todo_items
-              .filter(
-                (todo_item) =>
-                  todo_item.todo_list_id === todo_list.id && todo_item.completed === false,
-              )
+            v-for="task in tasks
+              .filter((task) => task.quest_id === quest.id && task.completed === false)
               .sort((a, b) => a.position - b.position)
               .slice(0, 1)"
           >
             <div class="todo-item-timer">
-              <p>{{ todo_item.title }}</p>
+              <p>{{ task.title }}</p>
               <div
                 class="checkbox"
-                @click="toggleTodoItemCompletion(toRaw(todo_item))"
+                @click="questsStore.toggleTaskCompletion(toRaw(task))"
               >
                 DONE
               </div>

@@ -1,17 +1,20 @@
 export const IPC_CHANNELS = {
-  // ========= GLOBAL =========
-  GET_ITEMS: 'get-items',
+  // ========= UNIVERSAL =========
   MOVE_ITEM: 'move-item',
-  DELETE_ITEM: 'delete-item',
 
   // ========= USER =========
-  GET_BALANCE: 'get-balance',
-  BALANCE_UPDATED: 'balance-updated',
-  GET_USER_EXP: 'get-user-exp',
-  USER_EXP_UPDATED: 'user-exp-updated',
-  GET_USER_LEVEL: 'get-user-level',
+  GET_USER: 'get-user',
+  USER_UPDATED: 'user-updated',
+
+  // ========= TIMER =========
   ADD_TIME: 'add-time',
-  USER_LEVEL_UPDATED: 'user-level-updated',
+  TIMER_START: 'timer:start',
+  TIMER_STOP: 'timer:stop',
+  TIMER_RESET: 'timer:reset',
+  TIMER_UPDATE: 'timer:update',
+  TIMER_COMPLETE: 'timer:complete',
+  TIMER_SET_DURATION: 'timer:set-duration',
+  TIMER_GET_STATE: 'timer:get-state',
 
   // ========== QUESTLINES ==========
   GET_QUESTLINES: 'get-questlines',
@@ -61,8 +64,8 @@ export const IPC_CHANNELS = {
   EDIT_HABIT: 'edit-habit',
   DELETE_HABIT: 'delete-habit',
   MOVE_NESTED_HABIT: 'move-nested-habit',
-  HABITS_UPDATED: 'habits-updated',
   TOGGLE_HABIT_COMPLETION: 'toggle-habit-completion',
+  HABITS_UPDATED: 'habits-updated',
   UPDATE_ALL_STREAKS: 'update-all-streaks',
 
   // ========== TAGS ==========

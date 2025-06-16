@@ -1,7 +1,7 @@
 <script setup>
 // ========== IMPORTS ==========
 // Vue
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 // Icons
 import RepeatIcon from '../assets/repeat.svg'
 // Composables
@@ -17,21 +17,15 @@ const props = defineProps({
     type: String,
     required: true,
     validator: (value) =>
-      ['rewards', 'tags', 'ideas', 'habits', 'stacks', 'todo_lists', 'todo_items'].includes(value),
+      ['rewards', 'tags', 'ideas', 'habits', 'stacks', 'questlines', 'quests', 'tasks'].includes(
+        value,
+      ),
   },
   allTags: {
     type: Array,
     default: () => [],
   },
-  allHabitStacks: {
-    type: Array,
-    default: () => [],
-  },
-  allTodoLists: {
-    type: Array,
-    default: () => [],
-  },
-  allProjects: {
+  allQuests: {
     type: Array,
     default: () => [],
   },
@@ -39,11 +33,11 @@ const props = defineProps({
     type: Number,
     default: null,
   },
-  listId: {
+  questId: {
     type: Number,
     default: null,
   },
-  projectId: {
+  questlineId: {
     type: Number,
     default: null,
   },
@@ -59,8 +53,8 @@ const addedItem = computed({
 })
 
 addedItem.value.stack_id = props.stackId
-addedItem.value.todo_list_id = props.listId
-addedItem.value.project_id = props.projectId
+addedItem.value.quest_id = props.questId
+addedItem.value.questline_id = props.questlineId
 
 // ========== EMITS ==========
 const emit = defineEmits(['save-add', 'cancel-add'])
@@ -70,29 +64,35 @@ useKeydowns({
   onSave: () => emit('save-add'),
   onCancel: () => emit('cancel-add'),
 })
+
+const titleInput = ref(null)
+onMounted(() => {
+  if (titleInput.value) titleInput.value.focus()
+})
 </script>
 
 <template>
   <div class="addWrapper">
     <h2 class="addTitle">Add {{ itemType.charAt(0).toUpperCase() + itemType.slice(1, -1) }}</h2>
 
-    <!-- TODO LIST -->
-    <template v-if="itemType === 'todo_lists'">
+    <!-- QUESTS -->
+    <template v-if="itemType === 'quests'">
       <div class="inputWrapper">
-        <label for="listTitle">List Title</label>
+        <label for="listTitle">Title</label>
         <input
+          ref="titleInput"
           type="text"
-          placeholder="List Title"
+          placeholder="Quest Title"
           spellcheck="false"
           v-model="addedItem.title"
         />
-        <label for="listTag">List Tag</label>
+        <label for="listTag">Tag</label>
         <select v-model="addedItem.tag_name">
           <option
             disabled
             value=""
           >
-            Please select one
+            Select a tag
           </option>
           <option
             v-for="tag in allTags"
@@ -102,32 +102,17 @@ useKeydowns({
             #{{ tag.title }}
           </option>
         </select>
-        <label for="listProject">List Project</label>
-        <select v-model="addedItem.project_id">
-          <option
-            disabled
-            value=""
-          >
-            Please select one
-          </option>
-          <option
-            v-for="project in allProjects"
-            :key="project.id"
-            :value="project.id"
-          >
-            #{{ project.title }}
-          </option>
-        </select>
       </div>
     </template>
 
-    <!-- TODO ITEM -->
-    <template v-if="itemType === 'todo_items'">
+    <!-- TASK -->
+    <template v-if="itemType === 'tasks'">
       <div class="inputWrapper">
-        <label for="itemTitle">Item Title</label>
+        <label for="itemTitle">Title</label>
         <input
+          ref="titleInput"
           type="text"
-          placeholder="Item Title"
+          placeholder="Task Title"
           spellcheck="false"
           v-model="addedItem.title"
         />
@@ -139,6 +124,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Idea Title"
           spellcheck="false"
@@ -158,8 +144,9 @@ useKeydowns({
     <!-- HABIT STACK -->
     <template v-if="itemType === 'stacks'">
       <div class="inputWrapper">
-        <label for="stackTitle">Stack Title</label>
+        <label for="stackTitle">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Stack Title"
           spellcheck="false"
@@ -171,8 +158,9 @@ useKeydowns({
     <!-- HABIT -->
     <template v-if="itemType === 'habits'">
       <div class="inputWrapper">
-        <label for="habitTitle">Habit Title</label>
+        <label for="habitTitle">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Habit Title"
           spellcheck="false"
@@ -204,6 +192,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Tag Title"
           spellcheck="false"
@@ -217,6 +206,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Reward Title"
           spellcheck="false"

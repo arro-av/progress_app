@@ -1,15 +1,19 @@
 <script setup>
-import { onMounted } from 'vue'
-import { useUser } from '../helpers/db_functions/useUser'
+import { onMounted, onUnmounted } from 'vue'
 
-const { balance, getBalance, onBalanceUpdate } = useUser()
+// Stores
+import { useUserStore } from '../stores/user'
+import { storeToRefs } from 'pinia'
 
-onMounted(async () => {
-  getBalance()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
-  onBalanceUpdate(() => {
-    getBalance()
-  })
+onMounted(() => {
+  userStore.init()
+})
+
+onUnmounted(() => {
+  userStore.cleanupListeners()
 })
 </script>
 
@@ -20,7 +24,7 @@ onMounted(async () => {
       alt="Crystal Symbol"
     />
     <p class="balance">
-      {{ balance }}
+      {{ user.balance }}
     </p>
   </div>
 </template>

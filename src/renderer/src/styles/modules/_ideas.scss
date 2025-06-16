@@ -1,60 +1,54 @@
 #ideasWrapper {
-    @include module-grid-layout($row-height: 100px);
+  @include module-grid-layout($row-height: 100px);
 
-    #ideaCard {
+  #ideaCard {
+    .bulbWrapper {
+      width: 40px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-
-        .bulbWrapper {
-            width: 40px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            .bulb{
-                fill: $main-txt-color;
-                transform: scale(.9);
-                opacity: .35;
-                transition: opacity .2s ease-in-out;
-                filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
-                &:hover {
-                    opacity: 1;
-                    filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
-                }
-            }
+      .bulb {
+        fill: $main-txt-color;
+        transform: scale(0.9);
+        opacity: 0.35;
+        transition: opacity 0.2s ease-in-out;
+        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
+        &:hover {
+          opacity: 1;
+          filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
         }
-
-        .ideaContent {
-            padding-left: 5px;
-            width: 200px;
-            height: 100px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-
-
-
-            h4 {
-                @include base-font($weight: 200, $size: 18px);
-                color: $main-txt-color;
-                padding-top: 0px;
-                height: 26px
-            }
-
-            p {
-                @include inter-font($weight: 300, $size: 12px);
-                color: $main-txt-color;
-                padding-top: 0px;
-                padding-right: 3px;
-                line-height: 15px;
-            }
-        }
+      }
     }
-      
+
+    .ideaContent {
+      padding-left: 5px;
+      width: 200px;
+      height: 100px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding-top: 5px;
+
+      h4 {
+        @include base-font($weight: 200, $size: 18px);
+        color: $main-txt-color;
+        padding-top: 0px;
+        height: 26px;
+      }
+
+      p {
+        @include inter-font($weight: 300, $size: 12px);
+        color: $main-txt-color;
+        padding-top: 0px;
+        padding-right: 10px;
+        line-height: 15px;
+      }
+    }
+  }
 }
 
 .addIdeaWrapper {
-@include add-wrapper(100px);
+  @include add-wrapper(100px);
 }

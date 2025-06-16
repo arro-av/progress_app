@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Timer from './views/Timer.vue'
-import Projects from './views/Projects.vue'
+import Quests from './views/Quests.vue'
 import Ideas from './views/Ideas.vue'
 import Habits from './views/Habits.vue'
 import Tags from './views/Tags.vue'
@@ -12,7 +12,7 @@ import Settings from './views/Settings.vue'
 
 const routes = [
   { path: '/', name: 'Timer', component: Timer },
-  { path: '/Projects', name: 'Projects', component: Projects },
+  { path: '/Quests', name: 'Quests', component: Quests },
   { path: '/Ideas', name: 'Ideas', component: Ideas },
   { path: '/Habits', name: 'Habits', component: Habits },
   { path: '/Tags', name: 'Tags', component: Tags },

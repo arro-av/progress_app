@@ -1,7 +1,7 @@
 <script setup>
 // ========== IMPORTS ==========
 // Vue
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 // Icons
 import RepeatIcon from '../assets/repeat.svg'
 // Composables
@@ -56,17 +56,23 @@ useKeydowns({
   onDelete: () =>
     confirmDelete.value === false ? (confirmDelete.value = true) : emit('delete-edit'), //delete only on double Keydown -> 2x'DELETE'
 })
+
+const titleInput = ref(null)
+onMounted(() => {
+  if (titleInput.value) titleInput.value.focus()
+})
 </script>
 
 <template>
   <div class="editWrapper">
     <h2 class="editTitle">Edit {{ itemType.charAt(0).toUpperCase() + itemType.slice(1, -1) }}</h2>
 
-    <!-- PROJECT -->
-    <template v-if="itemType === 'projects'">
+    <!-- Questlines -->
+    <template v-if="itemType === 'questlines'">
       <div class="inputWrapper">
         <label for="projectTitle">Project Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Project Title"
           spellcheck="false"
@@ -81,13 +87,14 @@ useKeydowns({
       </div>
     </template>
 
-    <!-- QUEST LINE -->
-    <template v-if="itemType === 'questlines'">
+    <!-- QUEST -->
+    <template v-if="itemType === 'quests'">
       <div class="inputWrapper">
-        <label for="listTitle">List Title</label>
+        <label for="questTitle">Quest Title</label>
         <input
+          ref="titleInput"
           type="text"
-          placeholder="List Title"
+          placeholder="Quest Title"
           spellcheck="false"
           v-model="editableItem.title"
         />
@@ -97,7 +104,7 @@ useKeydowns({
             disabled
             value=""
           >
-            Please select one
+            Select a tag
           </option>
           <option
             v-for="tag in allTags"
@@ -113,8 +120,9 @@ useKeydowns({
     <!-- TASK -->
     <template v-if="itemType === 'tasks'">
       <div class="inputWrapper">
-        <label for="itemTitle">Item Title</label>
+        <label for="itemTitle">Task Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Item Title"
           spellcheck="false"
@@ -128,6 +136,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Idea Title"
           spellcheck="false"
@@ -149,6 +158,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="stackTitle">Stack Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Stack Title"
           spellcheck="false"
@@ -162,6 +172,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="habitTitle">Habit Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Habit Title"
           spellcheck="false"
@@ -175,7 +186,7 @@ useKeydowns({
             disabled
             value=""
           >
-            select a tag
+            Select a tag
           </option>
           <option
             v-for="tag in allTags"
@@ -211,6 +222,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Tag Title"
           spellcheck="false"
@@ -224,6 +236,7 @@ useKeydowns({
       <div class="inputWrapper">
         <label for="title">Title</label>
         <input
+          ref="titleInput"
           type="text"
           placeholder="Add Reward Title"
           spellcheck="false"

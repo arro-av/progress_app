@@ -180,13 +180,7 @@ export function registerHabitHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.HABITS_UPDATED)
-    event.sender.send(IPC_CHANNELS.BALANCE_UPDATED, db.data.user.balance)
-    event.sender.send(
-      IPC_CHANNELS.USER_EXP_UPDATED,
-      db.data.user.exp_current,
-      db.data.user.exp_needed,
-    )
-    event.sender.send(IPC_CHANNELS.USER_LEVEL_UPDATED, db.data.user.level)
+    event.sender.send(IPC_CHANNELS.USER_UPDATED)
     return { success: true, exp, crystals, levelUp, tagLevelUp, tagTitle }
   })
 

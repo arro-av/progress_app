@@ -16,7 +16,7 @@ import { useEditEnable } from '../helpers/composables/useEditEnable'
 import { useRewardsStore } from '../stores/rewards'
 import { storeToRefs } from 'pinia'
 // Vue
-import { onMounted, onUnmounted, toRaw, ref } from 'vue'
+import { onMounted, onUnmounted, toRaw } from 'vue'
 // Helpers & Composables
 import { moveItem } from '../helpers/moveItem'
 
@@ -95,7 +95,7 @@ useKeydowns({
     <!-- Show AddIcon -->
     <template v-if="!isAdding">
       <div
-        v-if="editEnabled || rewardsStore.rewards.length === 0"
+        v-if="editEnabled || rewards.length === 0"
         class="addRewardWrapper"
         @click="startAdding()"
       >

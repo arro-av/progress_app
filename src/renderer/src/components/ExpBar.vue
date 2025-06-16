@@ -1,38 +1,29 @@
 <script setup>
-import { onMounted } from 'vue'
-import { useUser } from '../helpers/db_functions/useUser'
+import { onMounted, onUnmounted } from 'vue'
 
-const {
-  exp_current,
-  exp_needed,
-  level,
-  onUserExpUpdate,
-  getUserExp,
-  onUserLevelUpdate,
-  getUserLevel,
-} = useUser()
+import { useUserStore } from '../stores/user'
+import { storeToRefs } from 'pinia'
 
-onMounted(async () => {
-  getUserExp()
-  getUserLevel()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
-  onUserExpUpdate(() => {
-    getUserExp()
-  })
-  onUserLevelUpdate(() => {
-    getUserLevel()
-  })
+onMounted(() => {
+  userStore.init()
+})
+
+onUnmounted(() => {
+  userStore.cleanupListeners()
 })
 </script>
 
 <template>
   <div class="expBarWrapper">
-    <p id="userLevel">Level {{ level }}</p>
-    <p id="userExp">{{ exp_current }} / {{ exp_needed }}</p>
+    <p id="userLevel">Level {{ user.level }}</p>
+    <p id="userExp">{{ user.exp_current }} / {{ user.exp_needed }}</p>
     <progress
       class="expBar"
-      :value="exp_current"
-      :max="exp_needed"
+      :value="user.exp_current"
+      :max="user.exp_needed"
     >
       EXP
     </progress>

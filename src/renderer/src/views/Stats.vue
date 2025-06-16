@@ -1,35 +1,20 @@
 <script setup>
 import ModuleTitle from '../components/ModuleTitle.vue'
-import { useUniversals } from '../helpers/db_functions/useUniversals'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
-const { getItems } = useUniversals()
+// Stores
+import { useUserStore } from '../stores/user'
+import { storeToRefs } from 'pinia'
 
-const user = ref({
-  balance: 0,
-  level: 1,
-  exp_current: 0,
-  exp_needed: 100,
-  focused_time: 0,
-  pomodoros: 0,
-  projects_done: 0,
-  todos_done: 0,
-  ideas_total: 0,
-  habits_implemented: 0,
-  rewards_unlocked: 0,
-  exp_gained: 0,
-  crystals_gained: 0,
-  created_at: '',
-})
-
-const formatTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  return `${hours}h ${minutes}m`
-}
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 onMounted(async () => {
-  user.value = await getItems('user')
+  userStore.init()
+})
+
+onUnmounted(() => {
+  userStore.cleanupListeners()
 })
 </script>
 
@@ -65,8 +50,8 @@ onMounted(async () => {
       <div class="stat-card">
         <div class="stat-row">
           <div>
-            <div class="stat-value">{{ user.projects_done }}</div>
-            <div class="stat-label">Projects Done</div>
+            <div class="stat-value">{{ user.questlines_done }}</div>
+            <div class="stat-label">Questlines Completed</div>
           </div>
           <div>
             <div class="stat-value">{{ user.todos_done }}</div>

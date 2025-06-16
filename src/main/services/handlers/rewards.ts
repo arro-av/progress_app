@@ -94,7 +94,7 @@ export function registerRewardHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
-    event.sender.send(IPC_CHANNELS.BALANCE_UPDATED, balance)
+    event.sender.send(IPC_CHANNELS.USER_UPDATED)
 
     return {
       success: true,

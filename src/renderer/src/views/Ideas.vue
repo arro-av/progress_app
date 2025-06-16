@@ -2,61 +2,60 @@
 // ========== IMPORTS ==========
 // Icons
 import PlusIcon from '../assets/plus.svg'
-
 // Components
 import ModuleTitle from '../components/ModuleTitle.vue'
 import Card from '../components/Card.vue'
 import EditItem from '../components/EditItem.vue'
 import AddItem from '../components/AddItem.vue'
-
 // Composables
-import { useUniversals } from '../helpers/db_functions/useUniversals'
-import { useIdeas } from '../helpers/db_functions/useIdeas'
 import { useEdit } from '../helpers/composables/useEdit'
 import { useAdd } from '../helpers/composables/useAdd'
-import { useSort } from '../helpers/composables/useSort'
-
+import { useKeydowns } from '../helpers/composables/useKeydowns'
+import { useEditEnable } from '../helpers/composables/useEditEnable'
+// Stores
+import { useIdeasStore } from '../stores/ideas'
+import { storeToRefs } from 'pinia'
 // Vue
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, toRaw, ref } from 'vue'
+// Helpers & Composables
+import { moveItem } from '../helpers/moveItem'
 
 // ========== DATA ==========
-const { items, getItems, deleteItem, moveItem } = useUniversals()
-const { editIdea, addIdea, convertIdeaToProject, onIdeasUpdate } = useIdeas()
-const { sortByPosition } = useSort()
+const ideasStore = useIdeasStore()
+const { ideas } = storeToRefs(ideasStore)
 
-let cleanupIdeaUpdate = null
-
-const ideas = ref([])
+const { editEnabled, toggleEditEnabled } = useEditEnable()
 
 // ========== LIFECYCLE ==========
-onMounted(async () => {
-  ideas.value = sortByPosition(await getItems('ideas'))
-
-  cleanupIdeaUpdate = onIdeasUpdate(async () => {
-    ideas.value = sortByPosition(await getItems('ideas'))
-  })
+onMounted(() => {
+  ideasStore.init()
 })
 
-onUnmounted(async () => {
-  if (cleanupIdeaUpdate) {
-    await cleanupIdeaUpdate()
-  }
+onUnmounted(() => {
+  ideasStore.cleanupListeners()
 })
 
 // ========== EDITOR CONFIGS ==========
 const { editingId, editedItemData, startEditing, cancelEditing, saveEditing, deleteEditing } =
   useEdit({
-    editFn: editIdea,
-    deleteFn: deleteItem,
+    editFn: ideasStore.editIdea,
+    deleteFn: ideasStore.deleteIdea,
   })
 
 // ========== ADDER CONFIGS ==========
 const { isAdding, addedItemData, startAdding, cancelAdding, saveAdding } = useAdd({
-  addFn: addIdea,
+  addFn: ideasStore.addIdea,
   itemType: 'ideas',
 })
 
-// ========== FUNCTIONS ==========
+// ========== KEYDOWNS ==========
+useKeydowns({
+  onEdit: () => {
+    if (editingId.value === null && !isAdding.value) {
+      toggleEditEnabled()
+    }
+  },
+})
 </script>
 
 <template>
@@ -77,9 +76,9 @@ const { isAdding, addedItemData, startAdding, cancelAdding, saveAdding } = useAd
         <Card
           :itemData="idea"
           :itemType="'ideas'"
-          @start-edit="startEditing(idea, 'ideas')"
-          @move-item="moveItem(idea, 'ideas', $event)"
-          @idea-to-project="convertIdeaToProject(idea.id)"
+          @click="editEnabled ? startEditing(idea, 'ideas') : null"
+          @move-item="moveItem(toRaw(idea), 'ideas', $event)"
+          @idea-to-project="ideasStore.convertIdeaToProject(idea.id)"
         />
       </template>
 
@@ -98,6 +97,7 @@ const { isAdding, addedItemData, startAdding, cancelAdding, saveAdding } = useAd
     <!-- Show AddIcon -->
     <template v-if="!isAdding">
       <div
+        v-if="editEnabled || ideas.length === 0"
         class="addIdeaWrapper"
         @click="startAdding()"
       >
