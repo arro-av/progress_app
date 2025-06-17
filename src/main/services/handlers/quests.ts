@@ -137,8 +137,9 @@ export function registerQuestHandlers() {
     db.data.tasks = db.data.tasks.filter((t) => t.quest_id !== quest.id)
     db.data.quests = db.data.quests.filter((q) => q.id !== quest.id)
 
+    const questsInQuestline = db.data.quests.filter((q) => q.questline_id === questline.id)
     // Update questline status if needed
-    if (tasksInQuest.length <= 1) {
+    if (questsInQuestline.length === 0) {
       // Current quest is the last one
       questline.completed = true
     }

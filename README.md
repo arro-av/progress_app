@@ -126,6 +126,9 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
+- 17.06.2025: Questline randomly switching to completed | not resolved ⛔
+- 17.06.2025: Questline Completion not working | resolved ✅ (fixed handler logic)
+- 17.06.2025: User Update reactivity fails sometimes - Need to restart app to see EXP & Balance Updates | not resolved ⛔
 - 17.06.2025: Quest Rewards calculate wrong | resolved ✅ (adapted IPC handler)
 - 17.06.2025: Timer finished Notification Spams | not resolved ⛔
 - 17.06.2025: Edit-Mode lags when editing multiple items | not resolved ⛔
