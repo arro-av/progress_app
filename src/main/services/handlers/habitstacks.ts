@@ -65,6 +65,14 @@ export function registerHabitStackHandlers() {
         message: 'Habitstack not found',
       }
 
+    const habitsInStack = db.data.habits.filter((habit) => habit.stack_id === id)
+    if (habitsInStack.length > 0) {
+      return {
+        success: false,
+        message: 'There are habits in this stack!',
+      }
+    }
+
     const habitStacks = db.data.habit_stacks
     const habitStackToDelete = habitStacks[habitStackToDeleteIndex]
 

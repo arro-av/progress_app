@@ -7,6 +7,8 @@ import { useProgressions } from '../../../shared/helpers/useProgressions'
 
 const { getQuestlineProgressionReward, updateLevel } = useProgressions()
 
+import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
+
 export function registerQuestlineHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_QUESTLINES, () => db.data.questlines)
 
@@ -29,10 +31,32 @@ export function registerQuestlineHandlers() {
     const index = db.data.questlines.findIndex((questline) => questline.id === id)
     if (index === -1) return { success: false, message: 'Questline not found' }
 
+    const questsInQuestline = db.data.quests.filter((quest) => quest.questline_id === id)
+    // delete associated Quests
+    questsInQuestline.forEach((quest) => {
+      // delete associated Tasks
+      const tasksInQuest = db.data.tasks.filter((task) => task.quest_id === quest.id)
+      tasksInQuest.forEach((task) => {
+        db.data.tasks.splice(
+          db.data.tasks.findIndex((t) => t.id === task.id),
+          1,
+        )
+      })
+      db.data.quests.splice(
+        db.data.quests.findIndex((q) => q.id === quest.id),
+        1,
+      )
+    })
+
+    const questLineToDelete = db.data.questlines[index]
+    const questlines = db.data.questlines
+
     db.data.questlines.splice(index, 1)
+    normalizePositionAfterDeletion(questlines, questLineToDelete.position)
 
     db.write()
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     return { success: true, message: 'Questline deleted!' }
   })
 

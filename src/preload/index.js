@@ -42,6 +42,7 @@ const api = {
   // Questline Functions
   getQuestlines: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_QUESTLINES),
   addQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_QUESTLINE, project),
+  deleteQuestline: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_QUESTLINE, id),
   editQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUESTLINE, project),
   claimQuestlineReward: async (project) =>
     await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUESTLINE_REWARD, project),

@@ -89,6 +89,15 @@ export function registerQuestHandlers() {
     quests.splice(index, 1)
     normalizePositionAfterDeletion(questsInQuestline, questToDelete.position)
 
+    // delete associated Tasks
+    const tasksInQuest = db.data.tasks.filter((task) => task.quest_id === id)
+    tasksInQuest.forEach((task) => {
+      db.data.tasks.splice(
+        db.data.tasks.findIndex((t) => t.id === task.id),
+        1,
+      )
+    })
+
     db.write()
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     return { success: true, message: 'Quest deleted!' }
