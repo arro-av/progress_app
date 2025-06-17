@@ -1,6 +1,9 @@
 # Progress v0.1 (MVP)
 
-My personal gamified productivity app. Allows for tracking habits, projects, ideas, tags and much more.
+My personal gamified productivity app. Allows for tracking habits, projects, ideas, tags and much more. I am already using it for a while and i love it!
+
+However it might still be confusing for users who don't know whats going on under the hood. Will add improvements with time.
+(btw. Editing mode is hidden -> hit e on keyboard lol)
 
 ---
 
@@ -123,6 +126,7 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
+- 17.06.2025: Timer finished Notification Spams | not resolved ⛔
 - 17.06.2025: Edit-Mode lags when editing multiple items | not resolved ⛔
 - 16.06.2025: Timer throttling when minimized | resolved ✅ (moved to main process)
 - 15.06.2025: Loose Data After Quest Deletion | resolved ✅ (cascading delete)
