@@ -109,10 +109,10 @@ export function registerQuestHandlers() {
     if (!questline) return { success: false, message: 'Questline not found' }
 
     const claimedQuestPosition = quest.position
-    const questsInQuestline = db.data.quests.filter((q) => q.questline_id === questline.id)
+    const tasksInQuest = db.data.tasks.filter((t) => t.quest_id === quest.id)
 
     // Calculate rewards first
-    const reward = getQuestProgressionReward(quest, questsInQuestline)
+    const reward = getQuestProgressionReward(quest, tasksInQuest)
     const { crystals: crystalsGained, userExp: userExpGained, tagExp: tagExpGained } = reward
 
     // Update user and tag
@@ -134,17 +134,17 @@ export function registerQuestHandlers() {
     user.todos_done += 1
 
     // Clean up completed quest and its tasks
-    db.data.tasks = db.data.tasks.filter((task) => task.quest_id !== quest.id)
+    db.data.tasks = db.data.tasks.filter((t) => t.quest_id !== quest.id)
     db.data.quests = db.data.quests.filter((q) => q.id !== quest.id)
 
     // Update questline status if needed
-    if (questsInQuestline.length <= 1) {
+    if (tasksInQuest.length <= 1) {
       // Current quest is the last one
       questline.completed = true
     }
 
     // Normalize positions
-    questsInQuestline.forEach((q) => {
+    db.data.quests.forEach((q) => {
       if (q.position > claimedQuestPosition && q.questline_id === questline.id) {
         q.position--
       }

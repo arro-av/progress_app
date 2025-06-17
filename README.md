@@ -126,6 +126,7 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
+- 17.06.2025: Quest Rewards calculate wrong | resolved ✅ (adapted IPC handler)
 - 17.06.2025: Timer finished Notification Spams | not resolved ⛔
 - 17.06.2025: Edit-Mode lags when editing multiple items | not resolved ⛔
 - 16.06.2025: Timer throttling when minimized | resolved ✅ (moved to main process)

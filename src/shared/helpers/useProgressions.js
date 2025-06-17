@@ -43,11 +43,11 @@ export const useProgressions = () => {
     }
   }
 
-  const getQuestProgressionReward = (quest, questsInQuestlines) => {
+  const getQuestProgressionReward = (quest, tasksInQuest) => {
     return {
-      crystals: Math.round(questsInQuestlines.length + quest.time_spent / 10),
-      tagExp: Math.round(questsInQuestlines.length * 10 + quest.time_spent / 2),
-      userExp: Math.round(questsInQuestlines.length * 15 + quest.time_spent / 1.35),
+      crystals: Math.round(tasksInQuest.length + quest.time_spent / 10),
+      tagExp: Math.round(tasksInQuest.length * 10 + quest.time_spent / 2),
+      userExp: Math.round(tasksInQuest.length * 15 + quest.time_spent / 1.35),
     }
   }
 
