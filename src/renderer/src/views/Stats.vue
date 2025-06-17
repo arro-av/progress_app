@@ -40,8 +40,10 @@ onUnmounted(() => {
       <!-- Focus Time -->
       <div class="stat-card">
         <div class="stat-value">
-          {{ user.focused_time }}
-          <span class="unit">Minutes</span>
+          {{ Math.floor(user.focused_time / 60) }}
+          <span class="unit">H</span>
+          {{ user.focused_time % 60 }}
+          <span class="unit">M</span>
         </div>
         <div class="stat-subtext">Focused time in {{ user.pomodoros }} sessions</div>
       </div>
