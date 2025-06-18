@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-import { Idea } from '../../db/types'
+import { Idea } from '../db/types'
 
-import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
-import { getDates } from '../../helpers/getDates.js'
+import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
+import { getDates } from '../helpers/getDates.js'
 const { getToday } = getDates()
 
 export function registerIdeaHandlers() {

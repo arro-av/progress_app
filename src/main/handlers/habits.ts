@@ -1,15 +1,15 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-import { Habit } from '../../db/types'
+import { Habit } from '../db/types'
 
-import { useProgressions } from '../../../shared/helpers/useProgressions'
+import { useProgressions } from '../../shared/helpers/useProgressions'
 const { getHabitProgressionReward, updateLevel } = useProgressions()
 
-import { getDates } from '../../helpers/getDates.js'
+import { getDates } from '../helpers/getDates.js'
 const { getToday, getYesterday } = getDates()
 
-import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
+import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
 
 export function registerHabitHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_HABITS, () => db.data.habits)

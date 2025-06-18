@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { IPC_CHANNELS } from '../main/services/channels'
+import { IPC_CHANNELS } from '../main/channels'
 
 // exposes custom API to renderer process
 const api = {
@@ -112,9 +112,16 @@ const api = {
   deleteReward: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_REWARD, id),
   unlockReward: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.UNLOCK_REWARD, id),
   onRewardsUpdate: (callback) => {
-    const handler = () => callback()
+    console.log('✅ [Preload] Setting up rewards update listener')
+    const handler = () => {
+      console.log('🔔 [Preload] Rewards update event received')
+      callback()
+    }
     ipcRenderer.on(IPC_CHANNELS.REWARDS_UPDATED, handler)
-    return () => ipcRenderer.removeListener(IPC_CHANNELS.REWARDS_UPDATED, handler)
+    return () => {
+      console.log('🧹 [Preload] Cleaning up rewards update listener')
+      ipcRenderer.removeListener(IPC_CHANNELS.REWARDS_UPDATED, handler)
+    }
   },
 
   // HabitStack Functions

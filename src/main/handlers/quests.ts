@@ -1,12 +1,12 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-import { Quest } from '../../db/types'
+import { Quest } from '../db/types'
 
-import { useProgressions } from '../../../shared/helpers/useProgressions'
+import { useProgressions } from '../../shared/helpers/useProgressions'
 const { getQuestProgressionReward, updateLevel } = useProgressions()
 
-import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
+import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
 
 export function registerQuestHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_QUESTS, () => db.data.quests)

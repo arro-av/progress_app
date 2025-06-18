@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { registerDBHandlers } from './services/handler'
+import { registerDBHandlers } from './api.ts'
 
 function createWindow() {
   // Create the browser window.

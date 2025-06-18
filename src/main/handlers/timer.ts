@@ -1,5 +1,5 @@
 import { ipcMain, BrowserWindow } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
 
 let timerInterval: NodeJS.Timeout | null = null

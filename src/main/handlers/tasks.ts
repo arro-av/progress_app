@@ -1,12 +1,12 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-import { Task } from '../../db/types'
+import { Task } from '../db/types'
 
-import { getDates } from '../../helpers/getDates.js'
+import { getDates } from '../helpers/getDates.js'
 const { getToday } = getDates()
 
-import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
+import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
 
 export function registerTaskHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_TASKS, () => db.data.tasks)

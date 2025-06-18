@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels.js'
-import { Reward, Habit, Tag, Idea, HabitStack, Questline, Quest, Task } from '../../db/types.js'
+import { Reward, Habit, Tag, Idea, HabitStack, Quest, Task } from '../db/types.ts'
 
 export function registerMoveItemHandler() {
   ipcMain.handle(

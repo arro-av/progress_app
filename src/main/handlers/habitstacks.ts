@@ -1,9 +1,9 @@
 import { ipcMain } from 'electron'
-import db from '../../db/lowdb.js'
+import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-import { HabitStack } from '../../db/types'
+import { HabitStack } from '../db/types'
 
-import { normalizePositionAfterDeletion } from '../../helpers/positionNormalizer.js'
+import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
 
 export function registerHabitStackHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_HABIT_STACKS, () => db.data.habit_stacks)
