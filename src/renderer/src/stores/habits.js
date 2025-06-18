@@ -138,7 +138,10 @@ export const useHabitsStore = defineStore('habits', () => {
 
   const updateAllStreaks = async () => {
     try {
-      await window.api.updateAllStreaks()
+      const result = await window.api.updateAllStreaks()
+      if (result.success && result.lostStreaks > 0) {
+        addToast({ message: 'Lost ' + result.lostStreaks + ' streaks', type: 'warning' })
+      }
     } catch (error) {
       console.error('Error running daily streak update on backend:', error)
     }

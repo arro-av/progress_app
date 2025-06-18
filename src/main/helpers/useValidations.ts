@@ -10,6 +10,16 @@ export function useValidations() {
     return true
   }
 
+  const validateTag = (tag_name: string) => {
+    if (!tag_name || tag_name.trim() === '') return false
+    return true
+  }
+
+  const validateStack = (stack_id: number) => {
+    if (!stack_id) return false
+    return true
+  }
+
   const validateCost = (cost: number) => {
     if (!cost || cost <= 0) return false
     return true
@@ -23,6 +33,8 @@ export function useValidations() {
   return {
     validateExistance,
     validateTitle,
+    validateTag,
+    validateStack,
     validateCost,
     validateBalance,
   }

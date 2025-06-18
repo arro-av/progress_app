@@ -59,6 +59,8 @@ export function useRewards() {
     if (!rewardExists) return { rewardExists, updatedRewards: allRewards }
 
     // validation returns reward object if it exists
+    const rewardToDelete = rewardExists
+
     const updatedRewardsPreNormalizing = allRewards.filter(
       (reward) => reward.id !== rewardExists.id,
     )

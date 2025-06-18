@@ -77,7 +77,7 @@ export interface Habit {
   counter: number
   current_streak: number
   best_streak: number
-  tag_name: string
+  tag_name: string // TODO -> Reference Tag ID instead
   last_month_completed: string[]
   position: number
 }

@@ -3,7 +3,7 @@ import { Tag } from '../db/types'
 
 import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer'
 import { useValidations } from '../helpers/useValidations'
-const { validateExistance, validateTitle, validateCost, validateBalance } = useValidations()
+const { validateExistance, validateTitle } = useValidations()
 
 import { getDates } from '../helpers/getDates'
 const { getToday } = getDates()
@@ -57,11 +57,12 @@ export function useTags() {
     if (!tagExists) return { tagExists, updatedTags: allTags }
 
     // validation returns tag object if it exists
-    const updatedTagsPreNormalizing = allTags.filter((tag) => tag.id !== tagExists.id)
+    const tagToDelete = tagExists
+    const updatedTagsPreNormalizing = allTags.filter((tag) => tag.id !== tagToDelete.id)
 
     const updatedTagsNormalized = normalizePositionAfterDeletion(
       updatedTagsPreNormalizing,
-      tagExists.position,
+      tagToDelete.position,
     )
 
     const updatedTags = updatedTagsNormalized

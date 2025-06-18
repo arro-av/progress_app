@@ -50,6 +50,6 @@ export function registerTagHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
-    return { success: true, message: 'Tag deleted!' }
+    return { success: true, message: 'Tag deleted' }
   })
 }

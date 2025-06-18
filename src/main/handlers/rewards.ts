@@ -52,7 +52,7 @@ export function registerRewardHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
-    return { success: true, message: 'Reward deleted!' }
+    return { success: true, message: 'Reward deleted' }
   })
 
   // UNLOCK REWARD ====================================================
@@ -75,6 +75,6 @@ export function registerRewardHandlers() {
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
     event.sender.send(IPC_CHANNELS.USER_UPDATED)
-    return { success: true, message: 'Reward unlocked!', rewardCost: rewardToUnlock.cost }
+    return { success: true, message: 'Reward unlocked', rewardCost: rewardToUnlock.cost }
   })
 }
