@@ -13,9 +13,6 @@ import { sortByPosition } from '../helpers/sortByPosition'
  * @function deleteReward {function} - Deletes a reward from the database & normalizes position | {param} Reward ID
  * @function unlockReward {function} - Unlocks a reward, updates the balance & deletes based on repeatable value | {param} Reward object
  * --------------------------------------------------------------------------------------------------------------
- * @function setupListeners {function} - Sets up listeners for rewards update events
- * @function cleanupListeners {function} - Cleans up the listeners when a component unmounts
- * @function init {function} - Initializes the store by fetching rewards & setting up listeners
  */
 export const useRewardsStore = defineStore('rewards', () => {
   const { addToast } = useToasts()
@@ -69,17 +66,24 @@ export const useRewardsStore = defineStore('rewards', () => {
     }
   }
 
+  /**
+   * --------------------------------------------------------------------------------------------------------------
+   * @function setupListeners {function} - Sets up listeners for rewards update events
+   * @function cleanupListeners {function} - Cleans up the listeners when a component unmounts
+   * @function init {function} - Initializes the store by fetching rewards & setting up listeners
+   * --------------------------------------------------------------------------------------------------------------
+   */
   const setupListeners = () => {
     // if cleanupListener is not null, execute the cleanup function - prevent multiple listeners
     if (cleanupListener) {
       cleanupListener()
     }
-    cleanupListener = window.api.onRewardsUpdate(fetchRewards) // cleanupListener holds the cleanup function
+    cleanupListener = window.api.onRewardsUpdate(fetchRewards) // listens to rewards update events
   }
 
   const cleanupListeners = () => {
     if (cleanupListener) {
-      cleanupListener() // execute the cleanup function
+      cleanupListener() // executes the returned removeListener function -> see preload/index.js
       cleanupListener = null
     }
   }

@@ -2,7 +2,10 @@ import { User, Tag } from '../db/types'
 import { useXPMultipliers } from '../../shared/constants/useXPMultipliers'
 const { EXP_MULTIPLIER_USER, EXP_MULTIPLIER_TAGS } = useXPMultipliers()
 
-export function updateLevels() {
+export function updateLevels(): {
+  updateUserLevel: (user: User, expChange: number) => User
+  updateTagLevel: (tag: Tag, expChange: number) => Tag
+} {
   const updateUserLevel = (user: User, expChange: number) => {
     let newExp = user.exp_current + expChange
     let newLevel = user.level

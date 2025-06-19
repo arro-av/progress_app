@@ -1,4 +1,7 @@
-export const normalizePositionAfterDeletion = (items: any[], deletedItemPosition: number) => {
+export const normalizePositionAfterDeletion = (
+  items: any[],
+  deletedItemPosition: number,
+): any[] => {
   return items.map((item) => {
     if (item.position > deletedItemPosition) {
       return { ...item, position: item.position - 1 }

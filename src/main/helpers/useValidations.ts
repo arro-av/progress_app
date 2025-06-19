@@ -1,4 +1,11 @@
-export function useValidations() {
+export function useValidations(): {
+  validateExistance: (id: number, array: any[]) => any
+  validateTitle: (title: string) => boolean
+  validateTag: (tag_name: string) => boolean
+  validateStack: (stack_id: number) => boolean
+  validateCost: (cost: number) => boolean
+  validateBalance: (balance: number, cost: number) => boolean
+} {
   const validateExistance = (id: number, array: any[]) => {
     const index = array.findIndex((item) => item.id === id)
     if (index === -1) return false
