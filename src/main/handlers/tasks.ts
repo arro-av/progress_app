@@ -1,38 +1,22 @@
 import { ipcMain } from 'electron'
 import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
+
 import { Task } from '../db/types'
-
-import { getDates } from '../helpers/getDates.js'
-const { getToday } = getDates()
-
-import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer.js'
+import { useTasks } from '../services/useTasks'
+const { addTask, editTask, deleteTask, toggleTaskCompletion } = useTasks()
 
 export function registerTaskHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_TASKS, () => db.data.tasks)
 
   ipcMain.handle(IPC_CHANNELS.ADD_TASK, (event, addedTask: Task) => {
     db.read()
-    const nextId = (db.data.tasks.at(-1)?.id || 0) + 1
-    const nextPosition = db.data.tasks.filter((task) => task.quest_id === addedTask.quest_id).length
+    const result = addTask(addedTask, db.data.tasks)
+    if (!result.titleValid) return { success: false, message: 'Title is required' }
 
-    if (!addedTask.title || addedTask.title.trim() === '') {
-      return {
-        success: false,
-        message: 'Title is required',
-      }
-    }
-
-    const newTask = {
-      id: nextId,
-      title: addedTask.title,
-      quest_id: addedTask.quest_id,
-      completed: false,
-      position: nextPosition,
-    }
-    db.data.tasks.push(newTask)
-
+    db.data.tasks = result.updatedTasks
     db.write()
+
     event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
@@ -44,29 +28,13 @@ export function registerTaskHandlers() {
 
   ipcMain.handle(IPC_CHANNELS.EDIT_TASK, (event, editedTask: Task) => {
     db.read()
-    const index = db.data.tasks.findIndex((task) => task.id === editedTask.id)
-    if (index === -1) return { success: false, message: 'Task not found' }
+    const result = editTask(editedTask, db.data.tasks)
+    if (!result.taskExists || !result.titleValid)
+      return { success: false, message: 'Task not found' }
 
-    const tasks = db.data.tasks
-    const taskToUpdate = tasks[index]
-    const newQuest = editedTask.quest_id
-    const oldQuest = taskToUpdate.quest_id
-
-    if (newQuest !== oldQuest) {
-      // update position of tasks in the old quest
-      tasks.forEach((task) => {
-        if (task.quest_id === oldQuest && task.position > taskToUpdate.position) {
-          task.position--
-        }
-      })
-      // put edited task in the end of the new quest
-      taskToUpdate.position = tasks.filter((task) => task.quest_id === newQuest).length
-    }
-
-    taskToUpdate.title = editedTask.title
-    taskToUpdate.quest_id = editedTask.quest_id
-
+    db.data.tasks = result.updatedTasks
     db.write()
+
     event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
@@ -75,18 +43,12 @@ export function registerTaskHandlers() {
 
   ipcMain.handle(IPC_CHANNELS.DELETE_TASK, (event, id: number) => {
     db.read()
-    const index = db.data.tasks.findIndex((task) => task.id === id)
-    if (index === -1) return { success: false, message: 'Task not found' }
+    const result = deleteTask(id, db.data.tasks)
+    if (!result.taskExists) return { success: false, message: 'Task not found' }
 
-    const tasks = db.data.tasks
-    const taskToDelete = tasks[index]
-    const taskToDeleteQuest = taskToDelete.quest_id
-    const tasksInSameQuest = tasks.filter((task) => task.quest_id === taskToDeleteQuest)
-
-    tasks.splice(index, 1)
-    normalizePositionAfterDeletion(tasksInSameQuest, taskToDelete.position)
-
+    db.data.tasks = result.updatedTasks
     db.write()
+
     event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
@@ -95,17 +57,11 @@ export function registerTaskHandlers() {
 
   ipcMain.handle(IPC_CHANNELS.TOGGLE_TASK_COMPLETION, (event, task: Task) => {
     db.read()
-    const dbTask = db.data.tasks.find((t) => t.id === task.id)
-    if (!dbTask) return { success: false, message: 'Task not found' }
+    const result = toggleTaskCompletion(task, db.data.tasks, db.data.user.todos_done)
+    if (!result.taskExists) return { success: false, message: 'Task not found' }
 
-    dbTask.completed = !dbTask.completed
-
-    if (dbTask.completed) {
-      db.data.user.todos_done += 1
-    } else {
-      db.data.user.todos_done -= 1
-    }
-
+    db.data.tasks = result.updatedTasks
+    db.data.user.todos_done = result.updatedTodosDone
     db.write()
 
     event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
