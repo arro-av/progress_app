@@ -8,8 +8,24 @@ const { validateExistance, validateTitle } = useValidations()
 import { getDates } from '../helpers/getDates'
 const { getToday } = getDates()
 
+type AddTagResult = {
+  titleValid: boolean
+  updatedTags: Tag[]
+}
+
+type EditTagResult = {
+  tagExists: boolean
+  titleValid: boolean
+  updatedTags: Tag[]
+}
+
+type DeleteTagResult = {
+  tagExists: boolean
+  updatedTags: Tag[]
+}
+
 export function useTags() {
-  const addTag = (addedTag: Tag, allTags: Tag[]) => {
+  const addTag = (addedTag: Tag, allTags: Tag[]): AddTagResult => {
     const titleValid = validateTitle(addedTag.title)
 
     if (!titleValid) return { titleValid, updatedTags: allTags }
@@ -33,7 +49,7 @@ export function useTags() {
     return { titleValid, updatedTags }
   }
 
-  const editTag = (editedTag: Tag, allTags: Tag[]) => {
+  const editTag = (editedTag: Tag, allTags: Tag[]): EditTagResult => {
     const tagExists = validateExistance(editedTag.id, allTags)
     const titleValid = validateTitle(editedTag.title)
 
@@ -52,7 +68,7 @@ export function useTags() {
     return { tagExists, titleValid, updatedTags }
   }
 
-  const deleteTag = (tagId: number, allTags: Tag[]) => {
+  const deleteTag = (tagId: number, allTags: Tag[]): DeleteTagResult => {
     const tagExists = validateExistance(tagId, allTags)
     if (!tagExists) return { tagExists, updatedTags: allTags }
 

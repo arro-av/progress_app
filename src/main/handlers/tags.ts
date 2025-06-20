@@ -21,7 +21,7 @@ export function registerTagHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
-    return { success: true, message: 'Tag added' }
+    return { success: true, message: 'Tag added!' }
   })
 
   // EDIT TAG ====================================================
@@ -36,7 +36,7 @@ export function registerTagHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
-    return { success: true, message: 'Tag updated' }
+    return { success: true, message: 'Tag updated!' }
   })
 
   // DELETE TAG ====================================================
@@ -50,6 +50,6 @@ export function registerTagHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
-    return { success: true, message: 'Tag deleted' }
+    return { success: true, message: 'Tag deleted!' }
   })
 }

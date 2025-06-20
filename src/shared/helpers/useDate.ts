@@ -1,10 +1,3 @@
-/**
- * @function getToday {function} - Gets today's date
- * @returns {string} - Today's date in the format YYYY-MM-DD
- * ---
- * @function getYesterday {function} - Gets yesterday's date
- * @returns {string} - Yesterday's date in the format YYYY-MM-DD
- */
 export function useDates() {
   const getToday = (): string => {
     const today = new Date()

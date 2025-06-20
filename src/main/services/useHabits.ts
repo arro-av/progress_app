@@ -14,8 +14,46 @@ const { getToday, getYesterday } = getDates()
 import { useProgressions } from '../../shared/utils/useProgressions'
 const { getHabitProgressionReward } = useProgressions()
 
+type AddHabitResult = {
+  titleValid: boolean
+  tagValid: boolean
+  stackValid: boolean
+  updatedHabits: Habit[]
+}
+
+type EditHabitResult = {
+  habitExists: boolean
+  titleValid: boolean
+  tagValid: boolean
+  stackValid: boolean
+  updatedHabits: Habit[]
+}
+
+type DeleteHabitResult = {
+  habitExists: boolean
+  updatedHabits: Habit[]
+}
+
+type ToggleHabitCompletionResult = {
+  habitExists: boolean
+  tagExists: Tag | undefined
+  updatedHabits: Habit[]
+  updatedTags: Tag[]
+  updatedUser: User
+  levelUp: boolean
+  tagLevelUp: boolean
+  tagTitle: string
+  exp: number
+  crystals: number
+}
+
+type UpdateAllStreaksResult = {
+  updatedHabits: Habit[]
+  lostStreaks: number
+}
+
 export function useHabits() {
-  const addHabit = (addedHabit: Habit, allHabits: Habit[]) => {
+  const addHabit = (addedHabit: Habit, allHabits: Habit[]): AddHabitResult => {
     const titleValid = validateTitle(addedHabit.title)
     const tagValid = validateTag(addedHabit.tag_name)
     const stackValid = validateStack(addedHabit.stack_id)
@@ -43,7 +81,7 @@ export function useHabits() {
     return { titleValid, tagValid, stackValid, updatedHabits }
   }
 
-  const editHabit = (editedHabit: Habit, allHabits: Habit[]) => {
+  const editHabit = (editedHabit: Habit, allHabits: Habit[]): EditHabitResult => {
     const habitExists = validateExistance(editedHabit.id, allHabits)
     const titleValid = validateTitle(editedHabit.title)
     const tagValid = validateTag(editedHabit.tag_name)
@@ -79,7 +117,7 @@ export function useHabits() {
     return { habitExists, titleValid, tagValid, stackValid, updatedHabits }
   }
 
-  const deleteHabit = (habitId: number, allHabits: Habit[]) => {
+  const deleteHabit = (habitId: number, allHabits: Habit[]): DeleteHabitResult => {
     const habitExists = validateExistance(habitId, allHabits)
     if (!habitExists) return { habitExists, updatedHabits: allHabits }
 
@@ -105,7 +143,7 @@ export function useHabits() {
     allHabits: Habit[],
     allTags: Tag[],
     user: User,
-  ) => {
+  ): ToggleHabitCompletionResult => {
     const habitExists = validateExistance(toogledHabit.id, allHabits)
     const tagExists = allTags.find((tag) => tag.title === toogledHabit.tag_name)
     if (!habitExists || !tagExists)
@@ -118,6 +156,8 @@ export function useHabits() {
         levelUp: false,
         tagLevelUp: false,
         tagTitle: '',
+        exp: 0,
+        crystals: 0,
       }
 
     const today = getToday()
@@ -141,13 +181,13 @@ export function useHabits() {
       }
       updatedUser = {
         ...updatedUser,
-        balance: updatedUser.balance - (reward?.crystals - 1),
-        exp_gained: updatedUser.exp_gained - (reward?.exp - 1),
-        crystals_gained: updatedUser.crystals_gained - (reward?.crystals - 1),
+        balance: updatedUser.balance - (reward.crystals - 1),
+        exp_gained: updatedUser.exp_gained - (reward.exp - 1),
+        crystals_gained: updatedUser.crystals_gained - (reward.crystals - 1),
       }
 
-      updatedUser = updateUserLevel(updatedUser, -reward?.exp + 1)
-      updatedTag = updateTagLevel(updatedTag, -reward?.exp + 1)
+      updatedUser = updateUserLevel(updatedUser, -reward.exp + 1)
+      updatedTag = updateTagLevel(updatedTag, -reward.exp + 1)
     } else {
       updatedHabit = {
         ...updatedHabit,
@@ -161,16 +201,16 @@ export function useHabits() {
       }
       updatedUser = {
         ...updatedUser,
-        balance: updatedUser.balance + reward?.crystals,
-        exp_gained: updatedUser.exp_gained + reward?.exp,
-        crystals_gained: updatedUser.crystals_gained + reward?.crystals,
+        balance: updatedUser.balance + reward.crystals,
+        exp_gained: updatedUser.exp_gained + reward.exp,
+        crystals_gained: updatedUser.crystals_gained + reward.crystals,
         habits_implemented:
           updatedHabit.counter >= 60
             ? updatedUser.habits_implemented + 1
             : updatedUser.habits_implemented,
       }
-      updatedUser = updateUserLevel(updatedUser, reward?.exp)
-      updatedTag = updateTagLevel(updatedTag, reward?.exp)
+      updatedUser = updateUserLevel(updatedUser, reward.exp)
+      updatedTag = updateTagLevel(updatedTag, reward.exp)
     }
 
     const updatedHabits = allHabits.map((habit) => {
@@ -219,12 +259,12 @@ export function useHabits() {
       levelUp,
       tagLevelUp,
       tagTitle: updatedTag.title,
-      exp: reward?.exp,
-      crystals: reward?.crystals,
+      exp: reward.exp,
+      crystals: reward.crystals,
     }
   }
 
-  const updateAllStreaks = (allHabits: Habit[]) => {
+  const updateAllStreaks = (allHabits: Habit[]): UpdateAllStreaksResult => {
     const today = getToday()
     const yesterday = getYesterday()
 

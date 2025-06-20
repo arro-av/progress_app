@@ -22,7 +22,7 @@ export function registerRewardHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
-    return { success: true, message: 'Reward added' }
+    return { success: true, message: 'Reward added!' }
   })
 
   // EDIT REWARD ====================================================
@@ -38,7 +38,7 @@ export function registerRewardHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
-    return { success: true, message: 'Reward updated' }
+    return { success: true, message: 'Reward updated!' }
   })
 
   // DELETE REWARD ====================================================
@@ -52,7 +52,7 @@ export function registerRewardHandlers() {
     db.write()
 
     event.sender.send(IPC_CHANNELS.REWARDS_UPDATED)
-    return { success: true, message: 'Reward deleted' }
+    return { success: true, message: 'Reward deleted!' }
   })
 
   // UNLOCK REWARD ====================================================

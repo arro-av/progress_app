@@ -8,8 +8,34 @@ const { validateExistance, validateTitle, validateCost, validateBalance } = useV
 import { useUser } from './useUser'
 const { removeBalance } = useUser()
 
+type AddRewardResult = {
+  titleValid: boolean
+  costValid: boolean
+  updatedRewards: Reward[]
+}
+
+type EditRewardResult = {
+  rewardExists: boolean
+  titleValid: boolean
+  costValid: boolean
+  updatedRewards: Reward[]
+}
+
+type DeleteRewardResult = {
+  rewardExists: boolean
+  updatedRewards: Reward[]
+}
+
+type UnlockRewardResult = {
+  rewardExists: boolean
+  enoughBalance: boolean
+  updatedRewards: Reward[]
+  updatedRewards_unlocked: number
+  updatedBalance: number
+}
+
 export function useRewards() {
-  const addReward = (addedReward: Reward, allRewards: Reward[]) => {
+  const addReward = (addedReward: Reward, allRewards: Reward[]): AddRewardResult => {
     const titleValid = validateTitle(addedReward.title)
     const costValid = validateCost(addedReward.cost)
 
@@ -31,7 +57,7 @@ export function useRewards() {
     return { titleValid, costValid, updatedRewards }
   }
 
-  const editReward = (editedReward: Reward, allRewards: Reward[]) => {
+  const editReward = (editedReward: Reward, allRewards: Reward[]): EditRewardResult => {
     const rewardExists = validateExistance(editedReward.id, allRewards)
     const titleValid = validateTitle(editedReward.title)
     const costValid = validateCost(editedReward.cost)
@@ -54,7 +80,7 @@ export function useRewards() {
     return { rewardExists, titleValid, costValid, updatedRewards }
   }
 
-  const deleteReward = (rewardId: number, allRewards: Reward[]) => {
+  const deleteReward = (rewardId: number, allRewards: Reward[]): DeleteRewardResult => {
     const rewardExists = validateExistance(rewardId, allRewards)
     if (!rewardExists) return { rewardExists, updatedRewards: allRewards }
 
@@ -80,7 +106,7 @@ export function useRewards() {
     allRewards: Reward[],
     balance: number,
     rewards_unlocked: number,
-  ) => {
+  ): UnlockRewardResult => {
     const rewardExists = validateExistance(rewardToUnlock.id, allRewards)
     const enoughBalance = validateBalance(balance, rewardToUnlock.cost)
     if (!rewardExists || !enoughBalance)

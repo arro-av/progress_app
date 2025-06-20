@@ -23,7 +23,7 @@ export function registerIdeaHandlers() {
     event.sender.send(IPC_CHANNELS.IDEAS_UPDATED)
     return {
       success: true,
-      message: 'Idea added',
+      message: 'Idea added!',
     }
   })
 

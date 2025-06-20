@@ -8,8 +8,33 @@ const { validateExistance, validateTitle } = useValidations()
 import { getDates } from '../helpers/getDates'
 const { getToday } = getDates()
 
+type AddIdeaResult = {
+  titleValid: boolean
+  descriptionValid: boolean
+  updatedIdeas: Idea[]
+  updatedTotalIdeas: number
+}
+
+type EditIdeaResult = {
+  ideaExists: boolean
+  titleValid: boolean
+  descriptionValid: boolean
+  updatedIdeas: Idea[]
+}
+
+type DeleteIdeaResult = {
+  ideaExists: boolean
+  updatedIdeas: Idea[]
+}
+
+type ConvertIdeaToProjectResult = {
+  ideaExists: boolean
+  updatedQuestlines: Questline[]
+  updatedIdeas: Idea[]
+}
+
 export function useIdeas() {
-  const addIdea = (addedIdea: Idea, allIdeas: Idea[], totalIdeas: number) => {
+  const addIdea = (addedIdea: Idea, allIdeas: Idea[], totalIdeas: number): AddIdeaResult => {
     const titleValid = validateTitle(addedIdea.title)
     const descriptionValid = validateTitle(addedIdea.description) // same validation logic as title
 
@@ -32,7 +57,7 @@ export function useIdeas() {
     return { titleValid, descriptionValid, updatedIdeas, updatedTotalIdeas }
   }
 
-  const editIdea = (editedIdea: Idea, allIdeas: Idea[]) => {
+  const editIdea = (editedIdea: Idea, allIdeas: Idea[]): EditIdeaResult => {
     const ideaExists = validateExistance(editedIdea.id, allIdeas)
     const titleValid = validateTitle(editedIdea.title)
     const descriptionValid = validateTitle(editedIdea.description)
@@ -54,7 +79,7 @@ export function useIdeas() {
     return { ideaExists, titleValid, descriptionValid, updatedIdeas }
   }
 
-  const deleteIdea = (ideaId: number, allIdeas: Idea[]) => {
+  const deleteIdea = (ideaId: number, allIdeas: Idea[]): DeleteIdeaResult => {
     const ideaExists = validateExistance(ideaId, allIdeas)
     if (!ideaExists) return { ideaExists, updatedIdeas: allIdeas }
 
@@ -72,7 +97,11 @@ export function useIdeas() {
     return { ideaExists, updatedIdeas }
   }
 
-  const convertIdeaToProject = (ideaId: number, allIdeas: Idea[], allQuestlines: Questline[]) => {
+  const convertIdeaToProject = (
+    ideaId: number,
+    allIdeas: Idea[],
+    allQuestlines: Questline[],
+  ): ConvertIdeaToProjectResult => {
     const ideaExists = validateExistance(ideaId, allIdeas)
     if (!ideaExists) return { ideaExists, updatedIdeas: allIdeas, updatedQuestlines: allQuestlines }
 

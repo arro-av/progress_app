@@ -1,17 +1,21 @@
 import { User, Tag } from '../db/types'
 import { useXPMultipliers } from '../../shared/constants/useXPMultipliers'
 const { EXP_MULTIPLIER_USER, EXP_MULTIPLIER_TAGS } = useXPMultipliers()
+import { useCaps } from '../../shared/constants/useCaps'
+const { LEVEL_CAP } = useCaps()
 
 export function updateLevels(): {
   updateUserLevel: (user: User, expChange: number) => User
   updateTagLevel: (tag: Tag, expChange: number) => Tag
 } {
-  const updateUserLevel = (user: User, expChange: number) => {
+  const updateUserLevel = (user: User, expChange: number): User => {
+    if (user.level === LEVEL_CAP) return user
+
     let newExp = user.exp_current + expChange
     let newLevel = user.level
 
     // Handle leveling up
-    while (newExp >= user.exp_needed) {
+    while (newExp >= user.exp_needed && newLevel < LEVEL_CAP) {
       newExp -= user.exp_needed
       newLevel++
       user.exp_needed = EXP_MULTIPLIER_USER(newLevel)
@@ -28,19 +32,21 @@ export function updateLevels(): {
     const newUserState = {
       ...user,
       level: newLevel,
-      exp_current: Math.max(0, newExp),
+      exp_current: newLevel === LEVEL_CAP ? 0 : Math.max(0, newExp),
       exp_needed: user.exp_needed,
     }
 
     return newUserState
   }
 
-  const updateTagLevel = (tag: Tag, expChange: number) => {
+  const updateTagLevel = (tag: Tag, expChange: number): Tag => {
+    if (tag.level === LEVEL_CAP) return tag
+
     let newExp = tag.exp_current + expChange
     let newLevel = tag.level
 
     // Handle leveling up
-    while (newExp >= tag.exp_needed) {
+    while (newExp >= tag.exp_needed && newLevel < LEVEL_CAP) {
       newExp -= tag.exp_needed
       newLevel++
       tag.exp_needed = EXP_MULTIPLIER_TAGS(newLevel)
@@ -57,7 +63,7 @@ export function updateLevels(): {
     const newTagState = {
       ...tag,
       level: newLevel,
-      exp_current: Math.max(0, newExp),
+      exp_current: newLevel === LEVEL_CAP ? 0 : Math.max(0, newExp),
       exp_needed: tag.exp_needed,
     }
 
