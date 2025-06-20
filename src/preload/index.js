@@ -59,6 +59,7 @@ const api = {
   addQuest: async (quest) => await ipcRenderer.invoke(IPC_CHANNELS.ADD_QUEST, quest),
   editQuest: async (quest) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUEST, quest),
   deleteQuest: async (id) => await ipcRenderer.invoke(IPC_CHANNELS.DELETE_QUEST, id),
+  activateQuest: async (quest) => await ipcRenderer.invoke(IPC_CHANNELS.ACTIVATE_QUEST, quest),
   claimQuestReward: async (quest) =>
     await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUEST_REWARD, quest),
   onQuestsUpdate: (callback) => {

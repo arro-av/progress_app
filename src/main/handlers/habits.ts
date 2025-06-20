@@ -12,7 +12,7 @@ export function registerHabitHandlers() {
   ipcMain.handle(IPC_CHANNELS.ADD_HABIT, (event, addedHabit: Habit) => {
     db.read()
 
-    const result = addHabit(addedHabit, db.data.habits)
+    const result = addHabit(addedHabit, db.data.habits, db.data.tags)
     if (!result.titleValid) return { success: false, message: 'Title is required' }
     if (!result.tagValid) return { success: false, message: 'Tag is required' }
     if (!result.stackValid) return { success: false, message: 'Stack ID is required' }
@@ -29,7 +29,7 @@ export function registerHabitHandlers() {
 
   ipcMain.handle(IPC_CHANNELS.EDIT_HABIT, (event, editedHabit: Habit) => {
     db.read()
-    const result = editHabit(editedHabit, db.data.habits)
+    const result = editHabit(editedHabit, db.data.habits, db.data.tags)
     if (!result.habitExists) return { success: false, message: 'Habit not found' }
     if (!result.titleValid) return { success: false, message: 'Title is required' }
     if (!result.tagValid) return { success: false, message: 'Tag is required' }

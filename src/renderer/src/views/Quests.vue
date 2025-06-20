@@ -158,13 +158,13 @@ useKeydowns({
       </template>
 
       <div class="projectRewardWrapper">
-        <template v-if="questline.completed">
+        <template v-if="quests.filter((quest) => quest.questline_id === questline.id).length === 0">
           <div class="projectRewardText">
             <p>+{{ getQuestlineProgressionReward(questline).crystals }} Crystals</p>
             <p>+{{ getQuestlineProgressionReward(questline).userExp }} User-EXP</p>
           </div>
           <button
-            v-if="questline.completed"
+            v-if="quests.filter((quest) => quest.questline_id === questline.id).length === 0"
             id="claimButtonActive"
             @click="questsStore.claimQuestlineReward(toRaw(questline))"
           >
@@ -187,6 +187,7 @@ useKeydowns({
           <template v-if="questEditingId !== quest.id">
             <Card
               :itemData="quest"
+              :tagname="tags.find((tag) => tag.id === quest.tag_id)?.title"
               :itemType="'quests'"
               @click="editEnabled ? questStartEditing(quest, 'quests') : null"
               @move-item="moveItem(toRaw(quest), 'quests', $event)"

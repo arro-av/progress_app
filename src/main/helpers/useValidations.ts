@@ -1,7 +1,9 @@
+import { Tag } from '../db/types'
+
 export function useValidations(): {
   validateExistance: (id: number, array: any[]) => any
   validateTitle: (title: string) => boolean
-  validateTag: (tag_name: string) => boolean
+  validateTag: (tag_id: number, allTags: Tag[]) => boolean
   validateStack: (stack_id: number) => boolean
   validateCost: (cost: number) => boolean
   validateBalance: (balance: number, cost: number) => boolean
@@ -17,8 +19,8 @@ export function useValidations(): {
     return true
   }
 
-  const validateTag = (tag_name: string): boolean => {
-    if (!tag_name || tag_name.trim() === '') return false
+  const validateTag = (tag_id: number, allTags: Tag[]): boolean => {
+    if (!allTags.find((tag) => tag.id === tag_id)) return false
     return true
   }
 

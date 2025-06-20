@@ -46,24 +46,27 @@ const defaultData: DbSchema = {
       title: 'Sub-quests',
       time_spent: 1080,
       questline_id: 1,
-      tag_name: 'Rare',
+      tag_id: 7,
       position: 0,
+      active: true,
     },
     {
       id: 2,
       title: 'Reward Calc',
       time_spent: 0,
       questline_id: 1,
-      tag_name: 'Rare',
+      tag_id: 8,
       position: 1,
+      active: false,
     },
     {
       id: 3,
       title: 'TODO',
       time_spent: 0,
       questline_id: 1,
-      tag_name: 'Legendary',
+      tag_id: 9,
       position: 2,
+      active: false,
     },
   ],
   tasks: [
@@ -346,7 +349,7 @@ const defaultData: DbSchema = {
     {
       id: 1,
       title: 'Habit Stacks',
-      tag_name: 'Epic',
+      tag_id: 6,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -357,7 +360,7 @@ const defaultData: DbSchema = {
     {
       id: 2,
       title: 'Can be ',
-      tag_name: 'Legendary',
+      tag_id: 7,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -368,7 +371,7 @@ const defaultData: DbSchema = {
     {
       id: 3,
       title: 'populated',
-      tag_name: 'Common',
+      tag_id: 8,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -379,7 +382,7 @@ const defaultData: DbSchema = {
     {
       id: 4,
       title: 'With Habits',
-      tag_name: 'They Level-Up!',
+      tag_id: 9,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -390,7 +393,7 @@ const defaultData: DbSchema = {
     {
       id: 5,
       title: 'Common',
-      tag_name: 'Common',
+      tag_id: 6,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -401,7 +404,7 @@ const defaultData: DbSchema = {
     {
       id: 6,
       title: 'Uncommon',
-      tag_name: 'Uncommon',
+      tag_id: 7,
       counter: 100,
       current_streak: 0,
       best_streak: 1,
@@ -412,7 +415,7 @@ const defaultData: DbSchema = {
     {
       id: 7,
       title: 'Rare',
-      tag_name: 'Rare',
+      tag_id: 8,
       counter: 500,
       current_streak: 0,
       best_streak: 1,
@@ -423,7 +426,7 @@ const defaultData: DbSchema = {
     {
       id: 8,
       title: 'Epic',
-      tag_name: 'Epic',
+      tag_id: 9,
       counter: 1000,
       current_streak: 0,
       best_streak: 1,
@@ -434,7 +437,7 @@ const defaultData: DbSchema = {
     {
       id: 9,
       title: 'Legendary',
-      tag_name: 'Legendary',
+      tag_id: 10,
       counter: 2000,
       current_streak: 0,
       best_streak: 1,
@@ -445,7 +448,7 @@ const defaultData: DbSchema = {
     {
       id: 10,
       title: 'They track',
-      tag_name: 'Common',
+      tag_id: 6,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -456,7 +459,7 @@ const defaultData: DbSchema = {
     {
       id: 11,
       title: 'Your Streaks',
-      tag_name: 'Common',
+      tag_id: 6,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -467,7 +470,7 @@ const defaultData: DbSchema = {
     {
       id: 12,
       title: 'Counters',
-      tag_name: 'Uncommon',
+      tag_id: 7,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -478,7 +481,7 @@ const defaultData: DbSchema = {
     {
       id: 13,
       title: '& Records',
-      tag_name: 'Legendary',
+      tag_id: 8,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -489,7 +492,7 @@ const defaultData: DbSchema = {
     {
       id: 14,
       title: 'Give EXP ',
-      tag_name: 'Legendary',
+      tag_id: 9,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -500,7 +503,7 @@ const defaultData: DbSchema = {
     {
       id: 15,
       title: '& Crystals',
-      tag_name: 'Legendary',
+      tag_id: 10,
       counter: 0,
       current_streak: 0,
       best_streak: 0,

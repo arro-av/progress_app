@@ -114,8 +114,7 @@ export function useIdeas() {
       title: ideaToConvert.title,
       description: ideaToConvert.description,
       time_spent: 0,
-      active: false,
-      completed: false,
+      active: allQuestlines.length === 0 ? true : false,
       created_at: getToday(),
       position: nextPosition,
     }

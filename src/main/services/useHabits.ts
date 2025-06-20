@@ -53,9 +53,10 @@ type UpdateAllStreaksResult = {
 }
 
 export function useHabits() {
-  const addHabit = (addedHabit: Habit, allHabits: Habit[]): AddHabitResult => {
+  const addHabit = (addedHabit: Habit, allHabits: Habit[], allTags: Tag[]): AddHabitResult => {
+    console.log(addedHabit.tag_id)
     const titleValid = validateTitle(addedHabit.title)
-    const tagValid = validateTag(addedHabit.tag_name)
+    const tagValid = validateTag(addedHabit.tag_id, allTags)
     const stackValid = validateStack(addedHabit.stack_id)
 
     if (!titleValid || !tagValid || !stackValid)
@@ -67,7 +68,7 @@ export function useHabits() {
     const newHabit = {
       id: nextId,
       title: addedHabit.title,
-      tag_name: addedHabit.tag_name,
+      tag_id: addedHabit.tag_id,
       counter: 0,
       current_streak: 0,
       best_streak: 0,
@@ -81,10 +82,10 @@ export function useHabits() {
     return { titleValid, tagValid, stackValid, updatedHabits }
   }
 
-  const editHabit = (editedHabit: Habit, allHabits: Habit[]): EditHabitResult => {
+  const editHabit = (editedHabit: Habit, allHabits: Habit[], allTags: Tag[]): EditHabitResult => {
     const habitExists = validateExistance(editedHabit.id, allHabits)
     const titleValid = validateTitle(editedHabit.title)
-    const tagValid = validateTag(editedHabit.tag_name)
+    const tagValid = validateTag(editedHabit.tag_id, allTags)
     const stackValid = validateStack(editedHabit.stack_id)
 
     if (!habitExists || !titleValid || !tagValid || !stackValid)
@@ -106,7 +107,7 @@ export function useHabits() {
         return {
           ...habit,
           title: editedHabit.title,
-          tag_name: editedHabit.tag_name,
+          tag_id: editedHabit.tag_id,
           stack_id: editedHabit.stack_id,
           position: habitToUpdate.position,
         }
@@ -145,7 +146,7 @@ export function useHabits() {
     user: User,
   ): ToggleHabitCompletionResult => {
     const habitExists = validateExistance(toogledHabit.id, allHabits)
-    const tagExists = allTags.find((tag) => tag.title === toogledHabit.tag_name)
+    const tagExists = allTags.find((tag) => tag.id === toogledHabit.tag_id)
     if (!habitExists || !tagExists)
       return {
         habitExists,

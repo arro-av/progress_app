@@ -87,7 +87,7 @@ onMounted(() => {
           v-model="addedItem.title"
         />
         <label for="listTag">Tag</label>
-        <select v-model="addedItem.tag_name">
+        <select v-model="addedItem.tag_id">
           <option
             disabled
             value=""
@@ -97,7 +97,7 @@ onMounted(() => {
           <option
             v-for="tag in allTags"
             :key="tag.id"
-            :value="tag.title"
+            :value="tag.id"
           >
             #{{ tag.title }}
           </option>
@@ -169,7 +169,7 @@ onMounted(() => {
       </div>
       <div class="inputWrapper">
         <label for="habitTag">Tag</label>
-        <select v-model="addedItem.tag_name">
+        <select v-model="addedItem.tag_id">
           <option
             disabled
             value=""
@@ -179,7 +179,7 @@ onMounted(() => {
           <option
             v-for="tag in allTags"
             :key="tag.id"
-            :value="tag.title"
+            :value="tag.id"
           >
             #{{ tag.title }}
           </option>

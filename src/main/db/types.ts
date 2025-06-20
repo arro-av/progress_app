@@ -33,7 +33,8 @@ export interface Quest {
   title: string
   time_spent: number
   questline_id: number
-  tag_name: string
+  tag_id: number
+  active: boolean
   position: number
 }
 
@@ -76,7 +77,7 @@ export interface Habit {
   counter: number
   current_streak: number
   best_streak: number
-  tag_name: string // TODO -> Reference Tag ID instead
+  tag_id: number
   last_month_completed: string[]
   position: number
 }

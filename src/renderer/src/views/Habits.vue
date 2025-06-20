@@ -150,6 +150,7 @@ useKeydowns({
         <template v-if="habitEditingId !== habit.id">
           <Card
             :itemData="habit"
+            :tagname="tags.find((tag) => tag.id === habit.tag_id)?.title"
             :itemType="'habits'"
             @click="editEnabled ? habitStartEditing(habit, 'habits') : null"
             @toggle-completion="habitsStore.toggleHabitCompletion(habit)"

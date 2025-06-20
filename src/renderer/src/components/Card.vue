@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  tagname: {
+    type: String,
+    required: false,
+  },
 })
 
 const emit = defineEmits(['move-item', 'unlock-reward', 'idea-to-project', 'toggle-completion']) // Added 'toggle-completion'
@@ -84,7 +88,7 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
     <template v-if="itemType === 'quests'">
       <div class="todoListCardContent">
         <h2 class="habitStackTitle">{{ itemData.title }}</h2>
-        <p class="todoListTag">#{{ itemData.tag_name }}</p>
+        <p class="todoListTag">#{{ tagname }}</p>
       </div>
     </template>
 
@@ -230,7 +234,7 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
           />
           <h4 class="habitTitle">{{ itemData.title }}</h4>
         </div>
-        <p class="habitTag">#{{ itemData.tag_name }}</p>
+        <p class="habitTag">#{{ tagname }}</p>
         <p class="habitStreak">Streak: {{ itemData.current_streak || 0 }}</p>
       </div>
     </template>

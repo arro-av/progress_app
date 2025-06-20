@@ -30,21 +30,21 @@ export const constructPayload = (itemType) => {
     case 'habits':
       return {
         title: '',
-        tag_name: null,
+        tag_id: null,
         stack_id: null,
       }
     case 'quests':
       return {
         title: '',
-        project_id: null,
+        questline_id: null,
         time_spent: 0,
-        tag_name: null,
+        tag_id: null,
         position: 0,
       }
     case 'tasks':
       return {
         title: '',
-        todo_list_id: null,
+        quest_id: null,
         completed: false,
         position: 0,
       }

@@ -100,11 +100,15 @@ export function useQuestlines() {
       questlineToDelete.position,
     )
 
-    const questlineToActivate = updatedQuestlinesPreReactivation[0]
-    const updatedQuestlines = activateQuestline(
-      questlineToActivate,
-      updatedQuestlinesPreReactivation,
-    ).updatedQuestlines
+    let updatedQuestlines = updatedQuestlinesPreReactivation
+
+    if (updatedQuestlinesPreReactivation.length > 0) {
+      const questlineToActivate = updatedQuestlinesPreReactivation[0]
+      updatedQuestlines = activateQuestline(
+        questlineToActivate,
+        updatedQuestlinesPreReactivation,
+      ).updatedQuestlines
+    }
 
     return { questlineExists, updatedQuestlines, updatedQuests, updatedTasks }
   }
