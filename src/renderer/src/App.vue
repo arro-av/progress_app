@@ -1,9 +1,10 @@
 <script setup>
 import Dragbar from './components/Dragbar.vue'
-import Navigation from './components/Navigation.vue';
+import Navigation from './components/Navigation.vue'
 import Crystals from './components/Crystals.vue'
 import ExpBar from './components/ExpBar.vue'
 import ToastContainer from './components/ToastContainer.vue'
+import TimerOverlay from './components/TimerOverlay.vue'
 </script>
 
 <template>
@@ -11,11 +12,12 @@ import ToastContainer from './components/ToastContainer.vue'
     <Dragbar />
     <Navigation />
     <Crystals />
-    <ToastContainer />
     <ExpBar />
+    <ToastContainer />
+    <TimerOverlay />
     <main>
       <router-view v-slot="{ Component }">
-          <component :is="Component" />
+        <component :is="Component" />
       </router-view>
     </main>
   </body>

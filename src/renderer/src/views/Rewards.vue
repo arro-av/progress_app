@@ -26,9 +26,13 @@ const { rewards } = storeToRefs(rewardsStore)
 
 const { editEnabled, toggleEditEnabled } = useEditEnable()
 
+let rewardsNotificationCleanup = null
 // ========== LIFECYCLE ==========
 onMounted(() => {
   rewardsStore.init()
+  rewardsNotificationCleanup = window.api.onRewardsUpdate(() => {
+    rewardsStore.init()
+  })
 })
 
 onUnmounted(() => {

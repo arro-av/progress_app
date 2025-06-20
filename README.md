@@ -126,12 +126,12 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
-- 17.06.2025: Questline randomly switching to completed | not resolved ⛔
+- 17.06.2025: Questline randomly switching to completed | resolved ✅ (dynamically checks if completed, depending if all sub-quests including tasks are completed)
 - 17.06.2025: Questline Completion not working | resolved ✅ (fixed handler logic)
-- 17.06.2025: User Update reactivity fails sometimes - Need to restart app to see EXP & Balance Updates | not resolved ⛔
+- 17.06.2025: User Update reactivity fails sometimes - Need to restart app to see EXP & Balance Updates | unsure ❓ (did not happen since backend cleanup - will see if occurs again)
 - 17.06.2025: Quest Rewards calculate wrong | resolved ✅ (adapted IPC handler)
-- 17.06.2025: Timer finished Notification Spams | not resolved ⛔
-- 17.06.2025: Edit-Mode lags when editing multiple items | not resolved ⛔
+- 17.06.2025: Timer finished Notification Spams | resolved ✅ (fixed cleaning event listeners)
+- 17.06.2025: Edit-Mode lags when editing multiple items | resolved ✅ (fixced with backend cleanup)
 - 16.06.2025: Timer throttling when minimized | resolved ✅ (moved to main process)
 - 15.06.2025: Loose Data After Quest Deletion | resolved ✅ (cascading delete)
 - 14.06.2025: Corrupted Position values in DB | resolved ✅ (implemented normalize function)

@@ -2,59 +2,29 @@ import { ipcMain, BrowserWindow } from 'electron'
 import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
 
-let timerInterval: NodeJS.Timeout | null = null
+import { useCaps } from '../../shared/constants/useCaps'
+const { MAX_TIMER_DURATION, MIN_TIMER_DURATION } = useCaps()
+
+import { useTimer } from '../services/useTimer'
+const { addTime } = useTimer()
+
+let timerInterval: NodeJS.Timeout | null
 let timeLeft = 0
-let timerDuration = 25 * 60 // Default 25 minutes in seconds
+let timerDuration = 25 * 60
 let isRunning = false
-let isCompleting = false
-
-function notifyTimerUpdate(window: BrowserWindow) {
-  window.webContents.send(IPC_CHANNELS.TIMER_UPDATE, { timeLeft })
-}
-
-function notifyTimerComplete(window: BrowserWindow) {
-  window.webContents.send(IPC_CHANNELS.TIMER_COMPLETE)
-}
-
-// Extract the addTime logic to a separate function
-async function addTimeToActiveQuestline(timeSpentMinutes: number) {
-  db.read()
-  const user = db.data.user
-  const currentActiveQuestline = db.data.questlines.find((questline) => questline.active)
-  if (!currentActiveQuestline) return { success: false, message: 'No active questline found' }
-
-  const firstQuestInCurrentActiveQuestline = db.data.quests
-    .filter((quest) => quest.questline_id === currentActiveQuestline.id)
-    .sort((a, b) => a.position - b.position)[0]
-
-  if (!firstQuestInCurrentActiveQuestline) {
-    return { success: false, message: 'No quest found for active questline' }
-  }
-
-  const roundedTimeSpent = Math.round(timeSpentMinutes)
-
-  user.pomodoros++
-  user.focused_time += roundedTimeSpent
-  currentActiveQuestline.time_spent += roundedTimeSpent
-  firstQuestInCurrentActiveQuestline.time_spent += roundedTimeSpent
-
-  db.write()
-  return {
-    success: true,
-    user,
-    questline: currentActiveQuestline,
-    quest: firstQuestInCurrentActiveQuestline,
-  }
-}
 
 export function registerTimerHandlers() {
-  ipcMain.handle(IPC_CHANNELS.ADD_TIME, async (event, timeSpentMinutes: number) => {
-    const result = await addTimeToActiveQuestline(timeSpentMinutes)
-    if (result.success) {
-      event.sender.send(IPC_CHANNELS.USER_UPDATED)
-      event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
-      event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
-    }
+  ipcMain.handle(IPC_CHANNELS.ADD_TIME, (event, timeSpentMinutes: number) => {
+    const result = addTime(timeSpentMinutes, db.data.user, db.data.questlines, db.data.quests)
+    if (!result.success) return { success: false, message: 'Failed to add time' }
+    db.data.user = result.updatedUser
+    db.data.questlines = result.updatedQuestlines
+    db.data.quests = result.updatedQuests
+    db.write()
+
+    event.sender.send(IPC_CHANNELS.USER_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     return result
   })
 
@@ -62,47 +32,54 @@ export function registerTimerHandlers() {
     if (isRunning) return { success: false, message: 'Timer already running' }
 
     isRunning = true
-    timeLeft = timeLeft || timerDuration
+    timeLeft = timerDuration
 
     const window = BrowserWindow.fromWebContents(event.sender)
-    if (!window) return { success: false, message: 'Window not found' }
+    if (!window) {
+      isRunning = false
+      return { success: false, message: 'Window not found' }
+    }
 
-    timerInterval = setInterval(async () => {
-      timeLeft--
-      notifyTimerUpdate(window)
+    console.log('Timer started!', timeLeft / 60)
 
-      if (timeLeft <= 0 && !isCompleting) {
-        isCompleting = true
-        clearInterval(timerInterval!)
-        timerInterval = null
-        isRunning = false
-
-        // Add time when timer completes
-        try {
-          notifyTimerComplete(window)
-          const timeSpentMinutes = timerDuration / 60
-          const result = await addTimeToActiveQuestline(timeSpentMinutes)
-          if (result.success && window && !window.isDestroyed()) {
-            window.webContents.send(IPC_CHANNELS.USER_UPDATED)
-            window.webContents.send(IPC_CHANNELS.QUESTLINES_UPDATED)
-            window.webContents.send(IPC_CHANNELS.QUESTS_UPDATED)
-          }
-        } catch (error) {
-          console.error('Failed to add time on timer completion:', error)
-        }
-      }
-    }, 1000)
-
-    return { success: true }
-  })
-
-  ipcMain.handle(IPC_CHANNELS.TIMER_STOP, () => {
     if (timerInterval) {
       clearInterval(timerInterval)
       timerInterval = null
     }
-    isRunning = false
-    return { success: true }
+
+    timerInterval = setInterval(() => {
+      timeLeft--
+      event.sender.send(IPC_CHANNELS.TIMER_UPDATE, { timeLeft })
+
+      if (timeLeft <= 0) {
+        if (timerInterval) {
+          clearInterval(timerInterval)
+          timerInterval = null
+        }
+
+        isRunning = false
+
+        try {
+          event.sender.send(IPC_CHANNELS.TIMER_COMPLETE)
+          console.log('Timer completed!')
+          const timeSpentMinutes = timerDuration / 60
+          const result = addTime(timeSpentMinutes, db.data.user, db.data.questlines, db.data.quests)
+          db.data.user = result.updatedUser
+          db.data.questlines = result.updatedQuestlines
+          db.data.quests = result.updatedQuests
+          db.write()
+
+          console.log('Timer completion handled successfully')
+        } catch (error) {
+          console.error('Failed to handle timer completion:', error)
+        }
+      }
+    }, 1000)
+
+    event.sender.send(IPC_CHANNELS.USER_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
+    return { success: true, message: 'Timer started' }
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_RESET, () => {
@@ -112,12 +89,13 @@ export function registerTimerHandlers() {
     }
     isRunning = false
     timeLeft = timerDuration
-    return { success: true }
+    return { success: true, message: 'Timer reset' }
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_SET_DURATION, (event, duration: number) => {
-    const newDuration = Math.max(1, Math.min(120, duration)) // Clamp between 1-120 minutes
-    timerDuration = newDuration * 60 // Convert to seconds
+    console.log('Timer duration set to:', duration)
+    const newDuration = Math.max(MIN_TIMER_DURATION, Math.min(MAX_TIMER_DURATION, duration))
+    timerDuration = newDuration
     if (!isRunning) {
       timeLeft = timerDuration
     }
@@ -125,6 +103,7 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_GET_STATE, () => {
+    console.log('Timer state requested!', timeLeft / 60)
     return {
       isRunning,
       timeLeft,

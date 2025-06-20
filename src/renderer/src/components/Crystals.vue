@@ -4,6 +4,9 @@ import { onMounted, onUnmounted } from 'vue'
 // Stores
 import { useUserStore } from '../stores/user'
 import { storeToRefs } from 'pinia'
+// Helpers
+import { useToasts } from '../helpers/composables/useToasts'
+const { addToast } = useToasts()
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
