@@ -123,7 +123,7 @@ onUnmounted(() => {
       <div v-for="questline in questlines.filter((questline) => questline.active)">
         <div
           v-for="quest in quests.filter(
-            (quest) => quest.questline_id === questline.id && quest.position === 0,
+            (quest) => quest.questline_id === questline.id && quest.active === true,
           )"
         >
           <div

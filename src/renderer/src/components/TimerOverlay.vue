@@ -21,4 +21,4 @@ onUnmounted(() => {
 })
 </script>
 
-<template></template>
+<template><!-- TODO: Add timer overlay --></template>

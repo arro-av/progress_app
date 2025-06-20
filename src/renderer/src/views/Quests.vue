@@ -20,7 +20,7 @@ import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, toRaw } from 'vue'
 // Helpers
 import { moveItem } from '../helpers/moveItem'
-import { useProgressions } from '../../../shared/helpers/useProgressions'
+import { useProgressions } from '../../../shared/utils/useProgressions'
 import { useToasts } from '../helpers/composables/useToasts'
 // ========== DATA ==========
 const questsStore = useQuestsStore()
@@ -181,6 +181,7 @@ useKeydowns({
       <div
         v-for="quest in quests.filter((quest) => quest.questline_id === questline.id)"
         :key="quest.id"
+        :style="{ opacity: quest.active ? 1 : 0.5 }"
         class="habitStackCard"
       >
         <div class="listTitleWrapper">
@@ -254,7 +255,12 @@ useKeydowns({
             @cancel-add="taskCancelAdding()"
           />
         </template>
-
+        <button
+          class="btn activate-btn"
+          @click="questsStore.activateQuest(toRaw(quest))"
+        >
+          Activate
+        </button>
         <div class="todoRewardWrapper">
           <h4>Reward:</h4>
           <p>

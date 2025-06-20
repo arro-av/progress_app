@@ -1613,6 +1613,13 @@ progress::-webkit-progress-value {
   color: white;
 }
 
+.activate-btn {
+  font-size: 0.8rem;
+  padding: 0.2rem;
+  background-color: #4a612f;
+  color: white;
+}
+
 .add-btn {
   background-color: #211e1d;
   color: white;

@@ -93,9 +93,8 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_SET_DURATION, (event, duration: number) => {
-    console.log('Timer duration set to:', duration)
     const newDuration = Math.max(MIN_TIMER_DURATION, Math.min(MAX_TIMER_DURATION, duration))
-    timerDuration = newDuration
+    timerDuration = newDuration * 60
     if (!isRunning) {
       timeLeft = timerDuration
     }
@@ -103,7 +102,6 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_GET_STATE, () => {
-    console.log('Timer state requested!', timeLeft / 60)
     return {
       isRunning,
       timeLeft,

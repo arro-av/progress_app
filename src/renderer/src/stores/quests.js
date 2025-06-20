@@ -20,6 +20,7 @@ import { sortByPosition } from '../helpers/sortByPosition'
  * @function addQuest {function} - Adds a new quest to the database | {param} Quest object
  * @function editQuest {function} - Updates an existing quest in the database | {param} Quest object
  * @function deleteQuest {function} - Deletes a quest from the database & normalizes position | {param} Quest ID
+ * @function activateQuest {function} - Activates a quest | {param} Quest ID
  * @function claimQuestReward {function} - Claims a quest reward | {param} Quest ID
  * --------------------------------------------------------------------------------------------------------------
  * @var tasks {array} - Array of tasks
@@ -136,6 +137,20 @@ export const useQuestsStore = defineStore('quests', () => {
     return await window.api.deleteQuest(id)
   }
 
+  const activateQuest = async (quest) => {
+    try {
+      const result = await window.api.activateQuest(quest)
+      if (result.success) {
+        addToast({ message: result.message, type: 'success' })
+      } else {
+        addToast({ message: result.message, type: 'error' })
+      }
+    } catch (error) {
+      console.error('Error activating quest:', error)
+      addToast({ message: 'An error occured...', type: 'error' })
+    }
+  }
+
   const claimQuestReward = async (quest) => {
     try {
       const result = await window.api.claimQuestReward(quest)
@@ -232,11 +247,12 @@ export const useQuestsStore = defineStore('quests', () => {
     deleteQuestline,
     activateQuestline,
     claimQuestlineReward,
-    claimQuestReward,
 
     addQuest,
     editQuest,
     deleteQuest,
+    activateQuest,
+    claimQuestReward,
 
     addTask,
     editTask,
