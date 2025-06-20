@@ -1,7 +1,10 @@
 import { ipcMain } from 'electron'
 import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels.js'
+
 import { Reward, Habit, Tag, Idea, HabitStack, Quest, Task } from '../db/types.ts'
+import { useGlobals } from '../services/useGlobals'
+const { updateItemPositions } = useGlobals()
 
 export function registerMoveItemHandler() {
   ipcMain.handle(
@@ -21,136 +24,69 @@ export function registerMoveItemHandler() {
       direction: 'up' | 'down',
     ) => {
       db.read()
-      const items = db.data[type]
-      const itemToMoveIndex = items.findIndex((item) => item.id === passedItem.id)
 
-      if (itemToMoveIndex === -1)
-        return {
-          success: false,
-          message: `${type.charAt(0).toUpperCase() + type.slice(1)} not found`,
-        }
-      if (direction !== 'up' && direction !== 'down')
-        return { success: false, message: 'No valid Direction specified' }
-
-      if (type !== 'habits' && type !== 'tasks' && type !== 'quests') {
-        const itemToMove = items[itemToMoveIndex]
-        const currentPosition = itemToMove.position
-
-        // Already at TOP
-        if (currentPosition === 0 && direction === 'up')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed first.`,
-          }
-        // Already at BOTTOM
-        if (currentPosition === items.length - 1 && direction === 'down')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed last.`,
-          }
-
-        const newPosition = direction === 'up' ? currentPosition - 1 : currentPosition + 1
-        const itemToSwapIndex = items.findIndex((item) => item.position === newPosition)
-        const itemToSwap = items[itemToSwapIndex]
-
-        itemToSwap.position = currentPosition
-        itemToMove.position = newPosition
+      let result: any
+      switch (type) {
+        case 'rewards':
+          const rewardItem = passedItem as Reward
+          result = updateItemPositions(rewardItem, db.data.rewards, db.data.rewards, direction)
+          break
+        case 'habits':
+          const habitItem = passedItem as Habit
+          const habitsInStack = db.data.habits.filter(
+            (habit) => habit.stack_id === habitItem.stack_id,
+          )
+          result = updateItemPositions(habitItem, habitsInStack, db.data.habits, direction)
+          break
+        case 'ideas':
+          const ideaItem = passedItem as Idea
+          result = updateItemPositions(ideaItem, db.data.ideas, db.data.ideas, direction)
+          break
+        case 'tags':
+          const tagItem = passedItem as Tag
+          result = updateItemPositions(tagItem, db.data.tags, db.data.tags, direction)
+          break
+        case 'habit_stacks':
+          const stackItem = passedItem as HabitStack
+          result = updateItemPositions(
+            stackItem,
+            db.data.habit_stacks,
+            db.data.habit_stacks,
+            direction,
+          )
+          break
+        case 'questlines':
+          const questlineItem = passedItem as Quest
+          result = updateItemPositions(
+            questlineItem,
+            db.data.questlines,
+            db.data.questlines,
+            direction,
+          )
+          break
+        case 'quests':
+          const questItem = passedItem as Quest
+          const questsInQuestline = db.data.quests.filter(
+            (quest) => quest.questline_id === questItem.questline_id,
+          )
+          result = updateItemPositions(questItem, questsInQuestline, db.data.quests, direction)
+          break
+        case 'tasks':
+          const taskItem = passedItem as Task
+          const tasksInQuests = db.data.tasks.filter((task) => task.quest_id === taskItem.quest_id)
+          result = updateItemPositions(taskItem, tasksInQuests, db.data.tasks, direction)
+          break
+        default:
+          return { success: false, message: 'No valid Type specified' }
       }
+      if (!result.itemExists) return { success: false, message: 'Item not found' }
+      if (!result.directionValid) return { success: false, message: 'No valid Direction specified' }
+      if (result.atTop) return { success: false, message: 'Already placed first' }
+      if (result.atBottom) return { success: false, message: 'Already placed last' }
 
-      if (type === 'habits') {
-        const habits = db.data.habits
-        const habitToMove = habits[itemToMoveIndex]
-        const habitToMoveStack = habitToMove.stack_id
-        const habitsInSameStack = habits.filter((habit) => habit.stack_id === habitToMoveStack)
-
-        const currentPosition = habitToMove.position
-
-        // Already at TOP
-        if (currentPosition === 0 && direction === 'up')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed first.`,
-          }
-        // Already at BOTTOM
-        if (currentPosition === habitsInSameStack.length - 1 && direction === 'down')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed last.`,
-          }
-
-        const newPosition = direction === 'up' ? currentPosition - 1 : currentPosition + 1
-        const habitToSwapIndex = habitsInSameStack.findIndex(
-          (habit) => habit.position === newPosition,
-        )
-        const habitToSwap = habitsInSameStack[habitToSwapIndex]
-
-        habitToSwap.position = currentPosition
-        habitToMove.position = newPosition
-      }
-
-      if (type === 'tasks') {
-        const tasks = db.data.tasks
-        const taskToMove = tasks[itemToMoveIndex]
-        const taskToMoveQuest = taskToMove.quest_id
-        const tasksInSameQuest = tasks.filter((task) => task.quest_id === taskToMoveQuest)
-
-        const currentPosition = taskToMove.position
-
-        // Already at TOP
-        if (currentPosition === 0 && direction === 'up')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed first.`,
-          }
-        // Already at BOTTOM
-        if (currentPosition === tasksInSameQuest.length - 1 && direction === 'down')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed last.`,
-          }
-
-        const newPosition = direction === 'up' ? currentPosition - 1 : currentPosition + 1
-        const taskToSwapIndex = tasksInSameQuest.findIndex((task) => task.position === newPosition)
-        const taskToSwap = tasksInSameQuest[taskToSwapIndex]
-
-        taskToSwap.position = currentPosition
-        taskToMove.position = newPosition
-      }
-
-      if (type === 'quests') {
-        const quests = db.data.quests
-        const questToMove = quests[itemToMoveIndex]
-        const questToMoveQuestline = questToMove.questline_id
-        const questsInSameQuestline = quests.filter(
-          (quest) => quest.questline_id === questToMoveQuestline,
-        )
-
-        const currentPosition = questToMove.position
-
-        // Already at TOP
-        if (currentPosition === 0 && direction === 'up')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed first.`,
-          }
-        // Already at BOTTOM
-        if (currentPosition === questsInSameQuestline.length - 1 && direction === 'down')
-          return {
-            success: false,
-            message: `${type.charAt(0).toUpperCase() + type.slice(1, -1)} already placed last.`,
-          }
-
-        const newPosition = direction === 'up' ? currentPosition - 1 : currentPosition + 1
-        const questToSwapIndex = questsInSameQuestline.findIndex(
-          (quest) => quest.position === newPosition,
-        )
-        const questToSwap = questsInSameQuestline[questToSwapIndex]
-
-        questToSwap.position = currentPosition
-        questToMove.position = newPosition
-      }
-
+      db.data[type] = result.updatedItems
       db.write()
+
       event.sender.send(IPC_CHANNELS[type.toUpperCase() + '_UPDATED'])
       return {
         success: true,

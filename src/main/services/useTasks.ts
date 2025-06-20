@@ -3,16 +3,7 @@ import { Task } from '../db/types'
 
 import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer'
 import { useValidations } from '../helpers/useValidations'
-const { validateExistance, validateTitle, validateTag, validateStack } = useValidations()
-
-import { updateLevels } from '../helpers/updateLevels'
-const { updateUserLevel, updateTagLevel } = updateLevels()
-
-import { getDates } from '../helpers/getDates'
-const { getToday, getYesterday } = getDates()
-
-import { useProgressions } from '../../shared/utils/useProgressions'
-const { getHabitProgressionReward } = useProgressions()
+const { validateExistance, validateTitle } = useValidations()
 
 type AddTaskResult = {
   titleValid: boolean
