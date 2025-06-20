@@ -23,7 +23,6 @@ export interface Questline {
   description: string
   time_spent: number
   active: boolean
-  completed: boolean
   created_at: string
   position: number
 }
@@ -47,8 +46,8 @@ export interface Task {
   position: number
 }
 
-// ========== PROJECTS DONE ==========
-export interface ProjectsDone {
+// ========== QUESTLINES DONE ==========
+export interface QuestlineDone {
   id: number
   name: string
   created_at: string
@@ -115,7 +114,7 @@ export interface Achievement {
 export interface DbSchema {
   user: User
   questlines: Questline[]
-  questlines_done: ProjectsDone[]
+  questlines_done: QuestlineDone[]
   quests: Quest[]
   tasks: Task[]
   tags: Tag[]

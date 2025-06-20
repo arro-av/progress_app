@@ -253,8 +253,8 @@ export function useHabits() {
     return {
       habitExists,
       tagExists,
-      updatedHabits: updatedHabits,
-      updatedTags: updatedTags,
+      updatedHabits,
+      updatedTags,
       updatedUser,
       levelUp,
       tagLevelUp,
