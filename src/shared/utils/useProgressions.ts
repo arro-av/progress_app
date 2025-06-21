@@ -20,6 +20,11 @@ type QuestlineProgressionReward = {
   userExp: number
 }
 
+type TimeProgressionReward = {
+  tagExp: number
+  userExp: number
+}
+
 export const useProgressions = () => {
   const getHabitProgressionReward = (habit: Habit): HabitProgressionReward => {
     const habitRank = getHabitRank(habit)
@@ -76,9 +81,17 @@ export const useProgressions = () => {
     }
   }
 
+  const getTimeProgressionReward = (timeSpentMinutes: number): TimeProgressionReward => {
+    return {
+      tagExp: Math.round(timeSpentMinutes / 4),
+      userExp: Math.round(timeSpentMinutes / 2),
+    }
+  }
+
   return {
     getHabitProgressionReward,
     getQuestProgressionReward,
     getQuestlineProgressionReward,
+    getTimeProgressionReward,
   }
 }

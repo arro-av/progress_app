@@ -15,17 +15,32 @@ let isRunning = false
 
 export function registerTimerHandlers() {
   ipcMain.handle(IPC_CHANNELS.ADD_TIME, (event, timeSpentMinutes: number) => {
-    const result = addTime(timeSpentMinutes, db.data.user, db.data.questlines, db.data.quests)
+    const result = addTime(
+      timeSpentMinutes,
+      db.data.user,
+      db.data.questlines,
+      db.data.quests,
+      db.data.tags,
+    )
     if (!result.success) return { success: false, message: 'Failed to add time' }
     db.data.user = result.updatedUser
     db.data.questlines = result.updatedQuestlines
     db.data.quests = result.updatedQuests
+    db.data.tags = result.updatedTags
     db.write()
 
     event.sender.send(IPC_CHANNELS.USER_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
-    return result
+    event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
+    return {
+      success: true,
+      levelUp: result.levelUp,
+      tagLevelUp: result.tagLevelUp,
+      tagTitle: result.tagTitle,
+      userExp: result.userExp,
+      tagExp: result.tagExp,
+    }
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_START, async (event) => {
@@ -63,10 +78,17 @@ export function registerTimerHandlers() {
           event.sender.send(IPC_CHANNELS.TIMER_COMPLETE)
           console.log('Timer completed!')
           const timeSpentMinutes = timerDuration / 60
-          const result = addTime(timeSpentMinutes, db.data.user, db.data.questlines, db.data.quests)
+          const result = addTime(
+            timeSpentMinutes,
+            db.data.user,
+            db.data.questlines,
+            db.data.quests,
+            db.data.tags,
+          )
           db.data.user = result.updatedUser
           db.data.questlines = result.updatedQuestlines
           db.data.quests = result.updatedQuests
+          db.data.tags = result.updatedTags
           db.write()
 
           console.log('Timer completion handled successfully')
@@ -79,7 +101,9 @@ export function registerTimerHandlers() {
     event.sender.send(IPC_CHANNELS.USER_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
     event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
-    return { success: true, message: 'Timer started' }
+    return {
+      success: true,
+    }
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_RESET, () => {

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
+import { useToasts } from '../helpers/composables/useToasts'
+
 /**
  * TIMER STORE
  * --------------------------------------------------------------------------------------------------------------
@@ -18,6 +20,8 @@ import { ref, computed } from 'vue'
  * @function init {function} - Initializes the store
  */
 export const useTimerStore = defineStore('timer', () => {
+  const { addToast } = useToasts()
+
   const isRunning = ref(false)
   const timerDuration = ref(25) // in minutes
   const timeLeft = ref(25 * 60) // in seconds
@@ -70,8 +74,13 @@ export const useTimerStore = defineStore('timer', () => {
 
   const manuallyAddTime = async (minutes) => {
     try {
-      await window.api.addTime(minutes)
-      return true
+      const result = await window.api.addTime(minutes)
+      if (result.success) {
+        addToast({ message: '+' + result.userExp + ' EXP', type: 'plusExp' })
+        addToast({ message: '+' + result.tagExp + ' Tag-EXP', type: 'plusExp' })
+        if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
+        if (result.tagLevelUp) addToast({ message: `Level Up: ${result.tagTitle}`, type: 'lvlup' })
+      }
     } catch (error) {
       console.error('Failed to add time:', error)
       throw error

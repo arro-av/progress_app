@@ -126,10 +126,11 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
+- 21.06.2025: Tasks don't properly clean when quest resolved | resolved ✅ (fixed handler logic)
 - 20.06.2025: Rank indicator (mark) overlaps drag handle - minor css issue | not resolved ⚠️
 - 17.06.2025: Questline randomly switching to completed | resolved ✅ (dynamically checks if completed, depending if all sub-quests including tasks are completed)
 - 17.06.2025: Questline Completion not working | resolved ✅ (fixed handler logic)
-- 17.06.2025: User Update reactivity fails sometimes - Need to restart app to see EXP & Balance Updates | unsure ❓ (did not happen since backend cleanup - will see if occurs again)
+- 17.06.2025: User Update reactivity fails sometimes - Need to restart app to see EXP & Balance Updates | unsure ❓ (happens randomly - maybe race condition - will try refetching user data after ipc call instead of relying on update events)
 - 17.06.2025: Quest Rewards calculate wrong | resolved ✅ (adapted IPC handler)
 - 17.06.2025: Timer finished Notification Spams | resolved ✅ (fixed cleaning event listeners)
 - 17.06.2025: Edit-Mode lags when editing multiple items | resolved ✅ (fixced with backend cleanup)

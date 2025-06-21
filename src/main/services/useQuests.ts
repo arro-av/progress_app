@@ -41,6 +41,7 @@ type ClaimQuestRewardResult = {
   updatedUser: User
   updatedQuests: Quest[]
   updatedTags: Tag[]
+  updatedTasks: Task[]
   notCompleted: boolean
   crystalsGained: number
   userExpGained: number
@@ -182,6 +183,7 @@ export function useQuests() {
         updatedUser: user,
         updatedTags: allTags,
         updatedQuests: allQuests,
+        updatedTasks: allTasks,
         notCompleted: false,
         crystalsGained: 0,
         userExpGained: 0,
@@ -199,6 +201,7 @@ export function useQuests() {
         updatedUser: user,
         updatedTags: allTags,
         updatedQuests: allQuests,
+        updatedTasks: allTasks,
         notCompleted: true,
         crystalsGained: 0,
         userExpGained: 0,
@@ -225,12 +228,10 @@ export function useQuests() {
     let updatedTag = tagExists
     updatedTag = updateTagLevel(updatedTag, reward.tagExp)
 
-    let levelUp = false
-    if (userLvlBefore < updatedUser.level) levelUp = true
-    let tagLevelUp = false
-    if (tagLvlBefore < updatedTag.level) tagLevelUp = true
+    const updatesAfterDeelete = deleteQuest(claimedQuest.id, allQuests, allTasks)
+    const updatedQuests = updatesAfterDeelete.updatedQuests
+    const updatedTasks = updatesAfterDeelete.updatedTasks
 
-    const updatedQuests = deleteQuest(claimedQuest.id, allQuests, allTasks).updatedQuests
     const updatedTags = allTags.map((tag) => {
       if (tag.id === updatedTag.id) {
         return {
@@ -243,11 +244,17 @@ export function useQuests() {
       return { ...tag }
     })
 
+    let levelUp = false
+    if (userLvlBefore < updatedUser.level) levelUp = true
+    let tagLevelUp = false
+    if (tagLvlBefore < updatedTag.level) tagLevelUp = true
+
     return {
       questExists,
       updatedUser,
       updatedQuests,
       updatedTags,
+      updatedTasks,
       notCompleted: false,
       crystalsGained: reward.crystals,
       userExpGained: reward.userExp,

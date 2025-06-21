@@ -83,6 +83,7 @@ export function registerQuestHandlers() {
     db.data.user = result.updatedUser
     db.data.quests = result.updatedQuests
     db.data.tags = result.updatedTags
+    db.data.tasks = result.updatedTasks
     db.write()
 
     event.sender.send(IPC_CHANNELS.USER_UPDATED)
