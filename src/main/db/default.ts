@@ -1,7 +1,4 @@
-import { useDates } from '../../shared/helpers/useDate'
 import type { DbSchema } from './types'
-
-const { getToday } = useDates()
 
 const defaultData: DbSchema = {
   user: {

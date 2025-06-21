@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, toRaw } from 'vue'
 import { useToasts } from '../helpers/composables/useToasts'
-import { useDates } from '../../../shared/helpers/useDate.ts'
+import { useDates } from '../../../shared/utils/useDate.ts'
 import { sortByPosition } from '../helpers/sortByPosition'
 
 /**

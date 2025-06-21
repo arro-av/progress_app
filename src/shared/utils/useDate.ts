@@ -1,4 +1,4 @@
-export function getDates(): {
+export function useDates(): {
   getToday: () => string
   getYesterday: () => string
 } {

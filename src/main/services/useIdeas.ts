@@ -5,8 +5,8 @@ import { normalizePositionAfterDeletion } from '../helpers/positionNormalizer'
 import { useValidations } from '../helpers/useValidations'
 const { validateExistance, validateTitle } = useValidations()
 
-import { getDates } from '../helpers/getDates'
-const { getToday } = getDates()
+import { useDates } from '../../shared/utils/useDate'
+const { getToday } = useDates()
 
 type AddIdeaResult = {
   titleValid: boolean

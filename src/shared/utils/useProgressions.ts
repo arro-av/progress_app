@@ -1,5 +1,5 @@
 import { Habit, Quest, Questline, Task } from '../../main/db/types'
-import { useRanks } from '../helpers/useRanks'
+import { useRanks } from './useRanks'
 
 const { getHabitRank } = useRanks()
 

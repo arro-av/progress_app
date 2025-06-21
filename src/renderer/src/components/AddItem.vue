@@ -79,6 +79,13 @@ onMounted(() => {
     <template v-if="itemType === 'quests'">
       <div class="inputWrapper">
         <label for="listTitle">Title</label>
+        <n-input
+          type="text"
+          placeholder="Quest Title"
+          spellcheck="false"
+          clearable
+          v-model="addedItem.title"
+        />
         <input
           ref="titleInput"
           type="text"
@@ -205,6 +212,13 @@ onMounted(() => {
     <template v-if="itemType === 'rewards'">
       <div class="inputWrapper">
         <label for="title">Title</label>
+        <n-input
+          type="text"
+          placeholder="Add Reward Title"
+          spellcheck="false"
+          clearable
+          v-model="addedItem.title"
+        />
         <input
           ref="titleInput"
           type="text"

@@ -4,8 +4,8 @@
 import IdeaIcon from '../assets/idea.svg'
 import ArrowIcon from '../assets/arrow.svg'
 // Composables
-import { useDates } from '../../../shared/helpers/useDate' // Added for isSameDateAsToday
-import { useRanks } from '../../../shared/helpers/useRanks'
+import { useDates } from '../../../shared/utils/useDate' // Added for isSameDateAsToday
+import { useRanks } from '../../../shared/utils/useRanks'
 
 // ========== DATA ==========
 const props = defineProps({
@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['move-item', 'unlock-reward', 'idea-to-project', 'toggle-completion']) // Added 'toggle-completion'
 
 const { getToday } = useDates() // Added for checkbox
-const { getTagRank, getHabitRank, getProjectRank } = useRanks()
+const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
 </script>
 
 <template>
@@ -43,39 +43,39 @@ const { getTagRank, getHabitRank, getProjectRank } = useRanks()
     <template v-if="itemType === 'questlines'">
       <div class="projectRankGems">
         <img
-          v-if="getProjectRank(itemData) == 'legendary'"
+          v-if="getQuestlineRank(itemData) == 'legendary'"
           src="../assets/LEGENDARY_MARK.png"
           alt="tagIcon"
           class="projectRankMark"
-          :class="getProjectRank(itemData) + '-glow'"
+          :class="getQuestlineRank(itemData) + '-glow'"
         />
         <img
-          v-if="getProjectRank(itemData) == 'epic'"
+          v-if="getQuestlineRank(itemData) == 'epic'"
           src="../assets/EPIC_MARK.png"
           alt="tagIcon"
           class="projectRankMark"
-          :class="getProjectRank(itemData) + '-glow'"
+          :class="getQuestlineRank(itemData) + '-glow'"
         />
         <img
-          v-if="getProjectRank(itemData) == 'rare'"
+          v-if="getQuestlineRank(itemData) == 'rare'"
           src="../assets/RARE_MARK.png"
           alt="tagIcon"
           class="projectRankMark"
-          :class="getProjectRank(itemData) + '-glow'"
+          :class="getQuestlineRank(itemData) + '-glow'"
         />
         <img
-          v-if="getProjectRank(itemData) == 'uncommon'"
+          v-if="getQuestlineRank(itemData) == 'uncommon'"
           src="../assets/UNCOMMON_MARK.png"
           alt="tagIcon"
           class="projectRankMark"
-          :class="getProjectRank(itemData) + '-glow'"
+          :class="getQuestlineRank(itemData) + '-glow'"
         />
         <img
-          v-if="getProjectRank(itemData) == 'common'"
+          v-if="getQuestlineRank(itemData) == 'common'"
           src="../assets/COMMON_MARK.png"
           alt="tagIcon"
           class="projectRankMark"
-          :class="getProjectRank(itemData) + '-glow'"
+          :class="getQuestlineRank(itemData) + '-glow'"
         />
       </div>
       <div class="projectCardContent">

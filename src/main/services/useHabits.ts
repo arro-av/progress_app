@@ -8,8 +8,8 @@ const { validateExistance, validateTitle, validateTag, validateStack } = useVali
 import { updateLevels } from '../helpers/updateLevels'
 const { updateUserLevel, updateTagLevel } = updateLevels()
 
-import { getDates } from '../helpers/getDates'
-const { getToday, getYesterday } = getDates()
+import { useDates } from '../../shared/utils/useDate'
+const { getToday, getYesterday } = useDates()
 
 import { useProgressions } from '../../shared/utils/useProgressions'
 const { getHabitProgressionReward } = useProgressions()
