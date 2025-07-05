@@ -34,8 +34,11 @@ export function useTasks() {
 
     if (!titleValid) return { titleValid, updatedTasks: allTasks }
 
+    //check if this resolves the task arrangement issue
+    const allTasksInQuest = allTasks.filter((task) => task.quest_id === addedTask.quest_id)
+
     const nextId = nextID(allTasks)
-    const nextPosition = allTasks.length
+    const nextPosition = allTasksInQuest.length
 
     const newTask = {
       id: nextId,

@@ -126,6 +126,7 @@ Ranks:
 
 ## Bug Log (starting with MVP 0.1)
 
+- 24.06.2025: Nested move arrangement buggy | resolved ✅ (addTask handler calculated position based on all tasks instead of quest tasks)
 - 21.06.2025: Tasks don't properly clean when quest resolved | resolved ✅ (fixed handler logic)
 - 20.06.2025: Rank indicator (mark) overlaps drag handle - minor css issue | not resolved ⚠️
 - 17.06.2025: Questline randomly switching to completed | resolved ✅ (dynamically checks if completed, depending if all sub-quests including tasks are completed)
