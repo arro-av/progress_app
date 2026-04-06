@@ -41,43 +41,6 @@ const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
   >
     <!-- QUESTLINE -->
     <template v-if="itemType === 'questlines'">
-      <div class="projectRankGems">
-        <img
-          v-if="getQuestlineRank(itemData) == 'legendary'"
-          src="../assets/LEGENDARY_MARK.png"
-          alt="tagIcon"
-          class="projectRankMark"
-          :class="getQuestlineRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getQuestlineRank(itemData) == 'epic'"
-          src="../assets/EPIC_MARK.png"
-          alt="tagIcon"
-          class="projectRankMark"
-          :class="getQuestlineRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getQuestlineRank(itemData) == 'rare'"
-          src="../assets/RARE_MARK.png"
-          alt="tagIcon"
-          class="projectRankMark"
-          :class="getQuestlineRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getQuestlineRank(itemData) == 'uncommon'"
-          src="../assets/UNCOMMON_MARK.png"
-          alt="tagIcon"
-          class="projectRankMark"
-          :class="getQuestlineRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getQuestlineRank(itemData) == 'common'"
-          src="../assets/COMMON_MARK.png"
-          alt="tagIcon"
-          class="projectRankMark"
-          :class="getQuestlineRank(itemData) + '-glow'"
-        />
-      </div>
       <div class="projectCardContent">
         <h2 class="projectTitle">{{ itemData.title }}</h2>
         <p class="projectDescription">{{ itemData.description }}</p>

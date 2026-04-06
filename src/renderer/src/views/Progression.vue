@@ -9,7 +9,7 @@ const { EXP_MULTIPLIER_USER, EXP_MULTIPLIER_TAGS } = useXPMultipliers()
 const userData = computed(() => {
   let totalXP = 0
   let totalHours = 0
-  return Array.from({ length: 60 }, (_, i) => {
+  return Array.from({ length: 80 }, (_, i) => {
     const xpNeeded = EXP_MULTIPLIER_USER(i)
     const hoursNeeded = xpNeeded / 52
     totalXP += xpNeeded
@@ -27,7 +27,7 @@ const userData = computed(() => {
 const tagData = computed(() => {
   let totalXP = 0
   let totalHours = 0
-  return Array.from({ length: 60 }, (_, i) => {
+  return Array.from({ length: 80 }, (_, i) => {
     const xpNeeded = EXP_MULTIPLIER_TAGS(i)
     const hoursNeeded = xpNeeded / 35
     totalXP += xpNeeded

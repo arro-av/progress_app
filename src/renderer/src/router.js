@@ -1,25 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Timer from './views/Timer.vue'
-import Quests from './views/Quests.vue'
-import Ideas from './views/Ideas.vue'
-import Habits from './views/Habits.vue'
-import Tags from './views/Tags.vue'
+import Projects from './views/Projects.vue'
+import Skills from './views/Skills.vue'
 import Stats from './views/Stats.vue'
 import Rewards from './views/Rewards.vue'
-import Achievements from './views/Achievements.vue'
+import Progression from './views/Progression.vue'
 import Settings from './views/Settings.vue'
 
 const routes = [
   { path: '/', name: 'Timer', component: Timer },
-  { path: '/Quests', name: 'Quests', component: Quests },
-  { path: '/Ideas', name: 'Ideas', component: Ideas },
-  { path: '/Habits', name: 'Habits', component: Habits },
-  { path: '/Tags', name: 'Tags', component: Tags },
-  { path: '/Stats', name: 'Stats', component: Stats },
+  { path: '/Projects', name: 'Projects', component: Projects },
+  { path: '/Skills', name: 'Skills', component: Skills },
   { path: '/Rewards', name: 'Rewards', component: Rewards },
-  { path: '/Achievements', name: 'Achievements', component: Achievements },
+  { path: '/Stats', name: 'Stats', component: Stats },
   { path: '/Settings', name: 'Settings', component: Settings },
+  { path: '/Progression', name: 'Progression', component: Progression },
 ]
 
 const router = createRouter({ history: createWebHistory(), routes })
