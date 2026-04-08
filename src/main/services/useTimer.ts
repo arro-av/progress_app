@@ -13,8 +13,7 @@ type AddTimeResult = {
   updatedQuests: Quest[]
   updatedTags: Tag[]
   levelUp: boolean
-  tagLevelUp: boolean
-  tagTitle: string
+  tagLevelUps: string[]
   userExp: number
   tagExp: number
 }
@@ -71,20 +70,24 @@ export function useTimer() {
     }
 
     let updatedTags = allTags
-    let updatedTag: Tag | undefined
 
     const preUpdatedUserLevel = user.level
-    let preUpdatedTagLevel = updatedTag?.level
+    const tagLevelsBefore = new Map<number, number>()
+    const updatedTagMap = new Map<number, Tag>()
 
     if (currentActiveQuest) {
-      updatedTag = allTags.find((tag) => tag.id === currentActiveQuest.tag_id)
-      if (updatedTag) {
-        updatedTag = updateTagLevel(updatedTag, reward.tagExp)
-        preUpdatedTagLevel = updatedTag.level
-      }
+      const affectedTags = allTags.filter(
+        (tag) => tag.id === currentActiveQuest.tag_id_1 || tag.id === currentActiveQuest.tag_id_2,
+      )
+
+      affectedTags.forEach((tag) => {
+        tagLevelsBefore.set(tag.id, tag.level)
+        updatedTagMap.set(tag.id, updateTagLevel(tag, reward.tagExp))
+      })
 
       updatedTags = allTags.map((tag) => {
-        if (updatedTag && tag.id === updatedTag.id) {
+        const updatedTag = updatedTagMap.get(tag.id)
+        if (updatedTag) {
           return {
             ...tag,
             time_spent: tag.time_spent + roundedTimeSpent,
@@ -100,8 +103,10 @@ export function useTimer() {
     let levelUp = false
     if (preUpdatedUserLevel < updatedUser.level) levelUp = true
 
-    let tagLevelUp = false
-    if (updatedTag && preUpdatedTagLevel && preUpdatedTagLevel < updatedTag.level) tagLevelUp = true
+    const tagLevelUps = updatedTags
+      .filter((tag) => updatedTagMap.has(tag.id))
+      .filter((tag) => (tagLevelsBefore.get(tag.id) ?? tag.level) < tag.level)
+      .map((tag) => tag.title)
 
     return {
       success: true,
@@ -110,8 +115,7 @@ export function useTimer() {
       updatedQuests,
       updatedTags,
       levelUp,
-      tagLevelUp,
-      tagTitle: updatedTag?.title || '',
+      tagLevelUps,
       userExp: reward.userExp,
       tagExp: reward.tagExp,
     }

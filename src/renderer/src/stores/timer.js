@@ -79,7 +79,11 @@ export const useTimerStore = defineStore('timer', () => {
         addToast({ message: '+' + result.userExp + ' EXP', type: 'plusExp' })
         addToast({ message: '+' + result.tagExp + ' Tag-EXP', type: 'plusExp' })
         if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
-        if (result.tagLevelUp) addToast({ message: `Level Up: ${result.tagTitle}`, type: 'lvlup' })
+        if (result.tagLevelUps?.length) {
+          result.tagLevelUps.forEach((tagTitle) => {
+            addToast({ message: `Level Up: ${tagTitle}`, type: 'lvlup' })
+          })
+        }
       }
     } catch (error) {
       console.error('Failed to add time:', error)

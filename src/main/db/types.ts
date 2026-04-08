@@ -47,7 +47,8 @@ export interface Quest {
   title: string
   time_spent: number
   questline_id: number
-  tag_id: number
+  tag_id_1: number
+  tag_id_2: number | null
   active: boolean
   position: number
 }

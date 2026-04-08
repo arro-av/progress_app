@@ -26,7 +26,7 @@ const { questlines, quests, tasks } = storeToRefs(questsStore)
 const { tags } = storeToRefs(tagsStore)
 
 const { addToast } = useToasts()
-const { getQuestlineProgressionReward } = useProgressions()
+const { getQuestlineProgressionReward, getQuestProgressionReward } = useProgressions()
 const { getQuestlineRank } = useRanks()
 
 const selectedQuestlineId = ref(null)
@@ -42,8 +42,6 @@ const editingQuestId = ref(null)
 const questTitleDraft = ref('')
 const editingTaskId = ref(null)
 const taskTitleDraft = ref('')
-
-const secondaryTagSelections = ref({})
 
 // ========== COMPUTED ==========
 const sortedQuestlines = computed(() =>
@@ -80,12 +78,25 @@ const currentQuestlineReward = computed(() =>
   currentQuestline.value ? getQuestlineProgressionReward(currentQuestline.value) : null,
 )
 
+const currentQuestReward = computed(() =>
+  currentQuest.value
+    ? getQuestProgressionReward(currentQuest.value, tasksInCurrentQuest.value)
+    : null,
+)
+
 const questlineRankClass = computed(() =>
   currentQuestline.value ? `rank-${getQuestlineRank(currentQuestline.value)}` : 'rank-common',
 )
 
 const claimDisabled = computed(
   () => !currentQuestline.value || questsInCurrentQuestline.value.length > 0,
+)
+
+const epicClaimDisabled = computed(
+  () =>
+    !currentQuest.value ||
+    tasksInCurrentQuest.value.length === 0 ||
+    !tasksInCurrentQuest.value.every((task) => task.completed),
 )
 
 // ========== LIFECYCLE ==========
@@ -130,16 +141,6 @@ watch(
     const currentStillExists = nextQuests.some((quest) => quest.id === selectedQuestId.value)
     if (!currentStillExists) {
       selectedQuestId.value = nextQuests.find((quest) => quest.active)?.id ?? nextQuests[0].id
-    }
-  },
-  { immediate: true },
-)
-
-watch(
-  currentQuest,
-  (quest) => {
-    if (quest && secondaryTagSelections.value[quest.id] === undefined) {
-      secondaryTagSelections.value[quest.id] = null
     }
   },
   { immediate: true },
@@ -321,7 +322,8 @@ const addDefaultQuest = async () => {
   const result = await questsStore.addQuest({
     title: 'New Quest',
     questline_id: currentQuestline.value.id,
-    tag_id: tags.value[0].id,
+    tag_id_1: tags.value[0].id,
+    tag_id_2: null,
   })
 
   addToast({ message: result.message, type: result.success ? 'success' : 'error' })
@@ -332,15 +334,21 @@ const updatePrimaryTag = async (value) => {
 
   const result = await questsStore.editQuest({
     ...toRaw(currentQuest.value),
-    tag_id: Number(value),
+    tag_id_1: Number(value),
   })
 
   addToast({ message: result.message, type: result.success ? 'success' : 'error' })
 }
 
-const updateSecondaryTag = (value) => {
+const updateSecondaryTag = async (value) => {
   if (!currentQuest.value) return
-  secondaryTagSelections.value[currentQuest.value.id] = value === 'NONE' ? null : Number(value)
+
+  const result = await questsStore.editQuest({
+    ...toRaw(currentQuest.value),
+    tag_id_2: value === 'NONE' ? null : Number(value),
+  })
+
+  addToast({ message: result.message, type: result.success ? 'success' : 'error' })
 }
 
 // ========== TASKS ==========
@@ -425,6 +433,11 @@ const claimQuestlineReward = async () => {
 const cancelQuestline = async () => {
   if (!currentQuestline.value) return
   await questsStore.cancelQuestline(toRaw(currentQuestline.value))
+}
+
+const claimCurrentEpic = async () => {
+  if (!currentQuest.value) return
+  await questsStore.claimQuestReward(toRaw(currentQuest.value))
 }
 
 // ========== KEYDOWNS ==========
@@ -525,7 +538,7 @@ useKeydowns({
     <div class="projectsGrid">
       <section class="projectColumn">
         <div class="columnHeader">
-          <h3>Quests</h3>
+          <h3>Epics</h3>
         </div>
 
         <div class="panel questListPanel">
@@ -559,7 +572,14 @@ useKeydowns({
             </template>
 
             <span class="questMeta">
-              {{ tags.find((tag) => tag.id === quest.tag_id)?.title ?? 'No Skill' }}
+              {{
+                [
+                  tags.find((tag) => tag.id === quest.tag_id_1)?.title,
+                  tags.find((tag) => tag.id === quest.tag_id_2)?.title,
+                ]
+                  .filter(Boolean)
+                  .join(' / ') || 'No Skill'
+              }}
             </span>
           </button>
 
@@ -569,6 +589,31 @@ useKeydowns({
           >
             Add New
           </button>
+
+          <div
+            v-if="currentQuest"
+            class="epicRewardPreview"
+          >
+            <div class="rewardRow compact">
+              <span>Crystals</span>
+              <strong>{{ currentQuestReward?.crystals ?? 0 }}</strong>
+            </div>
+            <div class="rewardRow compact">
+              <span>User EXP</span>
+              <strong>{{ currentQuestReward?.userExp ?? 0 }}</strong>
+            </div>
+            <div class="rewardRow compact">
+              <span>Tag EXP</span>
+              <strong>{{ currentQuestReward?.tagExp ?? 0 }}</strong>
+            </div>
+            <button
+              class="actionButton primary compactButton"
+              :disabled="epicClaimDisabled"
+              @click="claimCurrentEpic"
+            >
+              Claim Epic
+            </button>
+          </div>
         </div>
       </section>
 
@@ -583,7 +628,7 @@ useKeydowns({
               <div class="tagSelectGroup">
                 <label>Primary Skill</label>
                 <select
-                  :value="currentQuest.tag_id"
+                  :value="currentQuest.tag_id_1"
                   @change="updatePrimaryTag($event.target.value)"
                 >
                   <option
@@ -599,7 +644,7 @@ useKeydowns({
               <div class="tagSelectGroup">
                 <label>Secondary Skill</label>
                 <select
-                  :value="secondaryTagSelections[currentQuest.id] ?? 'NONE'"
+                  :value="currentQuest.tag_id_2 ?? 'NONE'"
                   @change="updateSecondaryTag($event.target.value)"
                 >
                   <option value="NONE">NONE</option>
@@ -684,6 +729,10 @@ useKeydowns({
 
       <section class="projectColumn">
         <div class="summaryStack">
+          <div class="columnHeader">
+            <h3>Overview</h3>
+          </div>
+
           <div class="panel summaryPanel">
             <p class="summaryLabel">Project Time</p>
             <h3>{{ currentQuestline ? formatMinutes(currentQuestline.time_spent) : '0h 0m' }}</h3>
@@ -1105,6 +1154,15 @@ useKeydowns({
   }
 }
 
+.epicRewardPreview {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .summaryStack {
   display: flex;
   flex-direction: column;
@@ -1160,6 +1218,13 @@ useKeydowns({
   }
 }
 
+.rewardRow.compact {
+  span,
+  strong {
+    font-size: 12px;
+  }
+}
+
 .cancelHint {
   font-family: 'Inter', sans-serif;
   font-size: 12px;
@@ -1204,6 +1269,11 @@ useKeydowns({
     background-color: rgba(220, 80, 80, 0.14);
     color: #d85f5f;
   }
+}
+
+.compactButton {
+  min-height: 36px;
+  margin-top: 4px;
 }
 
 .emptyState {

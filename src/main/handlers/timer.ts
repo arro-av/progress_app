@@ -36,8 +36,7 @@ export function registerTimerHandlers() {
     return {
       success: true,
       levelUp: result.levelUp,
-      tagLevelUp: result.tagLevelUp,
-      tagTitle: result.tagTitle,
+      tagLevelUps: result.tagLevelUps,
       userExp: result.userExp,
       tagExp: result.tagExp,
     }

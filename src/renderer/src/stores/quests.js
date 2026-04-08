@@ -178,7 +178,11 @@ export const useQuestsStore = defineStore('quests', () => {
         addToast({ message: '+' + result.userExpGained + ' EXP', type: 'plusExp' })
         addToast({ message: '+' + result.tagExpGained + ' Tag-EXP', type: 'plusExp' })
         if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
-        if (result.tagLevelUp) addToast({ message: `Level Up: ${result.tagTitle}`, type: 'lvlup' })
+        if (result.tagLevelUps?.length) {
+          result.tagLevelUps.forEach((tagTitle) => {
+            addToast({ message: `Level Up: ${tagTitle}`, type: 'lvlup' })
+          })
+        }
       } else {
         addToast({ message: result.message, type: 'error' })
       }

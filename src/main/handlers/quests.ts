@@ -14,7 +14,8 @@ export function registerQuestHandlers() {
 
     const result = addQuest(addedQuest, db.data.quests, db.data.tags)
     if (!result.titleValid) return { success: false, message: 'Title is required' }
-    if (!result.tagValid) return { success: false, message: 'Tag is required' }
+    if (!result.primaryTagValid) return { success: false, message: 'Primary skill is required' }
+    if (!result.secondaryTagValid) return { success: false, message: 'Secondary skill is invalid' }
 
     db.data.quests = result.updatedQuests
     db.write()
@@ -32,7 +33,8 @@ export function registerQuestHandlers() {
     const result = editQuest(editedQuest, db.data.quests, db.data.tags)
     if (!result.questExists) return { success: false, message: 'Quest not found' }
     if (!result.titleValid) return { success: false, message: 'Title is required' }
-    if (!result.tagValid) return { success: false, message: 'Tag is required' }
+    if (!result.primaryTagValid) return { success: false, message: 'Primary skill is required' }
+    if (!result.secondaryTagValid) return { success: false, message: 'Secondary skill is invalid' }
 
     db.data.quests = result.updatedQuests
     db.write()
@@ -96,8 +98,8 @@ export function registerQuestHandlers() {
       userExpGained: result.userExpGained,
       tagExpGained: result.tagExpGained,
       levelUp: result.levelUp,
-      tagLevelUp: result.tagLevelUp,
-      tagTitle: result.tagTitle,
+      tagLevelUps: result.tagLevelUps,
+      tagTitles: result.tagTitles,
     }
   })
 }

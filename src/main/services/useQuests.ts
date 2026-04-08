@@ -13,14 +13,16 @@ const { getQuestProgressionReward } = useProgressions()
 
 type AddQuestResult = {
   titleValid: boolean
-  tagValid: boolean
+  primaryTagValid: boolean
+  secondaryTagValid: boolean
   updatedQuests: Quest[]
 }
 
 type EditQuestResult = {
   questExists: boolean
   titleValid: boolean
-  tagValid: boolean
+  primaryTagValid: boolean
+  secondaryTagValid: boolean
   updatedQuests: Quest[]
 }
 
@@ -46,19 +48,24 @@ type ClaimQuestRewardResult = {
   crystalsGained: number
   userExpGained: number
   tagExpGained: number
-  tagTitle: string
+  tagTitles: string[]
   levelUp: boolean
-  tagLevelUp: boolean
+  tagLevelUps: string[]
 }
 
 export function useQuests() {
   const addQuest = (addedQuest: Quest, allQuests: Quest[], allTags: Tag[]): AddQuestResult => {
     const titleValid = validateTitle(addedQuest.title)
-    const tagValid = validateTag(addedQuest.tag_id, allTags)
-    if (!titleValid || !tagValid) return { titleValid, tagValid, updatedQuests: allQuests }
+    const primaryTagValid = validateTag(addedQuest.tag_id_1, allTags)
+    const secondaryTagValid =
+      addedQuest.tag_id_2 === null || validateTag(addedQuest.tag_id_2, allTags)
+    if (!titleValid || !primaryTagValid || !secondaryTagValid)
+      return { titleValid, primaryTagValid, secondaryTagValid, updatedQuests: allQuests }
 
     const nextId = nextID(allQuests)
-    const nextPosition = allQuests.length
+    const nextPosition = allQuests.filter(
+      (quest) => quest.questline_id === addedQuest.questline_id,
+    ).length
 
     const newQuest = {
       ...addedQuest,
@@ -66,38 +73,46 @@ export function useQuests() {
       title: addedQuest.title,
       time_spent: 0,
       questline_id: addedQuest.questline_id,
-      tag_id: addedQuest.tag_id,
+      tag_id_1: addedQuest.tag_id_1,
+      tag_id_2: addedQuest.tag_id_2,
       active: false,
       position: nextPosition,
     }
 
     const updatedQuests = [...allQuests, newQuest]
 
-    console.log(updatedQuests)
-
-    return { titleValid, tagValid, updatedQuests }
+    return { titleValid, primaryTagValid, secondaryTagValid, updatedQuests }
   }
 
   const editQuest = (editedQuest: Quest, allQuests: Quest[], allTags: Tag[]): EditQuestResult => {
     const questExists = validateExistance(editedQuest.id, allQuests)
     const titleValid = validateTitle(editedQuest.title)
-    const tagValid = validateTag(editedQuest.tag_id, allTags)
+    const primaryTagValid = validateTag(editedQuest.tag_id_1, allTags)
+    const secondaryTagValid =
+      editedQuest.tag_id_2 === null || validateTag(editedQuest.tag_id_2, allTags)
 
-    if (!questExists || !titleValid || !tagValid)
-      return { questExists, titleValid, tagValid, updatedQuests: allQuests }
+    if (!questExists || !titleValid || !primaryTagValid || !secondaryTagValid)
+      return {
+        questExists,
+        titleValid,
+        primaryTagValid,
+        secondaryTagValid,
+        updatedQuests: allQuests,
+      }
 
     const updatedQuests = allQuests.map((quest) => {
       if (quest.id === editedQuest.id) {
         return {
           ...quest,
           title: editedQuest.title,
-          tag_id: editedQuest.tag_id,
+          tag_id_1: editedQuest.tag_id_1,
+          tag_id_2: editedQuest.tag_id_2,
         }
       }
       return { ...quest }
     })
 
-    return { questExists, titleValid, tagValid, updatedQuests }
+    return { questExists, titleValid, primaryTagValid, secondaryTagValid, updatedQuests }
   }
 
   const deleteQuest = (
@@ -114,7 +129,6 @@ export function useQuests() {
       }
 
     const updatedTasks = allTasks.filter((task) => task.quest_id !== questId)
-    console.log(updatedTasks)
 
     // validation returns questline object if it exists
     const questToDelete = questExists
@@ -131,7 +145,7 @@ export function useQuests() {
 
     let updatedQuests = updatedQuestsPreReactivation
     if (questsInQuestline.length > 0) {
-      const questToActivate = updatedQuestsPreReactivation[0]
+      const questToActivate = questsInQuestline[0]
       updatedQuests = activateQuest(questToActivate, updatedQuestsPreReactivation).updatedQuests
     }
 
@@ -176,8 +190,13 @@ export function useQuests() {
     allTags: Tag[],
   ): ClaimQuestRewardResult => {
     const questExists = validateExistance(claimedQuest.id, allQuests)
-    const tagExists = allTags.find((tag) => tag.id === claimedQuest.tag_id)
-    if (!questExists || !tagExists)
+    const primaryTag = allTags.find((tag) => tag.id === claimedQuest.tag_id_1)
+    const secondaryTag =
+      claimedQuest.tag_id_2 === null
+        ? null
+        : allTags.find((tag) => tag.id === claimedQuest.tag_id_2) ?? null
+
+    if (!questExists || !primaryTag)
       return {
         questExists,
         updatedUser: user,
@@ -188,13 +207,13 @@ export function useQuests() {
         crystalsGained: 0,
         userExpGained: 0,
         tagExpGained: 0,
-        tagTitle: '',
+        tagTitles: [],
         levelUp: false,
-        tagLevelUp: false,
+        tagLevelUps: [],
       }
 
     const tasksInQuest = allTasks.filter((task) => task.quest_id === claimedQuest.id)
-    const tasksCompleted = tasksInQuest.every((task) => task.completed)
+    const tasksCompleted = tasksInQuest.length > 0 && tasksInQuest.every((task) => task.completed)
     if (!tasksCompleted)
       return {
         questExists,
@@ -206,36 +225,40 @@ export function useQuests() {
         crystalsGained: 0,
         userExpGained: 0,
         tagExpGained: 0,
-        tagTitle: '',
+        tagTitles: [],
         levelUp: false,
-        tagLevelUp: false,
+        tagLevelUps: [],
       }
 
     const reward = getQuestProgressionReward(claimedQuest, tasksInQuest)
 
     const userLvlBefore = user.level
-    const tagLvlBefore = tagExists.level
+    const tagTargets = [primaryTag, secondaryTag].filter(Boolean) as Tag[]
+    const tagLevelsBefore = new Map(tagTargets.map((tag) => [tag.id, tag.level]))
 
     let updatedUser = {
       ...user,
       balance: user.balance + reward.crystals,
       exp_gained: user.exp_gained + reward.userExp,
       crystals_gained: user.crystals_gained + reward.crystals,
-      questlines_done: user.questlines_done + 1,
     }
     updatedUser = updateUserLevel(updatedUser, reward.userExp)
 
-    let updatedTag = tagExists
-    updatedTag = updateTagLevel(updatedTag, reward.tagExp)
+    const updatedTagMap = new Map<number, Tag>()
+    tagTargets.forEach((tag) => {
+      updatedTagMap.set(tag.id, updateTagLevel(tag, reward.tagExp))
+    })
 
-    const updatesAfterDeelete = deleteQuest(claimedQuest.id, allQuests, allTasks)
-    const updatedQuests = updatesAfterDeelete.updatedQuests
-    const updatedTasks = updatesAfterDeelete.updatedTasks
+    const updatesAfterDelete = deleteQuest(claimedQuest.id, allQuests, allTasks)
+    const updatedQuests = updatesAfterDelete.updatedQuests
+    const updatedTasks = updatesAfterDelete.updatedTasks
 
     const updatedTags = allTags.map((tag) => {
-      if (tag.id === updatedTag.id) {
+      const updatedTag = updatedTagMap.get(tag.id)
+      if (updatedTag) {
         return {
           ...tag,
+          time_spent: tag.time_spent + claimedQuest.time_spent,
           level: updatedTag.level,
           exp_current: updatedTag.exp_current,
           exp_needed: updatedTag.exp_needed,
@@ -246,8 +269,11 @@ export function useQuests() {
 
     let levelUp = false
     if (userLvlBefore < updatedUser.level) levelUp = true
-    let tagLevelUp = false
-    if (tagLvlBefore < updatedTag.level) tagLevelUp = true
+
+    const tagLevelUps = updatedTags
+      .filter((tag) => updatedTagMap.has(tag.id))
+      .filter((tag) => (tagLevelsBefore.get(tag.id) ?? tag.level) < tag.level)
+      .map((tag) => tag.title)
 
     return {
       questExists,
@@ -259,9 +285,9 @@ export function useQuests() {
       crystalsGained: reward.crystals,
       userExpGained: reward.userExp,
       tagExpGained: reward.tagExp,
-      tagTitle: updatedTag.title,
+      tagTitles: tagTargets.map((tag) => tag.title),
       levelUp,
-      tagLevelUp,
+      tagLevelUps,
     }
   }
 
