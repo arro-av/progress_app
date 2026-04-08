@@ -37,13 +37,13 @@ import TimerOverlay from './components/TimerOverlay.vue'
 }
 
 body {
-  background-color: $ui-color-dark;
+  background-color: $main-background-color;
   width: 800px;
   overflow-x: hidden;
 
   main {
     position: absolute;
-    left: 125px;
+    left: 150px;
 
     .moduleWrapper {
       position: absolute;

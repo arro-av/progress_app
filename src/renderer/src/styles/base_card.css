@@ -21,15 +21,6 @@
   display: flex;
   flex-direction: column;
 }
-.cardWrapper .cardContent h4 {
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  color: #ffffff;
-  margin: auto 0;
-  height: -moz-fit-content;
-  height: fit-content;
-}
 .cardWrapper .cardContent .tagLvl {
   font-family: "Inter", sans-serif;
   font-weight: 500;

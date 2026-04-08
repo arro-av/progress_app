@@ -1,7 +1,0 @@
-#tagsWrapper {
-    @include module-grid-layout($row-height: 60px);
-}
-
-.addTagWrapper {
-    @include add-wrapper(60px);
-}

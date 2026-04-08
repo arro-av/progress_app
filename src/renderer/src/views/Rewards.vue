@@ -347,11 +347,6 @@ useKeydowns({
   height: 80px;
   cursor: pointer;
 
-  &.selected {
-    outline: 1px solid rgba($accent-color, 0.45);
-    box-shadow: 0 0 0 1px rgba($accent-color, 0.12);
-  }
-
   &.editing {
     outline: 1px solid rgba($accent-color, 0.75);
     box-shadow: 0 0 0 1px rgba($accent-color, 0.2);
@@ -362,12 +357,18 @@ useKeydowns({
   }
 
   h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: $common-color;
+    margin: auto 0;
+    height: fit-content;
+
     cursor: pointer;
 
     position: absolute;
     left: 4%;
     top: 12%;
-    font-size: 14px;
   }
 }
 .rewardTitleInput,
