@@ -19,7 +19,7 @@ const userData = computed(() => {
       xpNeeded,
       totalXP,
       hoursNeeded: hoursNeeded.toFixed(1),
-      totalHours: totalHours.toFixed(1),
+      totalHours: totalHours.toFixed(1) * 60,
     }
   })
 })
@@ -37,7 +37,7 @@ const tagData = computed(() => {
       xpNeeded,
       totalXP,
       hoursNeeded: hoursNeeded.toFixed(1),
-      totalHours: totalHours.toFixed(1),
+      totalHours: totalHours.toFixed(1) * 60,
     }
   })
 })

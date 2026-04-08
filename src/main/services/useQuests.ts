@@ -194,7 +194,7 @@ export function useQuests() {
     const secondaryTag =
       claimedQuest.tag_id_2 === null
         ? null
-        : allTags.find((tag) => tag.id === claimedQuest.tag_id_2) ?? null
+        : (allTags.find((tag) => tag.id === claimedQuest.tag_id_2) ?? null)
 
     if (!questExists || !primaryTag)
       return {
@@ -258,7 +258,7 @@ export function useQuests() {
       if (updatedTag) {
         return {
           ...tag,
-          time_spent: tag.time_spent + claimedQuest.time_spent,
+          time_spent: tag.time_spent,
           level: updatedTag.level,
           exp_current: updatedTag.exp_current,
           exp_needed: updatedTag.exp_needed,

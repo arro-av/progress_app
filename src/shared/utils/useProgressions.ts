@@ -1,11 +1,5 @@
 import { Quest, Questline, Task } from '../../main/db/types'
 
-// define return types
-type HabitProgressionReward = {
-  exp: number
-  crystals: number
-}
-
 type QuestProgressionReward = {
   crystals: number
   tagExp: number
@@ -28,23 +22,23 @@ export const useProgressions = () => {
     tasksInQuest: Task[],
   ): QuestProgressionReward => {
     return {
-      crystals: Math.round(tasksInQuest.length + quest.time_spent / 10),
-      tagExp: Math.round(tasksInQuest.length * 10 + quest.time_spent / 2),
-      userExp: Math.round(tasksInQuest.length * 10 + quest.time_spent / 1.25),
+      crystals: Math.round(quest.time_spent / 45),
+      tagExp: Math.round(quest.time_spent * 0.17),
+      userExp: Math.round(quest.time_spent * 0.24),
     }
   }
 
   const getQuestlineProgressionReward = (questline: Questline): QuestlineProgressionReward => {
     return {
-      crystals: Math.round(questline.time_spent / 10),
-      userExp: Math.round(questline.time_spent / 1.25),
+      crystals: Math.round(questline.time_spent / 6),
+      userExp: Math.round(questline.time_spent * 0.54),
     }
   }
 
   const getTimeProgressionReward = (timeSpentMinutes: number): TimeProgressionReward => {
     return {
-      tagExp: Math.round(timeSpentMinutes / 4),
-      userExp: Math.round(timeSpentMinutes / 2),
+      tagExp: Math.round(timeSpentMinutes * 0.43),
+      userExp: Math.round(timeSpentMinutes * 0.2),
     }
   }
 
