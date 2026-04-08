@@ -5,6 +5,13 @@ export const IPC_CHANNELS = {
   // ========= USER =========
   GET_USER: 'get-user',
   USER_UPDATED: 'user-updated',
+  GET_STATS_SNAPSHOT: 'get-stats-snapshot',
+  EXPORT_STATS_PDF: 'export-stats-pdf',
+  GET_SETTINGS: 'get-settings',
+  UPDATE_TIMER_SETTINGS: 'update-timer-settings',
+  RESET_TIMER_SETTINGS: 'reset-timer-settings',
+  EXPORT_DB_JSON: 'export-db-json',
+  SETTINGS_UPDATED: 'settings-updated',
 
   // ========= TIMER =========
   ADD_TIME: 'add-time',

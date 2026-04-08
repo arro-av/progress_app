@@ -13,10 +13,22 @@ const api = {
 
   // User Functions
   getUser: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_USER),
+  getStatsSnapshot: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_STATS_SNAPSHOT),
+  exportStatsPdf: async () => await ipcRenderer.invoke(IPC_CHANNELS.EXPORT_STATS_PDF),
   onUserUpdate: (callback) => {
     const handler = () => callback()
     ipcRenderer.on(IPC_CHANNELS.USER_UPDATED, handler)
     return () => ipcRenderer.removeListener(IPC_CHANNELS.USER_UPDATED, handler)
+  },
+  getSettings: async () => await ipcRenderer.invoke(IPC_CHANNELS.GET_SETTINGS),
+  updateTimerSettings: async (settings) =>
+    await ipcRenderer.invoke(IPC_CHANNELS.UPDATE_TIMER_SETTINGS, settings),
+  resetTimerSettings: async () => await ipcRenderer.invoke(IPC_CHANNELS.RESET_TIMER_SETTINGS),
+  exportDbJson: async () => await ipcRenderer.invoke(IPC_CHANNELS.EXPORT_DB_JSON),
+  onSettingsUpdate: (callback) => {
+    const handler = () => callback()
+    ipcRenderer.on(IPC_CHANNELS.SETTINGS_UPDATED, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.SETTINGS_UPDATED, handler)
   },
 
   // Timer Functions

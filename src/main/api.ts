@@ -9,6 +9,8 @@ import { registerQuestHandlers } from './handlers/quests'
 import { registerTaskHandlers } from './handlers/tasks.js'
 import { registerUserHandlers } from './handlers/user'
 import { registerTimerHandlers } from './handlers/timer'
+import { registerStatsHandlers } from './handlers/stats'
+import { registerSettingHandlers } from './handlers/settings'
 
 export function registerDBHandlers() {
   registerMoveItemHandler()
@@ -19,4 +21,6 @@ export function registerDBHandlers() {
   registerTaskHandlers()
   registerUserHandlers()
   registerTimerHandlers()
+  registerStatsHandlers()
+  registerSettingHandlers()
 }

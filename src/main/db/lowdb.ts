@@ -7,6 +7,7 @@ import type { DbSchema } from './types'
 
 // save path of db.json
 const file = join(app.getPath('userData'), 'dev-db.json') // change to 'db.json' in production
+export const dbFilePath = file
 
 // creates the adapter
 const adapter = new JSONFileSync<DbSchema>(file)

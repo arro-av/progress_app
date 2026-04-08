@@ -1,4 +1,4 @@
-import { User, Questline, Quest, Tag } from '../db/types'
+import { User, Questline, Quest, Tag, Year } from '../db/types'
 
 import { useProgressions } from '../../shared/utils/useProgressions'
 const { getTimeProgressionReward } = useProgressions()
@@ -10,6 +10,7 @@ type AddTimeResult = {
   success: boolean
   message?: string
   updatedUser: User
+  updatedYears: Year[]
   updatedQuestlines: Questline[]
   updatedQuests: Quest[]
   updatedTags: Tag[]
@@ -20,10 +21,62 @@ type AddTimeResult = {
 }
 
 export function useTimer() {
+  const getYearTemplate = (): number[] => Array(365).fill(0)
+
+  const getDayOfYearIndex = (date: Date): number => {
+    const startOfYear = new Date(date.getFullYear(), 0, 1)
+    const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+    const millisecondsPerDay = 24 * 60 * 60 * 1000
+    let dayIndex = Math.floor((currentDate.getTime() - startOfYear.getTime()) / millisecondsPerDay)
+
+    const isLeapYear =
+      date.getFullYear() % 4 === 0 &&
+      (date.getFullYear() % 100 !== 0 || date.getFullYear() % 400 === 0)
+
+    if (isLeapYear && date.getMonth() > 1) {
+      dayIndex -= 1
+    }
+
+    return Math.max(0, Math.min(364, dayIndex))
+  }
+
+  const updateYearHeatmap = (allYears: Year[], addedMinutes: number): Year[] => {
+    const today = new Date()
+    const currentYear = today.getFullYear()
+    const dayIndex = getDayOfYearIndex(today)
+
+    const yearExists = allYears.some((yearEntry) => yearEntry.year === currentYear)
+    const ensuredYears = yearExists
+      ? allYears.map((yearEntry) => ({
+          ...yearEntry,
+          time: [...yearEntry.time.slice(0, 365), ...getYearTemplate()].slice(0, 365),
+        }))
+      : [
+          ...allYears.map((yearEntry) => ({
+            ...yearEntry,
+            time: [...yearEntry.time.slice(0, 365), ...getYearTemplate()].slice(0, 365),
+          })),
+          { year: currentYear, time: getYearTemplate() },
+        ]
+
+    return ensuredYears.map((yearEntry) => {
+      if (yearEntry.year !== currentYear) return yearEntry
+
+      const updatedTime = [...yearEntry.time]
+      updatedTime[dayIndex] = (updatedTime[dayIndex] ?? 0) + addedMinutes
+
+      return {
+        ...yearEntry,
+        time: updatedTime,
+      }
+    })
+  }
+
   // Extract the addTime logic to a separate function
   const addTime = (
     timeSpentMinutes: number,
     user: User,
+    allYears: Year[],
     allQuestlines: Questline[],
     allQuests: Quest[],
     allTags: Tag[],
@@ -38,6 +91,7 @@ export function useTimer() {
         success: false,
         message: 'Select an active project and epic first',
         updatedUser: user,
+        updatedYears: allYears,
         updatedQuestlines: allQuestlines,
         updatedQuests: allQuests,
         updatedTags: allTags,
@@ -55,6 +109,7 @@ export function useTimer() {
         success: true,
         message: 'No time tracked yet',
         updatedUser: user,
+        updatedYears: allYears,
         updatedQuestlines: allQuestlines,
         updatedQuests: allQuests,
         updatedTags: allTags,
@@ -66,6 +121,7 @@ export function useTimer() {
     }
 
     const reward = getTimeProgressionReward(roundedTimeSpent)
+    const updatedYears = updateYearHeatmap(allYears, roundedTimeSpent)
 
     let updatedUser = user
     updatedUser.pomodoros += 1
@@ -142,6 +198,7 @@ export function useTimer() {
     return {
       success: true,
       updatedUser,
+      updatedYears,
       updatedQuestlines,
       updatedQuests,
       updatedTags,

@@ -8,6 +8,8 @@ import PlayIcon from '../assets/play.svg'
 import AddTimeIcon from '../assets/addtime.svg'
 import CancelIcon from '../assets/cancel.svg'
 
+import ExpBar from '../components/ExpBar.vue'
+
 import { useQuestsStore } from '../stores/quests'
 import { useTimerStore } from '../stores/timer'
 import { useRanks } from '../../../shared/utils/useRanks'
@@ -176,6 +178,8 @@ watch(
 </script>
 
 <template>
+  <ExpBar />
+
   <div
     class="timerView"
     @click="clearTransientUi"

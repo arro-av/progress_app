@@ -25,9 +25,6 @@ export interface Settings {
   timer_min: number
   timer_max: number
   timer_default_session: number
-
-  currency_crysral_ratio: number[]
-  max_projects: number
 }
 
 // ========== QUESTLINES ==========

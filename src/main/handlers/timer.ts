@@ -21,6 +21,26 @@ const getTimerLimits = () => {
   }
 }
 
+export const applyTimerSettings = (resetToDefault = false) => {
+  const { min, max, defaultSession } = getTimerLimits()
+  const clampedDefault = Math.max(min, Math.min(max, defaultSession))
+
+  if (!isRunning) {
+    const currentMinutes = Math.floor(timerDuration / 60) || clampedDefault
+    const nextMinutes = resetToDefault
+      ? clampedDefault
+      : Math.max(min, Math.min(max, currentMinutes))
+
+    timerDuration = nextMinutes * 60
+    timeLeft = timerDuration
+    return
+  }
+
+  const clampedDuration = Math.max(min * 60, Math.min(max * 60, timerDuration))
+  timerDuration = clampedDuration
+  timeLeft = Math.min(timeLeft, timerDuration)
+}
+
 const ensureTimerDefaults = () => {
   if (timerDuration > 0) return
 
@@ -52,6 +72,7 @@ const finalizeTrackedTime = (event, timeSpentMinutes: number) => {
   const result = addTime(
     timeSpentMinutes,
     db.data.user,
+    db.data.years,
     db.data.questlines,
     db.data.quests,
     db.data.tags,
@@ -62,6 +83,7 @@ const finalizeTrackedTime = (event, timeSpentMinutes: number) => {
   }
 
   db.data.user = result.updatedUser
+  db.data.years = result.updatedYears
   db.data.questlines = result.updatedQuestlines
   db.data.quests = result.updatedQuests
   db.data.tags = result.updatedTags
@@ -84,11 +106,13 @@ export function registerTimerHandlers() {
   ensureTimerDefaults()
 
   ipcMain.handle(IPC_CHANNELS.ADD_TIME, (event, timeSpentMinutes: number) => {
+    applyTimerSettings()
     ensureTimerDefaults()
     return finalizeTrackedTime(event, timeSpentMinutes)
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_START, async (event) => {
+    applyTimerSettings()
     ensureTimerDefaults()
     if (isRunning) return { success: false, message: 'Timer already running' }
 
@@ -142,6 +166,7 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_STOP, (event) => {
+    applyTimerSettings()
     ensureTimerDefaults()
 
     if (!isRunning) {
@@ -160,6 +185,7 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_RESET, () => {
+    applyTimerSettings(true)
     ensureTimerDefaults()
     clearTimerInterval()
     isRunning = false
@@ -170,6 +196,7 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_SET_DURATION, (event, duration: number) => {
+    applyTimerSettings()
     ensureTimerDefaults()
     const { min, max } = getTimerLimits()
     const newDuration = Math.max(min, Math.min(max, duration))
@@ -181,6 +208,7 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_GET_STATE, () => {
+    applyTimerSettings()
     ensureTimerDefaults()
     const { min, max, defaultSession } = getTimerLimits()
 
