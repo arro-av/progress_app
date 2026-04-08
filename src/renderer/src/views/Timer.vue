@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, toRaw, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import PlusIcon from '../assets/plus.svg'
 import ReloadIcon from '../assets/resetTimer.svg'
 import PlayIcon from '../assets/play.svg'
 import AddTimeIcon from '../assets/addtime.svg'
@@ -9,9 +10,11 @@ import CancelIcon from '../assets/cancel.svg'
 
 import { useQuestsStore } from '../stores/quests'
 import { useTimerStore } from '../stores/timer'
+import { useRanks } from '../../../shared/utils/useRanks'
 
 const questsStore = useQuestsStore()
 const timerStore = useTimerStore()
+const { getQuestlineRank } = useRanks()
 
 const { questlines, quests } = storeToRefs(questsStore)
 const { isRunning, timerDuration, formattedTime, minDuration, maxDuration, defaultDuration } =
@@ -19,6 +22,8 @@ const { isRunning, timerDuration, formattedTime, minDuration, maxDuration, defau
 
 const selectedQuestlineId = ref(null)
 const selectedQuestId = ref(null)
+const isQuestlineDropdownOpen = ref(false)
+const isQuestDropdownOpen = ref(false)
 
 const sortedQuestlines = computed(() =>
   [...questlines.value].sort((a, b) => a.position - b.position),
@@ -47,12 +52,19 @@ const currentQuest = computed(
 )
 
 const hasActiveSelection = computed(() => Boolean(currentQuestline.value && currentQuest.value))
+const getRankClass = (questline) => `rank-${getQuestlineRank(questline)}`
 
-const selectQuestline = async (questlineId) => {
-  const questline = sortedQuestlines.value.find((entry) => entry.id === Number(questlineId))
+const clearTransientUi = () => {
+  isQuestlineDropdownOpen.value = false
+  isQuestDropdownOpen.value = false
+}
+
+const selectQuestline = async (questline) => {
   if (!questline) return
 
   selectedQuestlineId.value = questline.id
+  isQuestlineDropdownOpen.value = false
+  isQuestDropdownOpen.value = false
 
   if (!questline.active) {
     await questsStore.activateQuestline(toRaw(questline))
@@ -74,15 +86,27 @@ const selectQuestline = async (questlineId) => {
   }
 }
 
-const selectQuest = async (questId) => {
-  const quest = questsInCurrentQuestline.value.find((entry) => entry.id === Number(questId))
+const selectQuest = async (quest) => {
   if (!quest) return
 
   selectedQuestId.value = quest.id
+  isQuestDropdownOpen.value = false
 
   if (!quest.active) {
     await questsStore.activateQuest(toRaw(quest))
   }
+}
+
+const toggleQuestlineDropdown = () => {
+  if (sortedQuestlines.value.length === 0) return
+  isQuestDropdownOpen.value = false
+  isQuestlineDropdownOpen.value = !isQuestlineDropdownOpen.value
+}
+
+const toggleQuestDropdown = () => {
+  if (questsInCurrentQuestline.value.length === 0) return
+  isQuestlineDropdownOpen.value = false
+  isQuestDropdownOpen.value = !isQuestDropdownOpen.value
 }
 
 const handlePlay = async () => {
@@ -152,52 +176,76 @@ watch(
 </script>
 
 <template>
-  <div class="timerView">
+  <div
+    class="timerView"
+    @click="clearTransientUi"
+  >
     <div
       v-if="!isRunning"
       class="timerToolbar"
     >
-      <div class="timerSelect">
-        <select
-          :value="selectedQuestlineId ?? ''"
-          @change="selectQuestline($event.target.value)"
+      <div
+        class="timerSelect"
+        @click.stop="toggleQuestlineDropdown"
+      >
+        <p>{{ currentQuestline?.title ?? 'No Projects' }}</p>
+
+        <div class="selectorIconButton">
+          <PlusIcon
+            class="addIcon"
+            :class="{ rotated: isQuestlineDropdownOpen }"
+          />
+        </div>
+
+        <div
+          v-if="isQuestlineDropdownOpen"
+          class="timerDropdown"
+          @click.stop
         >
-          <option
-            v-if="sortedQuestlines.length === 0"
-            value=""
-          >
-            No Projects
-          </option>
-          <option
+          <button
             v-for="questline in sortedQuestlines"
             :key="questline.id"
-            :value="questline.id"
+            class="timerOption"
+            :class="{ active: currentQuestline?.id === questline.id }"
+            @click="selectQuestline(questline)"
           >
-            {{ questline.title }}
-          </option>
-        </select>
+            <span>{{ questline.title }}</span>
+            <span :class="['timerOptionRank', getRankClass(questline)]">
+              {{ getQuestlineRank(questline) }}
+            </span>
+          </button>
+        </div>
       </div>
 
-      <div class="timerSelect">
-        <select
-          :value="selectedQuestId ?? ''"
-          :disabled="questsInCurrentQuestline.length === 0"
-          @change="selectQuest($event.target.value)"
+      <div
+        class="timerSelect"
+        :class="{ disabled: questsInCurrentQuestline.length === 0 }"
+        @click.stop="toggleQuestDropdown"
+      >
+        <p>{{ currentQuest?.title ?? 'No Epics' }}</p>
+
+        <div class="selectorIconButton">
+          <PlusIcon
+            class="addIcon"
+            :class="{ rotated: isQuestDropdownOpen }"
+          />
+        </div>
+
+        <div
+          v-if="isQuestDropdownOpen"
+          class="timerDropdown"
+          @click.stop
         >
-          <option
-            v-if="questsInCurrentQuestline.length === 0"
-            value=""
-          >
-            No Epics
-          </option>
-          <option
+          <button
             v-for="quest in questsInCurrentQuestline"
             :key="quest.id"
-            :value="quest.id"
+            class="timerOption"
+            :class="{ active: currentQuest?.id === quest.id }"
+            @click="selectQuest(quest)"
           >
-            {{ quest.title }}
-          </option>
-        </select>
+            <span>{{ quest.title }}</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -290,42 +338,100 @@ watch(
 .timerSelect {
   position: relative;
   height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 12px;
   border-radius: 2px;
-  overflow: hidden;
   background-color: $card-background-color;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 14px;
-    width: 8px;
-    height: 8px;
-    border-right: 1px solid rgba($accent-color, 0.9);
-    border-bottom: 1px solid rgba($accent-color, 0.9);
-    transform: translateY(-70%) rotate(45deg);
-    pointer-events: none;
-  }
-
-  select {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    padding: 0 36px 0 12px;
-    background: transparent;
+  p {
+    width: calc(100% - 36px);
     color: $accent-color;
     font-family: 'Inter', sans-serif;
     font-size: 15px;
     font-weight: 500;
-    appearance: none;
-    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  select:disabled {
-    color: $secondary-text-color;
-    cursor: not-allowed;
+  &:hover {
+    background-color: rgba($accent-color, 0.14);
   }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    p {
+      color: $secondary-text-color;
+    }
+  }
+}
+
+.selectorIconButton {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addIcon {
+  scale: 0.75;
+  fill: $accent-color;
+  transition:
+    transform 0.2s ease,
+    fill 0.2s ease;
+
+  &.rotated {
+    transform: rotate(45deg);
+  }
+}
+
+.timerDropdown {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 2px;
+  background-color: #171717;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  z-index: 20;
+}
+
+.timerOption {
+  width: 100%;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  color: $primary-text-color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    background-color: rgba($accent-color, 0.1);
+  }
+}
+
+.timerOptionRank {
+  font-size: 11px;
+  text-transform: uppercase;
 }
 
 .timerStage {
@@ -455,8 +561,27 @@ watch(
   height: 16px;
 }
 
-option {
-  background-color: $main-background-color;
-  color: $primary-text-color;
+.rank-common {
+  color: $common-color;
+}
+
+.rank-uncommon {
+  color: $uncommon-color;
+}
+
+.rank-rare {
+  color: $rare-color;
+}
+
+.rank-epic {
+  color: $epic-color;
+}
+
+.rank-legendary {
+  color: $legendary-color;
+}
+
+.rank-mythic {
+  color: $mythic-color;
 }
 </style>
