@@ -1,67 +1,31 @@
-.balanceWrapper{
-    display: flex;
-    justify-content: space-between;
+.expBarWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 39px;
+  z-index: 100;
+  width: 961px;
 
-    width: 65px;
+  #userLevel {
+    @include base-font($weight: 600, $size: 12px);
+    color: $main-txt-color;
+    text-align: right;
+    width: 100%;
+    padding-right: 8px;
+    opacity: 0.35;
+  }
+  #userExp {
+    @include inter-font($weight: 600, $size: 10px);
+    color: $ui-color-dark;
+    text-align: center;
+    width: 100%;
 
-    position: absolute;
-    top: 35px;
-    right: 40px;
+    position: relative;
+    bottom: -1px;
+    z-index: 200;
+  }
 
-    z-index: 10;
-   
-
-    img{
-        width: 30px;
-
-        position: relative;
-        left: 15px;
-
-        filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.35));
-    }
-    p{
-        @include base-font($weight: 500, $size: 16px);
-
-        margin: auto;
-        background-color: $ui-color-dark;
-        border-radius: 0px 10px 10px 0px;
-        height: 20px;
-
-        padding: 0px 8px 0px 12px;
-
-        color: $main-txt-color;
-    }
-}
-
-.expBarWrapper{
-    position: fixed;
-    bottom: 0;
-    left: 39px;
-    z-index: 100;
-    width: 961px;
-
-
-    #userLevel{
-        @include base-font($weight: 600, $size: 12px);
-        color: $main-txt-color;
-        text-align: right;
-        width: 100%;
-        padding-right: 8px; 
-        opacity: .35;
-    }
-    #userExp{
-        @include inter-font($weight: 600, $size: 10px);
-        color: $ui-color-dark;
-        text-align: center;
-        width: 100%;
-
-        position: relative;
-        bottom: -1px;
-        z-index: 200;
-    }
-
-    .expBar{
-        width: 100%;
-        height: 10px;
-    }
+  .expBar {
+    width: 100%;
+    height: 10px;
+  }
 }

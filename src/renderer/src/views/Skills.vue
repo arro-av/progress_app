@@ -213,7 +213,7 @@ useKeydowns({
               <p class="skillExp">
                 <span :class="getRankClass(tag)">{{ tag.exp_current }}</span>
                 <span class="skillExpSecondary">/</span>
-                <span class="skillExpSecondary">{{ tag.exp_needed }}</span>
+                <span class="skillExpSecondary">{{ tag.exp_needed }} EXP</span>
               </p>
             </div>
 
@@ -222,9 +222,7 @@ useKeydowns({
               :class="getRankClass(tag)"
               :value="tag.exp_current"
               :max="tag.exp_needed"
-            >
-              EXP
-            </progress>
+            ></progress>
           </template>
 
           <template v-else>
@@ -396,7 +394,7 @@ useKeydowns({
 
 .skillLevel {
   position: absolute;
-  right: 8%;
+  right: 7%;
   bottom: 15%;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -405,7 +403,7 @@ useKeydowns({
 
 .skillExp {
   position: absolute;
-  left: 8%;
+  left: 7%;
   bottom: 15%;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -469,7 +467,33 @@ progress::-webkit-progress-bar {
   border-radius: 5px;
 }
 
-progress::-webkit-progress-value {
+.expBar.rank-common::-webkit-progress-value {
+  background-color: $common-color;
+  border-radius: 5px;
+}
+
+.expBar.rank-uncommon::-webkit-progress-value {
+  background-color: $uncommon-color;
+  border-radius: 5px;
+}
+
+.expBar.rank-rare::-webkit-progress-value {
+  background-color: $rare-color;
+  border-radius: 5px;
+}
+
+.expBar.rank-epic::-webkit-progress-value {
+  background-color: $epic-color;
+  border-radius: 5px;
+}
+
+.expBar.rank-legendary::-webkit-progress-value {
+  background-color: $legendary-color;
+  border-radius: 5px;
+}
+
+.expBar.rank-mythic::-webkit-progress-value {
+  background-color: $mythic-color;
   border-radius: 5px;
 }
 

@@ -1,7 +1,4 @@
-import { Habit, Quest, Questline, Task } from '../../main/db/types'
-import { useRanks } from './useRanks'
-
-const { getHabitRank } = useRanks()
+import { Quest, Questline, Task } from '../../main/db/types'
 
 // define return types
 type HabitProgressionReward = {
@@ -26,43 +23,6 @@ type TimeProgressionReward = {
 }
 
 export const useProgressions = () => {
-  const getHabitProgressionReward = (habit: Habit): HabitProgressionReward => {
-    const habitRank = getHabitRank(habit)
-
-    switch (habitRank) {
-      case 'common':
-        return {
-          exp: 10 + habit.current_streak,
-          crystals: 1 + habit.current_streak,
-        }
-      case 'uncommon':
-        return {
-          exp: 20 + habit.current_streak,
-          crystals: 2 + habit.current_streak,
-        }
-      case 'rare':
-        return {
-          exp: 30 + habit.current_streak,
-          crystals: 3 + habit.current_streak,
-        }
-      case 'epic':
-        return {
-          exp: 40 + habit.current_streak,
-          crystals: 4 + habit.current_streak,
-        }
-      case 'legendary':
-        return {
-          exp: 50 + habit.current_streak,
-          crystals: 5 + habit.current_streak,
-        }
-      default:
-        return {
-          exp: 0,
-          crystals: 0,
-        }
-    }
-  }
-
   const getQuestProgressionReward = (
     quest: Quest,
     tasksInQuest: Task[],
@@ -89,7 +49,6 @@ export const useProgressions = () => {
   }
 
   return {
-    getHabitProgressionReward,
     getQuestProgressionReward,
     getQuestlineProgressionReward,
     getTimeProgressionReward,

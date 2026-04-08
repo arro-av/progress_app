@@ -23,6 +23,7 @@ export const IPC_CHANNELS = {
   DELETE_QUESTLINE: 'delete-questline',
   ACTIVATE_QUESTLINE: 'activate-questline',
   CLAIM_QUESTLINE_REWARD: 'claim-questline-reward',
+  CANCEL_QUESTLINE: 'cancel-questline',
   QUESTLINES_UPDATED: 'questlines-updated',
 
   // ========== QUESTS ==========

@@ -4,10 +4,31 @@ import { IPC_CHANNELS } from '../channels'
 
 import { Questline } from '../db/types'
 import { useQuestlines } from '../services/useQuestlines'
-const { editQuestline, deleteQuestline, activateQuestline, claimQuestlineReward } = useQuestlines()
+const {
+  addQuestline,
+  editQuestline,
+  deleteQuestline,
+  activateQuestline,
+  claimQuestlineReward,
+  cancelQuestline,
+} = useQuestlines()
 
 export function registerQuestlineHandlers() {
   ipcMain.handle(IPC_CHANNELS.GET_QUESTLINES, () => db.data.questlines)
+
+  ipcMain.handle(IPC_CHANNELS.ADD_QUESTLINE, (event, addedQuestline: Questline) => {
+    db.read()
+
+    const result = addQuestline(addedQuestline, db.data.questlines)
+    if (!result.titleValid) return { success: false, message: 'Title is required' }
+    if (!result.descriptionValid) return { success: false, message: 'Description is required' }
+
+    db.data.questlines = result.updatedQuestlines
+    db.write()
+
+    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    return { success: true, message: 'Questline added!' }
+  })
 
   ipcMain.handle(IPC_CHANNELS.EDIT_QUESTLINE, (event, editedQuestline: Questline) => {
     db.read()
@@ -69,11 +90,47 @@ export function registerQuestlineHandlers() {
     if (result.notCompleted) return { success: false, message: 'Questline not completed' }
 
     db.data.questlines = result.updatedQuestlines
+    db.data.quests = result.updatedQuests
+    db.data.tasks = result.updatedTasks
     db.data.questlines_done = result.updatedQuestlinesDone
     db.data.user = result.updatedUser
     db.write()
 
     event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
+    event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
+    event.sender.send(IPC_CHANNELS.USER_UPDATED)
+    return {
+      success: true,
+      crystalsGained: result.crystalsGained,
+      userExpGained: result.userExpGained,
+      levelUp: result.levelUp,
+    }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.CANCEL_QUESTLINE, (event, questline: Questline) => {
+    db.read()
+
+    const result = cancelQuestline(
+      questline,
+      db.data.questlines,
+      db.data.questlines_done,
+      db.data.user,
+      db.data.quests,
+      db.data.tasks,
+    )
+    if (!result.questlineExists) return { success: false, message: 'Questline not found' }
+
+    db.data.questlines = result.updatedQuestlines
+    db.data.quests = result.updatedQuests
+    db.data.tasks = result.updatedTasks
+    db.data.questlines_done = result.updatedQuestlinesDone
+    db.data.user = result.updatedUser
+    db.write()
+
+    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
+    event.sender.send(IPC_CHANNELS.TASKS_UPDATED)
     event.sender.send(IPC_CHANNELS.USER_UPDATED)
     return {
       success: true,

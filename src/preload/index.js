@@ -46,6 +46,7 @@ const api = {
   editQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.EDIT_QUESTLINE, project),
   claimQuestlineReward: async (project) =>
     await ipcRenderer.invoke(IPC_CHANNELS.CLAIM_QUESTLINE_REWARD, project),
+  cancelQuestline: async (project) => await ipcRenderer.invoke(IPC_CHANNELS.CANCEL_QUESTLINE, project),
   activateQuestline: async (project) =>
     await ipcRenderer.invoke(IPC_CHANNELS.ACTIVATE_QUESTLINE, project),
   onQuestlinesUpdate: (callback) => {

@@ -27,7 +27,7 @@ const props = defineProps({
 const emit = defineEmits(['move-item', 'unlock-reward', 'idea-to-project', 'toggle-completion']) // Added 'toggle-completion'
 
 const { getToday } = useDates() // Added for checkbox
-const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
+const { getTagRank, getQuestlineRank } = useRanks()
 </script>
 
 <template>

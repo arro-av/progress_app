@@ -85,6 +85,10 @@ export const useQuestsStore = defineStore('quests', () => {
   }
 
   // QUEST LINES
+  const addQuestline = async (questline) => {
+    return await window.api.addQuestline(questline)
+  }
+
   const editQuestline = async (questline) => {
     return await window.api.editQuestline(questline)
   }
@@ -119,6 +123,22 @@ export const useQuestsStore = defineStore('quests', () => {
       }
     } catch (error) {
       console.error('Error claiming todo list reward:', error)
+      addToast({ message: 'An error occured...', type: 'error' })
+    }
+  }
+
+  const cancelQuestline = async (questline) => {
+    try {
+      const result = await window.api.cancelQuestline(questline)
+      if (result.success) {
+        addToast({ message: '+' + result.crystalsGained + ' Crystals', type: 'plusCrystals' })
+        addToast({ message: '+' + result.userExpGained + ' EXP', type: 'plusExp' })
+        if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
+      } else {
+        addToast({ message: result.message, type: 'error' })
+      }
+    } catch (error) {
+      console.error('Error canceling project:', error)
       addToast({ message: 'An error occured...', type: 'error' })
     }
   }
@@ -242,10 +262,12 @@ export const useQuestsStore = defineStore('quests', () => {
     init,
     cleanupListeners,
 
+    addQuestline,
     editQuestline,
     deleteQuestline,
     activateQuestline,
     claimQuestlineReward,
+    cancelQuestline,
 
     addQuest,
     editQuest,

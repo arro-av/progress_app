@@ -8,12 +8,16 @@ export interface User {
   pomodoros: number
   questlines_done: number
   todos_done: number
-  ideas_total: number
-  habits_implemented: number
   rewards_unlocked: number
   exp_gained: number
   crystals_gained: number
   created_at: string
+}
+
+// ========== YEARS ========== Used for heatmap -> stores time spent per day in minutes
+export interface Year {
+  year: number
+  time: number[]
 }
 
 // ========== SETTINGS ==========
@@ -63,6 +67,7 @@ export interface QuestlineDone {
   name: string
   created_at: string
   time_spent: number
+  status: boolean
 }
 
 // ========== TAGS ==========
@@ -90,6 +95,7 @@ export interface Reward {
 export interface DbSchema {
   user: User
   settings: Settings
+  years: Year[]
   questlines: Questline[]
   questlines_done: QuestlineDone[]
   quests: Quest[]
