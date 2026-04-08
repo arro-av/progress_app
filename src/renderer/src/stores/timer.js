@@ -23,8 +23,11 @@ export const useTimerStore = defineStore('timer', () => {
   const { addToast } = useToasts()
 
   const isRunning = ref(false)
-  const timerDuration = ref(25) // in minutes
-  const timeLeft = ref(25 * 60) // in seconds
+  const timerDuration = ref(25)
+  const timeLeft = ref(25 * 60)
+  const minDuration = ref(1)
+  const maxDuration = ref(120)
+  const defaultDuration = ref(25)
   let cleanupUpdate = null
   let cleanupComplete = null
 
@@ -42,7 +45,11 @@ export const useTimerStore = defineStore('timer', () => {
   // Actions
   const startTimer = async () => {
     try {
-      await window.api.startTimer()
+      const result = await window.api.startTimer()
+      if (!result.success) {
+        addToast({ message: result.message ?? 'Failed to start timer', type: 'error' })
+        return false
+      }
       isRunning.value = true
       return true
     } catch (error) {
@@ -51,16 +58,39 @@ export const useTimerStore = defineStore('timer', () => {
     }
   }
 
-  const resetTimer = async () => {
+  const cancelTimer = async () => {
     try {
-      await window.api.resetTimer()
+      const result = await window.api.stopTimer()
+      if (!result.success) {
+        addToast({ message: result.message ?? 'Failed to cancel timer', type: 'error' })
+        return false
+      }
+
       isRunning.value = false
       timeLeft.value = timerDuration.value * 60
+
+      if (result.minutesAdded > 0) {
+        addToast({ message: `+${result.userExp} EXP`, type: 'plusExp' })
+        addToast({ message: `+${result.tagExp} Tag-EXP`, type: 'plusExp' })
+        if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
+        if (result.tagLevelUps?.length) {
+          result.tagLevelUps.forEach((tagTitle) => {
+            addToast({ message: `Level Up: ${tagTitle}`, type: 'lvlup' })
+          })
+        }
+      } else {
+        addToast({ message: result.message ?? 'No time tracked yet', type: 'info' })
+      }
+
       return true
     } catch (error) {
-      console.error('Failed to reset timer:', error)
+      console.error('Failed to cancel timer:', error)
       throw error
     }
+  }
+
+  const refreshTimer = async () => {
+    updateTimerDuration(defaultDuration.value)
   }
 
   const updateTimerDuration = (minutes) => {
@@ -76,6 +106,11 @@ export const useTimerStore = defineStore('timer', () => {
     try {
       const result = await window.api.addTime(minutes)
       if (result.success) {
+        if (result.minutesAdded <= 0) {
+          addToast({ message: result.message ?? 'No time tracked yet', type: 'info' })
+          return
+        }
+
         addToast({ message: '+' + result.userExp + ' EXP', type: 'plusExp' })
         addToast({ message: '+' + result.tagExp + ' Tag-EXP', type: 'plusExp' })
         if (result.levelUp) addToast({ message: 'Level Up!', type: 'lvlup' })
@@ -84,6 +119,8 @@ export const useTimerStore = defineStore('timer', () => {
             addToast({ message: `Level Up: ${tagTitle}`, type: 'lvlup' })
           })
         }
+      } else {
+        addToast({ message: result.message ?? 'Failed to add time', type: 'error' })
       }
     } catch (error) {
       console.error('Failed to add time:', error)
@@ -115,9 +152,13 @@ export const useTimerStore = defineStore('timer', () => {
       const state = await window.api.getTimerState()
       if (state) {
         isRunning.value = state.isRunning
+        minDuration.value = state.minDuration ?? minDuration.value
+        maxDuration.value = state.maxDuration ?? maxDuration.value
+        defaultDuration.value = state.defaultDuration ?? defaultDuration.value
+        timerDuration.value = Math.floor((state.duration || defaultDuration.value * 60) / 60)
         timeLeft.value = state.timeLeft || timerDuration.value * 60
         if (!isRunning.value) {
-          timerDuration.value = Math.floor((state.duration || 25 * 60) / 60)
+          timeLeft.value = timerDuration.value * 60
         }
       }
       setupListeners()
@@ -131,6 +172,9 @@ export const useTimerStore = defineStore('timer', () => {
     isRunning,
     timerDuration,
     timeLeft,
+    minDuration,
+    maxDuration,
+    defaultDuration,
 
     // Computed
     formattedTime,
@@ -138,7 +182,8 @@ export const useTimerStore = defineStore('timer', () => {
 
     // Actions
     startTimer,
-    resetTimer,
+    cancelTimer,
+    refreshTimer,
     updateTimerDuration,
     manuallyAddTime,
 

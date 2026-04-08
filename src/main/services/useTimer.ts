@@ -8,6 +8,7 @@ const { updateUserLevel, updateTagLevel } = updateLevels()
 
 type AddTimeResult = {
   success: boolean
+  message?: string
   updatedUser: User
   updatedQuestlines: Questline[]
   updatedQuests: Quest[]
@@ -28,11 +29,41 @@ export function useTimer() {
     allTags: Tag[],
   ): AddTimeResult => {
     const currentActiveQuestline = allQuestlines.find((questline) => questline.active)
-    const currentActiveQuest = allQuests.find(
-      (quest) => quest.questline_id === currentActiveQuestline!.id && quest.active,
-    )
+    const currentActiveQuest = currentActiveQuestline
+      ? allQuests.find((quest) => quest.questline_id === currentActiveQuestline.id && quest.active)
+      : null
 
-    const roundedTimeSpent = Math.round(timeSpentMinutes)
+    if (!currentActiveQuestline || !currentActiveQuest) {
+      return {
+        success: false,
+        message: 'Select an active project and epic first',
+        updatedUser: user,
+        updatedQuestlines: allQuestlines,
+        updatedQuests: allQuests,
+        updatedTags: allTags,
+        levelUp: false,
+        tagLevelUps: [],
+        userExp: 0,
+        tagExp: 0,
+      }
+    }
+
+    const roundedTimeSpent = Math.floor(timeSpentMinutes)
+
+    if (roundedTimeSpent <= 0) {
+      return {
+        success: true,
+        message: 'No time tracked yet',
+        updatedUser: user,
+        updatedQuestlines: allQuestlines,
+        updatedQuests: allQuests,
+        updatedTags: allTags,
+        levelUp: false,
+        tagLevelUps: [],
+        userExp: 0,
+        tagExp: 0,
+      }
+    }
 
     const reward = getTimeProgressionReward(roundedTimeSpent)
 

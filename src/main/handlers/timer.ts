@@ -1,122 +1,178 @@
-import { ipcMain, BrowserWindow } from 'electron'
+import { ipcMain, BrowserWindow, Notification } from 'electron'
 import db from '../db/lowdb.js'
 import { IPC_CHANNELS } from '../channels'
-
-import { useCaps } from '../../shared/constants/useCaps'
-const { MAX_TIMER_DURATION, MIN_TIMER_DURATION } = useCaps()
 
 import { useTimer } from '../services/useTimer'
 const { addTime } = useTimer()
 
 let timerInterval: NodeJS.Timeout | null
 let timeLeft = 0
-let timerDuration = 25 * 60
+let timerDuration = 0
 let isRunning = false
+let startedAt: number | null = null
+let endsAt: number | null = null
+
+const getTimerLimits = () => {
+  const settings = db.data.settings
+  return {
+    min: settings.timer_min,
+    max: settings.timer_max,
+    defaultSession: settings.timer_default_session,
+  }
+}
+
+const ensureTimerDefaults = () => {
+  if (timerDuration > 0) return
+
+  const { defaultSession } = getTimerLimits()
+  timerDuration = defaultSession * 60
+  timeLeft = timerDuration
+}
+
+const emitDataUpdates = (sender) => {
+  sender.send(IPC_CHANNELS.USER_UPDATED)
+  sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
+  sender.send(IPC_CHANNELS.QUESTS_UPDATED)
+  sender.send(IPC_CHANNELS.TAGS_UPDATED)
+}
+
+const clearTimerInterval = () => {
+  if (timerInterval) {
+    clearInterval(timerInterval)
+    timerInterval = null
+  }
+}
+
+const getElapsedMinutes = () => {
+  if (!startedAt) return 0
+  return Math.max(0, (Date.now() - startedAt) / 1000 / 60)
+}
+
+const finalizeTrackedTime = (event, timeSpentMinutes: number) => {
+  const result = addTime(
+    timeSpentMinutes,
+    db.data.user,
+    db.data.questlines,
+    db.data.quests,
+    db.data.tags,
+  )
+
+  if (!result.success) {
+    return { success: false, message: result.message ?? 'Failed to add time' }
+  }
+
+  db.data.user = result.updatedUser
+  db.data.questlines = result.updatedQuestlines
+  db.data.quests = result.updatedQuests
+  db.data.tags = result.updatedTags
+  db.write()
+
+  emitDataUpdates(event.sender)
+
+  return {
+    success: true,
+    levelUp: result.levelUp,
+    tagLevelUps: result.tagLevelUps,
+    userExp: result.userExp,
+    tagExp: result.tagExp,
+    minutesAdded: Math.floor(timeSpentMinutes),
+    message: result.message ?? 'Time added',
+  }
+}
 
 export function registerTimerHandlers() {
-  ipcMain.handle(IPC_CHANNELS.ADD_TIME, (event, timeSpentMinutes: number) => {
-    const result = addTime(
-      timeSpentMinutes,
-      db.data.user,
-      db.data.questlines,
-      db.data.quests,
-      db.data.tags,
-    )
-    if (!result.success) return { success: false, message: 'Failed to add time' }
-    db.data.user = result.updatedUser
-    db.data.questlines = result.updatedQuestlines
-    db.data.quests = result.updatedQuests
-    db.data.tags = result.updatedTags
-    db.write()
+  ensureTimerDefaults()
 
-    event.sender.send(IPC_CHANNELS.USER_UPDATED)
-    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
-    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
-    event.sender.send(IPC_CHANNELS.TAGS_UPDATED)
-    return {
-      success: true,
-      levelUp: result.levelUp,
-      tagLevelUps: result.tagLevelUps,
-      userExp: result.userExp,
-      tagExp: result.tagExp,
-    }
+  ipcMain.handle(IPC_CHANNELS.ADD_TIME, (event, timeSpentMinutes: number) => {
+    ensureTimerDefaults()
+    return finalizeTrackedTime(event, timeSpentMinutes)
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_START, async (event) => {
+    ensureTimerDefaults()
     if (isRunning) return { success: false, message: 'Timer already running' }
 
     isRunning = true
     timeLeft = timerDuration
+    startedAt = Date.now()
+    endsAt = startedAt + timerDuration * 1000
 
     const window = BrowserWindow.fromWebContents(event.sender)
     if (!window) {
       isRunning = false
+      startedAt = null
+      endsAt = null
       return { success: false, message: 'Window not found' }
     }
 
-    console.log('Timer started!', timeLeft / 60)
-
-    if (timerInterval) {
-      clearInterval(timerInterval)
-      timerInterval = null
-    }
+    clearTimerInterval()
 
     timerInterval = setInterval(() => {
-      timeLeft--
+      if (!endsAt) return
+
+      timeLeft = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000))
       event.sender.send(IPC_CHANNELS.TIMER_UPDATE, { timeLeft })
 
       if (timeLeft <= 0) {
-        if (timerInterval) {
-          clearInterval(timerInterval)
-          timerInterval = null
-        }
-
+        clearTimerInterval()
         isRunning = false
+        startedAt = null
+        endsAt = null
 
         try {
           event.sender.send(IPC_CHANNELS.TIMER_COMPLETE)
-          console.log('Timer completed!')
           const timeSpentMinutes = timerDuration / 60
-          const result = addTime(
-            timeSpentMinutes,
-            db.data.user,
-            db.data.questlines,
-            db.data.quests,
-            db.data.tags,
-          )
-          db.data.user = result.updatedUser
-          db.data.questlines = result.updatedQuestlines
-          db.data.quests = result.updatedQuests
-          db.data.tags = result.updatedTags
-          db.write()
+          finalizeTrackedTime(event, timeSpentMinutes)
 
-          console.log('Timer completion handled successfully')
+          if (Notification.isSupported()) {
+            new Notification({
+              title: 'Progress Timer',
+              body: 'Your timer has finished.',
+            }).show()
+          }
         } catch (error) {
           console.error('Failed to handle timer completion:', error)
         }
       }
     }, 1000)
 
-    event.sender.send(IPC_CHANNELS.USER_UPDATED)
-    event.sender.send(IPC_CHANNELS.QUESTLINES_UPDATED)
-    event.sender.send(IPC_CHANNELS.QUESTS_UPDATED)
     return {
       success: true,
     }
   })
 
-  ipcMain.handle(IPC_CHANNELS.TIMER_RESET, () => {
-    if (timerInterval) {
-      clearInterval(timerInterval)
-      timerInterval = null
+  ipcMain.handle(IPC_CHANNELS.TIMER_STOP, (event) => {
+    ensureTimerDefaults()
+
+    if (!isRunning) {
+      return { success: false, message: 'Timer is not running' }
     }
+
+    const elapsedMinutes = getElapsedMinutes()
+
+    clearTimerInterval()
     isRunning = false
+    startedAt = null
+    endsAt = null
+    timeLeft = timerDuration
+
+    return finalizeTrackedTime(event, elapsedMinutes)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.TIMER_RESET, () => {
+    ensureTimerDefaults()
+    clearTimerInterval()
+    isRunning = false
+    startedAt = null
+    endsAt = null
     timeLeft = timerDuration
     return { success: true, message: 'Timer reset' }
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_SET_DURATION, (event, duration: number) => {
-    const newDuration = Math.max(MIN_TIMER_DURATION, Math.min(MAX_TIMER_DURATION, duration))
+    ensureTimerDefaults()
+    const { min, max } = getTimerLimits()
+    const newDuration = Math.max(min, Math.min(max, duration))
     timerDuration = newDuration * 60
     if (!isRunning) {
       timeLeft = timerDuration
@@ -125,10 +181,20 @@ export function registerTimerHandlers() {
   })
 
   ipcMain.handle(IPC_CHANNELS.TIMER_GET_STATE, () => {
+    ensureTimerDefaults()
+    const { min, max, defaultSession } = getTimerLimits()
+
+    if (isRunning && endsAt) {
+      timeLeft = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000))
+    }
+
     return {
       isRunning,
       timeLeft,
       duration: timerDuration,
+      minDuration: min,
+      maxDuration: max,
+      defaultDuration: defaultSession,
       progress: (timeLeft / timerDuration) * 100,
     }
   })

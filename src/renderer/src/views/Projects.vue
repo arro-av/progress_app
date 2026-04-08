@@ -603,7 +603,7 @@ useKeydowns({
               <strong>{{ currentQuestReward?.userExp ?? 0 }}</strong>
             </div>
             <div class="rewardRow compact">
-              <span>Tag EXP</span>
+              <span>Skill EXP</span>
               <strong>{{ currentQuestReward?.tagExp ?? 0 }}</strong>
             </div>
             <button
@@ -733,15 +733,17 @@ useKeydowns({
             <h3>Overview</h3>
           </div>
 
-          <div class="panel summaryPanel">
-            <p class="summaryLabel">Project Time</p>
-            <h3>{{ currentQuestline ? formatMinutes(currentQuestline.time_spent) : '0h 0m' }}</h3>
+          <div
+            class="panel summaryPanel"
+            :class="getQuestlineRank(currentQuestline)"
+          >
             <p
               class="summaryRank"
               :class="questlineRankClass"
             >
-              {{ currentQuestline ? getQuestlineRank(currentQuestline) : 'common' }}
+              {{ currentQuestline ? getQuestlineRank(currentQuestline) : 'common' }} PROJECT
             </p>
+            <h3>{{ currentQuestline ? formatMinutes(currentQuestline.time_spent) : '0h 0m' }}</h3>
           </div>
 
           <div class="panel rewardPanel">
@@ -756,8 +758,6 @@ useKeydowns({
               <span>Experience</span>
               <strong>{{ currentQuestlineReward?.userExp ?? 0 }}</strong>
             </div>
-
-            <p class="cancelHint">Canceling grants half of the displayed reward.</p>
 
             <div class="rewardActions">
               <button
@@ -1185,6 +1185,30 @@ useKeydowns({
   color: $secondary-text-color;
 }
 
+.summaryPanel.common {
+  background-color: rgba($common-color, 0.1);
+}
+
+.summaryPanel.uncommon {
+  background-color: rgba($uncommon-color, 0.1);
+}
+
+.summaryPanel.rare {
+  background-color: rgba($rare-color, 0.1);
+}
+
+.summaryPanel.epic {
+  background-color: rgba($epic-color, 0.1);
+}
+
+.summaryPanel.legendary {
+  background-color: rgba($legendary-color, 0.1);
+}
+
+.summaryPanel.mythic {
+  background-color: rgba($mythic-color, 0.1);
+}
+
 .summaryPanel h3 {
   font-family: 'Inter', sans-serif;
   font-size: 28px;
@@ -1340,5 +1364,10 @@ useKeydowns({
   width: 20px;
   height: 20px;
   fill: #d85f5f;
+}
+
+option {
+  background-color: $main-background-color;
+  font-family: 'Inter', sans-serif;
 }
 </style>
