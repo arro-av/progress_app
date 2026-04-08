@@ -78,7 +78,7 @@ import StatsIcon from '../assets/stats.svg'
         <div :class="['navLink', { active: isActive }]">
           <div class="navLinkContent">
             <StatsIcon class="nav-icon" />
-            <p>Statistics</p>
+            <p>Stats</p>
           </div>
 
           <div class="navLinkIndicator"></div>
@@ -141,6 +141,7 @@ a {
   z-index: 10;
 
   background-color: $ui-color-dark;
+  border: none;
 
   .navigation {
     display: flex;
@@ -150,7 +151,7 @@ a {
 
     width: 100%;
     height: 55%;
-    padding-top: 15px;
+    padding-top: 30px;
 
     .navLink {
       display: flex;

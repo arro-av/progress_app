@@ -3,6 +3,7 @@
 // Icons
 import IdeaIcon from '../assets/idea.svg'
 import ArrowIcon from '../assets/arrow.svg'
+import CrystalIcon from '../assets/crystal.svg'
 // Composables
 import { useDates } from '../../../shared/utils/useDate' // Added for isSameDateAsToday
 import { useRanks } from '../../../shared/utils/useRanks'
@@ -70,26 +71,6 @@ const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
       </div>
     </template>
 
-    <!-- STACK -->
-    <template v-if="itemType === 'habit_stacks'">
-      <h2 class="habitStackTitle">{{ itemData.title }}</h2>
-    </template>
-
-    <!-- IDEA -->
-    <template v-if="itemType === 'ideas'">
-      <div class="bulbWrapper">
-        <IdeaIcon
-          class="bulb"
-          @click="emit('idea-to-project')"
-        />
-      </div>
-
-      <div class="ideaContent">
-        <h4>{{ itemData.title }}</h4>
-        <p>{{ itemData.description }}</p>
-      </div>
-    </template>
-
     <!-- TAG -->
     <template v-if="itemType === 'tags'">
       <div class="rankGems">
@@ -146,77 +127,17 @@ const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
       </progress>
     </template>
 
-    <!-- HABIT -->
-    <template v-if="itemType === 'habits'">
-      <div class="rankGems">
-        <img
-          v-if="getHabitRank(itemData) == 'legendary'"
-          src="../assets/LEGENDARY_MARK.png"
-          alt="habitRankIcon"
-          class="rankMark"
-          :class="getHabitRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getHabitRank(itemData) == 'epic'"
-          src="../assets/EPIC_MARK.png"
-          alt="habitRankIcon"
-          class="rankMark"
-          :class="getHabitRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getHabitRank(itemData) == 'rare'"
-          src="../assets/RARE_MARK.png"
-          alt="habitRankIcon"
-          class="rankMark"
-          :class="getHabitRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getHabitRank(itemData) == 'uncommon'"
-          src="../assets/UNCOMMON_MARK.png"
-          alt="habitRankIcon"
-          class="rankMark"
-          :class="getHabitRank(itemData) + '-glow'"
-        />
-        <img
-          v-if="getHabitRank(itemData) == 'common'"
-          src="../assets/COMMON_MARK.png"
-          alt="habitRankIcon"
-          class="rankMark"
-          :class="getHabitRank(itemData) + '-glow'"
-        />
-      </div>
-      <div class="habitCardContent">
-        <div class="habitCompletionWrapper">
-          <input
-            type="checkbox"
-            :checked="
-              itemData.last_month_completed[itemData.last_month_completed.length - 1] === getToday()
-            "
-            @change="emit('toggle-completion', itemData)"
-            class="habitCheckbox"
-          />
-          <h4 class="habitTitle">{{ itemData.title }}</h4>
-        </div>
-        <p class="habitTag">#{{ tagname }}</p>
-        <p class="habitStreak">Streak: {{ itemData.current_streak || 0 }}</p>
-      </div>
-    </template>
-
     <!-- REWARD -->
     <template v-if="itemType === 'rewards'">
-      <div
-        class="costWrapper"
-        @click="emit('unlock-reward')"
-      >
-        <img
-          src="../assets/crystal.png"
-          alt="crystal cost"
-        />
+      <div class="costWrapper">
         <p>{{ itemData.cost }}</p>
+        <CrystalIcon class="nav-icon" />
       </div>
       <div class="cardContent">
         <h4>{{ itemData.title }}</h4>
       </div>
+
+      <button @click="emit('unlock-reward')">Unlock</button>
     </template>
     <!-- TODO: Kinda weird on Project Conatiner | Will fix with SCSS refactor in future -->
     <div
@@ -236,3 +157,68 @@ const { getTagRank, getHabitRank, getQuestlineRank } = useRanks()
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+@use '../styles/variables.scss' as *;
+
+//=== TAG SPECIFIC STYLES ===
+.expBar {
+  width: 227px;
+  border-radius: 5px;
+  height: 3px;
+
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+
+  z-index: 20;
+
+  opacity: 50%;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #414141;
+
+  border-bottom-right-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+  background-color: #a335ee;
+}
+
+.rankGems {
+  position: relative;
+  width: 100px;
+  height: 60px;
+  overflow: visible;
+  z-index: 100;
+
+  pointer-events: none;
+}
+
+.rankMark {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  top: -35px;
+  left: -40px;
+
+  transition: all 0.15s ease-in-out;
+
+  &.legendary-glow {
+    filter: drop-shadow(0px 0px 2px rgba($legendary-color, 0.15));
+  }
+  &.epic-glow {
+    filter: drop-shadow(0px 0px 2px rgba($epic-color, 0.15));
+  }
+  &.rare-glow {
+    filter: drop-shadow(0px 0px 2px rgba($rare-color, 0.15));
+  }
+  &.uncommon-glow {
+    filter: drop-shadow(0px 0px 2px rgba($uncommon-color, 0.15));
+  }
+  &.common-glow {
+    filter: drop-shadow(0px 0px 2px rgba($common-color, 0.15));
+  }
+}
+</style>

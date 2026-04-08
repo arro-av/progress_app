@@ -22,3 +22,33 @@ import TimerOverlay from './components/TimerOverlay.vue'
     </main>
   </body>
 </template>
+
+<style scoped lang="scss">
+@use './styles/variables.scss' as *;
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background-color: $ui-color-dark;
+  width: 800px;
+  overflow-x: hidden;
+
+  main {
+    position: absolute;
+    left: 125px;
+
+    .moduleWrapper {
+      position: absolute;
+      margin-top: 10px;
+    }
+  }
+}
+</style>

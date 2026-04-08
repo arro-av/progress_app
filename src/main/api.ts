@@ -13,10 +13,7 @@ import { registerTimerHandlers } from './handlers/timer'
 export function registerDBHandlers() {
   registerMoveItemHandler()
   registerTagHandlers()
-  registerHabitHandlers()
-  registerHabitStackHandlers()
   registerRewardHandlers()
-  registerIdeaHandlers()
   registerQuestlineHandlers()
   registerQuestHandlers()
   registerTaskHandlers()

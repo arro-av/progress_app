@@ -1,0 +1,71 @@
+.cardWrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  cursor: default;
+  background-color: #201f1f;
+  border-radius: 2px;
+  width: 250px;
+  transition: filter 0.3s ease-in-out;
+}
+.cardWrapper:hover {
+  outline: 1px solid rgba(233, 193, 118, 0.45);
+  box-shadow: 0 0 0 1px rgba(233, 193, 118, 0.12);
+}
+.cardWrapper .cardContent {
+  padding-left: 5px;
+  padding-right: 13px;
+  width: 180px;
+  height: 60px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cardWrapper .cardContent h4 {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  margin: auto 0;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.cardWrapper .cardContent .tagLvl {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #dbb997;
+  opacity: 0.5;
+  height: -moz-fit-content;
+  height: fit-content;
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
+}
+.cardWrapper .editIconContainer {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  cursor: pointer;
+}
+.cardWrapper .editIconContainer .editIcon {
+  width: 18px;
+  height: 18px;
+  fill: #dbb997;
+  opacity: 0.3;
+  transition: opacity 0.15s ease-in-out;
+}
+.cardWrapper .editIconContainer .editIcon:hover {
+  opacity: 1;
+  filter: drop-shadow(0px 0px 10px rgba(219, 185, 151, 0.5));
+}
+.cardWrapper:hover .editIconContainer {
+  opacity: 0.75;
+  cursor: pointer;
+}
+.cardWrapper:hover .moveIconContainer {
+  opacity: 0.75;
+  cursor: pointer;
+}/*# sourceMappingURL=base_card.css.map */

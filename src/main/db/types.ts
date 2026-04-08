@@ -16,6 +16,16 @@ export interface User {
   created_at: string
 }
 
+// ========== SETTINGS ==========
+export interface Settings {
+  timer_min: number
+  timer_max: number
+  timer_default_session: number
+
+  currency_crysral_ratio: number[]
+  max_projects: number
+}
+
 // ========== QUESTLINES ==========
 export interface Questline {
   id: number
@@ -27,7 +37,7 @@ export interface Questline {
   position: number
 }
 
-// ========== QUESTS ==========
+// ========== Story ==========
 export interface Quest {
   id: number
   title: string
@@ -55,33 +65,6 @@ export interface QuestlineDone {
   time_spent: number
 }
 
-// ========== IDEAS ==========
-export interface Idea {
-  id: number
-  title: string
-  description: string
-  position: number
-}
-
-// ========== HABITS ==========
-export interface HabitStack {
-  id: number
-  title: string
-  position: number
-}
-
-export interface Habit {
-  id: number
-  stack_id: number
-  title: string
-  counter: number
-  current_streak: number
-  best_streak: number
-  tag_id: number
-  last_month_completed: string[]
-  position: number
-}
-
 // ========== TAGS ==========
 export interface Tag {
   id: number
@@ -103,25 +86,14 @@ export interface Reward {
   position: number
 }
 
-// ========== ACHIEVEMENTS ==========
-export interface Achievement {
-  id: number
-  title: string
-  description: string
-  unlocked: boolean
-}
-
 // ========== FULL DB SCHEMA ==========
 export interface DbSchema {
   user: User
+  settings: Settings
   questlines: Questline[]
   questlines_done: QuestlineDone[]
   quests: Quest[]
   tasks: Task[]
   tags: Tag[]
-  ideas: Idea[]
-  habit_stacks: HabitStack[]
-  habits: Habit[]
   rewards: Reward[]
-  achievements: Achievement[]
 }

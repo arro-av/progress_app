@@ -1,7 +1,0 @@
-#rewardsWrapper {
-    @include module-grid-layout($row-height: 60px);
-    }
-
-.addRewardWrapper {
-    @include add-wrapper(60px);
-}
